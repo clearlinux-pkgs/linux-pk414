@@ -1,0 +1,11 @@
+.*~
+*~
+*.swp
+results
+*xz
+*gz
+
+testresults
+
+linux-intel-*
+linux-4.14.*
