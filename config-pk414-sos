@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86_64 4.14.47-43.pk414-sos Kernel Configuration
+# Linux/x86 4.14.47 Kernel Configuration
 #
 CONFIG_64BIT=y
 CONFIG_X86_64=y
@@ -2451,7 +2451,7 @@ CONFIG_SERIAL_NONSTANDARD=y
 CONFIG_N_GSM=y
 CONFIG_TRACE_ROUTER=y
 CONFIG_TRACE_SINK=y
-# CONFIG_CBC_LDISC is not set
+CONFIG_CBC_LDISC=y
 # CONFIG_DEVMEM is not set
 # CONFIG_DEVKMEM is not set
 
