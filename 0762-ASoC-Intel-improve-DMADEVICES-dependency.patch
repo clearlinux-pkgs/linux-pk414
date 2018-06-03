@@ -1,7 +1,7 @@
-From 7f779deff205a33d9286a9986211bcfba1fbfe6a Mon Sep 17 00:00:00 2001
+From 19f8e52df541c722b14e409f0b3d9d99e4987dcd Mon Sep 17 00:00:00 2001
 From: Arnd Bergmann <arnd@arndb.de>
 Date: Wed, 8 Nov 2017 14:03:19 +0100
-Subject: [PATCH 0762/1029] ASoC: Intel: improve DMADEVICES dependency
+Subject: [PATCH 0762/1041] ASoC: Intel: improve DMADEVICES dependency
 
 As pointed out by Pierre-Louis Bossart, the dependency I added
 was broader than necessary, only Baytrail and Haswell/Broadwell
@@ -92,5 +92,5 @@ index d8b4be269200..de194d7497bc 100644
  	depends on SND_SOC_INTEL_BAYTRAIL
  	select SND_SOC_RT5640
 -- 
-2.17.0
+2.17.1
 

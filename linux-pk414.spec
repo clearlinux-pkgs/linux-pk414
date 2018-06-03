@@ -3,13 +3,13 @@
 #
 
 Name:           linux-pk414
-Version:        4.14.44
-Release:        42
+Version:        4.14.47
+Release:        43
 License:        GPL-2.0
 Summary:        The Linux kernel
 Url:            http://www.kernel.org/
 Group:          kernel
-Source0:        https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.14.44.tar.xz
+Source0:        https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.14.47.tar.xz
 Source1:        config-pk414-sos
 Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
@@ -1071,6 +1071,18 @@ Patch1026: 1026-Revert-usb-pci-quirks-register-USB-mux-found-on-Cher.patch
 Patch1027: 1027-usb-Add-info-about-USB_ROLE_SWITCH-in-Kconfig.patch
 Patch1028: 1028-REVERTME-usb-roles-intel_xhci-Set-device-mode-as-def.patch
 Patch1029: 1029-drm-i915-fix-compile-warning.patch
+Patch1030: 1030-media-intel-ipu-ICI-camera-driver-WW16-2018.patch
+Patch1031: 1031-media-i2c-common-camera-sensor-driver-crlmodule-lite.patch
+Patch1032: 1032-media-platform-Platform-data-for-ICI-driver-and-crlm.patch
+Patch1033: 1033-crlmodule-lite-Adding-config-dependencies-between-cr.patch
+Patch1034: 1034-media-platform-fix-different-I2C-bus-ID-for-UOS.patch
+Patch1035: 1035-media-intel-ipu-dma-functions-for-ici-driver.patch
+Patch1036: 1036-media-platform-crlmodule-lite-to-overcome-ACRN-UOS-l.patch
+Patch1037: 1037-media-platform-Change-I2C-bus-ID-from-0-to-3.patch
+Patch1038: 1038-media-platform-Change-I2C-bus-ID-for-UOS-from-6-to-0.patch
+Patch1039: 1039-crlmodule-lite-Fixing-un-used-variable-warning-issue.patch
+Patch1040: 1040-Integration-of-CBC-line-discipline-kernel-module.patch
+Patch1041: 1041-cbc-Avoid-rx-sequence-counter-mismatch-warnings.patch
 #END XXXX: PK Series
 
 # Clear Linux patch
@@ -1105,7 +1117,7 @@ Group:          kernel
 Linux kernel extra files
 
 %prep
-%setup -q -n linux-4.14.44
+%setup -q -n linux-4.14.47
 
 #patchXXXX PK Series
 %patch0001 -p1
@@ -2137,6 +2149,18 @@ Linux kernel extra files
 %patch1027 -p1
 %patch1028 -p1
 %patch1029 -p1
+%patch1030 -p1
+%patch1031 -p1
+%patch1032 -p1
+%patch1033 -p1
+%patch1034 -p1
+%patch1035 -p1
+%patch1036 -p1
+%patch1037 -p1
+%patch1038 -p1
+%patch1039 -p1
+%patch1040 -p1
+%patch1041 -p1
 # End XXXX PK Series
 
 %patch9001 -p1

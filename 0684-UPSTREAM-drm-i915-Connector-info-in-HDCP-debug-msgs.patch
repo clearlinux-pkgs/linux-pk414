@@ -1,7 +1,7 @@
-From c7a5372768fff1f31176fc51ee11bf02cb203f56 Mon Sep 17 00:00:00 2001
+From c7b202bd121d244290750911f4c7f7126e84ac30 Mon Sep 17 00:00:00 2001
 From: Ramalingam C <ramalingam.c@intel.com>
 Date: Sat, 3 Feb 2018 03:39:05 +0530
-Subject: [PATCH 0684/1029] UPSTREAM: drm/i915: Connector info in HDCP debug
+Subject: [PATCH 0684/1041] UPSTREAM: drm/i915: Connector info in HDCP debug
  msgs
 
 When HDCP authentication is triggered on multiple connector, having
@@ -69,5 +69,5 @@ index 0a1ef82c77a2..cfd13ee8c534 100644
  	ret = _intel_hdcp_disable(connector);
  	if (ret) {
 -- 
-2.17.0
+2.17.1
 

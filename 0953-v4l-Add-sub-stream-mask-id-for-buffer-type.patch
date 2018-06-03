@@ -1,7 +1,7 @@
-From 4bf775041141c88f150f47e3ba3405ed141a80c7 Mon Sep 17 00:00:00 2001
+From 40ce5bd5e805fb3aa3ac2dac6f4ca603aade8bf0 Mon Sep 17 00:00:00 2001
 From: wu xia <xia.wu@intel.com>
 Date: Fri, 20 Dec 2013 16:49:02 +0200
-Subject: [PATCH 0953/1029] v4l: Add sub-stream mask id for buffer type
+Subject: [PATCH 0953/1041] v4l: Add sub-stream mask id for buffer type
 
 To support multiple sub-streams on a single video node (and DMA
 engine), allow multiplexing the (buffer) type field on the structs
@@ -464,5 +464,5 @@ index 12811ea0101f..b6e836a11581 100644
  	((type) == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE	\
  	 || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
 -- 
-2.17.0
+2.17.1
 

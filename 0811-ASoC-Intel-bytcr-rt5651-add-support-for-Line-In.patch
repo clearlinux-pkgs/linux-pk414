@@ -1,7 +1,7 @@
-From 34cab3c5695de25c468c3d7a7141d1a09cd290f6 Mon Sep 17 00:00:00 2001
+From 14bbbc1e6950c129610d82f286587e2fda2de9d3 Mon Sep 17 00:00:00 2001
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Date: Fri, 5 Jan 2018 13:20:23 -0600
-Subject: [PATCH 0811/1029] ASoC: Intel: bytcr-rt5651: add support for Line In
+Subject: [PATCH 0811/1041] ASoC: Intel: bytcr-rt5651: add support for Line In
 
 Add the DAPM widgets and routes.
 
@@ -62,5 +62,5 @@ index dfe6435f8ed0..22c9cc5d135e 100644
  
  static struct snd_soc_jack_pin bytcr_jack_pins[] = {
 -- 
-2.17.0
+2.17.1
 

@@ -1,7 +1,7 @@
-From 209e90d5dd62e25d6bc24385c535986d136a9ab0 Mon Sep 17 00:00:00 2001
+From 472beed80b629c6a78a24b370d3d60dfcda5ee49 Mon Sep 17 00:00:00 2001
 From: Brahim Abes <brahimx.abes@intel.com>
 Date: Thu, 4 Jan 2018 21:51:33 +0800
-Subject: [PATCH 0493/1029] drm/915/gvt: Add new trace point to output per
+Subject: [PATCH 0493/1041] drm/915/gvt: Add new trace point to output per
  domain info
 
 Added trace point "i915_gem_request_add_domain" that prints the following
@@ -154,5 +154,5 @@ index cc38aab4e34f..244dfbd8fbfb 100644
  void gen8_irq_power_well_post_enable(struct drm_i915_private *dev_priv,
  				     u8 pipe_mask);
 -- 
-2.17.0
+2.17.1
 

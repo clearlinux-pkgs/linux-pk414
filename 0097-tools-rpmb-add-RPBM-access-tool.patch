@@ -1,7 +1,7 @@
-From 1b3558a5f928628da70ede620b89da5f2350cf60 Mon Sep 17 00:00:00 2001
+From fad865f6f45ea1e03bf47a3ee9be592ed6e697ed Mon Sep 17 00:00:00 2001
 From: Tomas Winkler <tomas.winkler@intel.com>
 Date: Sun, 20 Mar 2016 11:32:42 +0200
-Subject: [PATCH 0097/1029] tools rpmb: add RPBM access tool
+Subject: [PATCH 0097/1041] tools rpmb: add RPBM access tool
 
 Add simple RPMB host testing tool. It can be used
 to program key, write and read data block, and retrieve
@@ -1212,5 +1212,5 @@ index 000000000000..2f16f77c90e9
 +	exit(EXIT_SUCCESS);
 +}
 -- 
-2.17.0
+2.17.1
 

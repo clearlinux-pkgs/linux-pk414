@@ -1,7 +1,7 @@
-From 345a8b515a3e2adbf68faa214ecf181748feb704 Mon Sep 17 00:00:00 2001
+From eff255efcbfe1b55c1149bb4828dcd8cf5c8ec58 Mon Sep 17 00:00:00 2001
 From: "Ughreja, Rakesh A" <rakesh.a.ughreja@intel.com>
 Date: Fri, 1 Dec 2017 14:43:17 +0530
-Subject: [PATCH 0782/1029] ASoC: hdac_hdmi: introduce macro to access HDMI
+Subject: [PATCH 0782/1041] ASoC: hdac_hdmi: introduce macro to access HDMI
  private data
 
 This patch replaces the direct access of HDMI private data with macro
@@ -307,5 +307,5 @@ index 69416f465d94..bb1fbc8cd9b9 100644
  	struct hdac_hdmi_cvt *cvt, *cvt_next;
  	struct hdac_hdmi_pcm *pcm, *pcm_next;
 -- 
-2.17.0
+2.17.1
 

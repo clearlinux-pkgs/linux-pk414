@@ -1,7 +1,7 @@
-From 7179acc4cce7622112229aa8b8bb5c17cc40b86f Mon Sep 17 00:00:00 2001
+From bd56ac56d72b6cea2dbaa4c21f92189f7b1b7326 Mon Sep 17 00:00:00 2001
 From: Liam Girdwood <liam.r.girdwood@linux.intel.com>
 Date: Fri, 23 Mar 2018 22:06:42 +0000
-Subject: [PATCH 0887/1029] ASoC: SOF: BDW dont send payload in doorbell part2
+Subject: [PATCH 0887/1041] ASoC: SOF: BDW dont send payload in doorbell part2
 
 Send payload in mailbox.
 
@@ -29,5 +29,5 @@ index 422af7222c36..1e51323c4d05 100644
  	return 0;
  }
 -- 
-2.17.0
+2.17.1
 

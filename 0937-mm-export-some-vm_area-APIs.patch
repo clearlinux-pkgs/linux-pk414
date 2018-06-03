@@ -1,7 +1,7 @@
-From 7a7e5d49d1e3b1b569bd9c9c0a9d857d80a64493 Mon Sep 17 00:00:00 2001
+From df28a5c5ebe202737a111e0555ffab78f46037db Mon Sep 17 00:00:00 2001
 From: wu xia <xia.wu@intel.com>
 Date: Wed, 10 Jun 2015 15:57:12 +0800
-Subject: [PATCH 0937/1029] mm: export some vm_area APIs
+Subject: [PATCH 0937/1041] mm: export some vm_area APIs
 
 EXPORT_SYMBOL_GPL({find_vm_area,get_vm_area_caller,
 unmap_kernel_range});
@@ -38,5 +38,5 @@ index ebff729cc956..1fe42458836d 100644
  /**
   *	remove_vm_area  -  find and remove a continuous kernel virtual area
 -- 
-2.17.0
+2.17.1
 

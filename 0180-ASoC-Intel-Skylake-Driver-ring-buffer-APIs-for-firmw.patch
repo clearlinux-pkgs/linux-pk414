@@ -1,7 +1,7 @@
-From f161ae63b65d637a78588319d476cc1810fb1ad7 Mon Sep 17 00:00:00 2001
+From 9e6482534f52749c9bd083c5108dd443240c7ed8 Mon Sep 17 00:00:00 2001
 From: "Panwar, Ashish" <ashish.panwar@intel.com>
 Date: Wed, 20 Jan 2016 19:09:05 +0530
-Subject: [PATCH 0180/1029] ASoC: Intel: Skylake: Driver ring buffer APIs for
+Subject: [PATCH 0180/1041] ASoC: Intel: Skylake: Driver ring buffer APIs for
  firmware logging.
 
 Data from trace window will be copied in this buffer and passed to
@@ -306,5 +306,5 @@ index 000000000000..06304de3d2ab
 +void skl_dsp_done_log_buffer(struct sst_dsp *sst, int core);
 +#endif /* __SKL_FWLOG_H__ */
 -- 
-2.17.0
+2.17.1
 

@@ -1,7 +1,7 @@
-From 5abfca6c0757742966c4937efaacff0b88465ea9 Mon Sep 17 00:00:00 2001
+From 99e371bc7d5bc52603a4397a2c27f9f20a63645a Mon Sep 17 00:00:00 2001
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Date: Thu, 4 Jan 2018 16:35:53 -0600
-Subject: [PATCH 0798/1029] ASoC: Intel: Fix Kconfig with top-level selector
+Subject: [PATCH 0798/1041] ASoC: Intel: Fix Kconfig with top-level selector
 
 Follow network example suggested by Linus, move Intel definitions
 in if/endif block and clarify in help text which options distro
@@ -515,5 +515,5 @@ index 262a9a086f85..25e587d1e207 100644
 +
 +endif ## SND_SOC_INTEL_MACH
 -- 
-2.17.0
+2.17.1
 

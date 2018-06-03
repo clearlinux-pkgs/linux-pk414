@@ -1,7 +1,7 @@
-From 5663840af84f4fdbbfa7f6243f98d4774b7e8bd1 Mon Sep 17 00:00:00 2001
+From 2395c65b3cc1dc054eb422a1044a6dd0f93ff902 Mon Sep 17 00:00:00 2001
 From: Sean Paul <seanpaul@chromium.org>
 Date: Mon, 8 Jan 2018 14:55:41 -0500
-Subject: [PATCH 0530/1029] UPSTREAM: drm/i915: Add function to output Aksv
+Subject: [PATCH 0530/1041] UPSTREAM: drm/i915: Add function to output Aksv
  over GMBUS
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -152,5 +152,5 @@ index e7854c24832a..3466c501c9b5 100644
  {
  	return i2c_bit_algo.functionality(adapter) &
 -- 
-2.17.0
+2.17.1
 

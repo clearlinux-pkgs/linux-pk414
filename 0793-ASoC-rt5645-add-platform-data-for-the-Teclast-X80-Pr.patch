@@ -1,7 +1,7 @@
-From e4db8f87d6bc07b14b8d61d7bcfaf0eea0fdb95b Mon Sep 17 00:00:00 2001
+From 20f845adab2a336e0a4574796e51607d26ea91b6 Mon Sep 17 00:00:00 2001
 From: Hans de Goede <hdegoede@redhat.com>
 Date: Tue, 2 Jan 2018 19:53:13 +0100
-Subject: [PATCH 0793/1029] ASoC: rt5645: add platform data for the Teclast X80
+Subject: [PATCH 0793/1041] ASoC: rt5645: add platform data for the Teclast X80
  Pro tablet
 
 The Teclast X80 Pro tablet needs jd_mode = 3 for headset jack detection.
@@ -33,5 +33,5 @@ index 6ff1896f50cc..ebc4f5970f24 100644
  };
  
 -- 
-2.17.0
+2.17.1
 

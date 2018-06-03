@@ -1,7 +1,7 @@
-From 1edeb79611dccbf30fbebc9cafbb8a17a83587e5 Mon Sep 17 00:00:00 2001
+From fb76378f0866c26963c3fefc9e1e3fabb4842959 Mon Sep 17 00:00:00 2001
 From: "Li, Fei1" <fei1.li@intel.com>
 Date: Tue, 23 Jan 2018 00:47:29 +0800
-Subject: [PATCH 0517/1029] HVLog: reserve memory for CWP HVLog
+Subject: [PATCH 0517/1041] HVLog: reserve memory for CWP HVLog
 
 Change-Id: Ic87c83510d1405c791ce9c47872b960f801d45c2
 Signed-off-by: Li, Fei1 <fei1.li@intel.com>
@@ -127,5 +127,5 @@ index 000000000000..e977a142c005
 +}
 +early_param("hvlog", early_hvlog);
 -- 
-2.17.0
+2.17.1
 

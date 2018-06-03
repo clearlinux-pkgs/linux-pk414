@@ -1,7 +1,7 @@
-From 1e2e685f1cdcb3e12686060212949c64f2980093 Mon Sep 17 00:00:00 2001
+From 5772beef846f3477ca11e96d6a6495a8c129d4a4 Mon Sep 17 00:00:00 2001
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Date: Thu, 4 Jan 2018 16:35:57 -0600
-Subject: [PATCH 0802/1029] ASoC: Intel: boards: align Kconfig dependencies for
+Subject: [PATCH 0802/1041] ASoC: Intel: boards: align Kconfig dependencies for
  Haswell/Broadwell
 
 Make sure that the same I2C/I2C_DESIGNWARE_PLATFORM are selected.
@@ -31,5 +31,5 @@ index 424cdfe5f546..abe3cc17d7e7 100644
  	help
  	  This adds support for Intel Broadwell platform based boards with
 -- 
-2.17.0
+2.17.1
 

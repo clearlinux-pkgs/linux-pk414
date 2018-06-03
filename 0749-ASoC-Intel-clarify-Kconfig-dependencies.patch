@@ -1,7 +1,7 @@
-From 530d83e5d0dbeeeee582f1fc3c3f43a56f876176 Mon Sep 17 00:00:00 2001
+From 367de7924ad1f5b9f382619d5d060f87ca62b7e8 Mon Sep 17 00:00:00 2001
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Date: Thu, 12 Oct 2017 18:49:45 -0500
-Subject: [PATCH 0749/1029] ASoC: Intel: clarify Kconfig dependencies
+Subject: [PATCH 0749/1041] ASoC: Intel: clarify Kconfig dependencies
 
 Introduce more logical dependencies, with the SOC selected first and the
 relevant machine drivers are exposed.
@@ -349,5 +349,5 @@ index 56bb3609fa80..d8b4be269200 100644
          select SND_SOC_RT5514
          select SND_SOC_RT5514_SPI
 -- 
-2.17.0
+2.17.1
 

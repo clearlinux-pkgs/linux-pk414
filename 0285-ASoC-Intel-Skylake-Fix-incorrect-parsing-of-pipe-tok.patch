@@ -1,7 +1,7 @@
-From 1cef9e8460082e271bcf34d23cfe334bb8b95fd3 Mon Sep 17 00:00:00 2001
+From f8129677fedcc7ec53ba2130e62d8372b59490b3 Mon Sep 17 00:00:00 2001
 From: Shreyas NC <shreyas.nc@intel.com>
 Date: Tue, 30 May 2017 19:37:19 +0530
-Subject: [PATCH 0285/1029] ASoC: Intel: Skylake: Fix incorrect parsing of pipe
+Subject: [PATCH 0285/1041] ASoC: Intel: Skylake: Fix incorrect parsing of pipe
  tokens
 
 To avoid parsing of pipe related tokens multiple times for a case where
@@ -49,5 +49,5 @@ index 014f0e8dfb32..eeeb30d46209 100644
  					tkn_elem->token, tkn_elem->value);
  			if (ret < 0)
 -- 
-2.17.0
+2.17.1
 

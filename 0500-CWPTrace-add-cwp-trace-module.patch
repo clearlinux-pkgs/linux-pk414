@@ -1,7 +1,7 @@
-From 2d0073e48567e38ee978b1df2e5d06674c68f3fd Mon Sep 17 00:00:00 2001
+From 953290b98f22f01d545ff1dfe1b5cba372de5a4d Mon Sep 17 00:00:00 2001
 From: "Li, Fei1" <fei1.li@intel.com>
 Date: Fri, 12 Jan 2018 23:02:08 +0800
-Subject: [PATCH 0500/1029] CWPTrace: add cwp trace module
+Subject: [PATCH 0500/1041] CWPTrace: add cwp trace module
 
 Change-Id: I9bf3a0a13e411e15063eb50905875e86e5731d1b
 Signed-off-by: Li, Fei1 <fei1.li@intel.com>
@@ -340,5 +340,5 @@ index 000000000000..0f9e7f388639
 +MODULE_DESCRIPTION("Driver for the Intel CWP Hypervisor Trace");
 +MODULE_VERSION("0.1");
 -- 
-2.17.0
+2.17.1
 

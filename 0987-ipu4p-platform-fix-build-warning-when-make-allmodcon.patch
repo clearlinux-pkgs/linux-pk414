@@ -1,7 +1,7 @@
-From e415252cfed96c91944c9b7c2e9dee61f64892f4 Mon Sep 17 00:00:00 2001
+From 0becd4eebe70f4849ff044c1ffc58af1b7b46915 Mon Sep 17 00:00:00 2001
 From: Zhong Huiping <huipingdx.zhong@intel.com>
 Date: Sat, 28 Apr 2018 16:49:48 +0800
-Subject: [PATCH 0987/1029] ipu4p: platform: fix build warning when make
+Subject: [PATCH 0987/1041] ipu4p: platform: fix build warning when make
  allmodconfig
 
 Change-Id: I2507d3cbb17e10e739a287d34df49d4b328febf2
@@ -33,5 +33,5 @@ index ed6987ed2f06..a56d52de0134 100644
  #endif
  		NULL,
 -- 
-2.17.0
+2.17.1
 

@@ -1,7 +1,7 @@
-From 6be9bdf7666b4b8196e2cdba24f1bd072358b5bf Mon Sep 17 00:00:00 2001
+From 8ec162936a68fe4e7d676fdf6d9265ce3cef671a Mon Sep 17 00:00:00 2001
 From: Pan Xiuli <xiuli.pan@linux.intel.com>
 Date: Wed, 21 Mar 2018 16:38:55 +0800
-Subject: [PATCH 0879/1029] ASoC: SOF: add dsp_oops_offset for DSP panic
+Subject: [PATCH 0879/1041] ASoC: SOF: add dsp_oops_offset for DSP panic
 
 Store the offset to get the data stored in exception memory window.
 
@@ -23,5 +23,5 @@ index 9d4ebe2ac767..e7e1b7b939a2 100644
  	/* debug */
  	struct dentry *debugfs_root;
 -- 
-2.17.0
+2.17.1
 

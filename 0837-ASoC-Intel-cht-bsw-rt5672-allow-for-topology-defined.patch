@@ -1,7 +1,7 @@
-From 5c3eb00ce555dfcf212c9b1f25d89c87d9206968 Mon Sep 17 00:00:00 2001
+From 25661b2fb706deaa09061d1643dbace01aea4017 Mon Sep 17 00:00:00 2001
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Date: Fri, 8 Dec 2017 15:20:47 -0600
-Subject: [PATCH 0837/1029] ASoC: Intel: cht-bsw-rt5672: allow for
+Subject: [PATCH 0837/1041] ASoC: Intel: cht-bsw-rt5672: allow for
  topology-defined codec-dai setup
 
 Hard-coded setups conflict with topology defined ones. Move this code to
@@ -76,5 +76,5 @@ index c14a52d2f714..49cf30cb471b 100644
  		.be_hw_params_fixup = cht_codec_fixup,
  		.dpcm_playback = 1,
 -- 
-2.17.0
+2.17.1
 

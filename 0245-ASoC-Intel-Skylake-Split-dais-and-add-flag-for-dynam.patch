@@ -1,7 +1,7 @@
-From 0168644ec66df456dfad44374e273050a6496233 Mon Sep 17 00:00:00 2001
+From eb5e9ebeaec050d8b4fd34cf431a26a414375176 Mon Sep 17 00:00:00 2001
 From: Guneshwor Singh <guneshwor.o.singh@intel.com>
 Date: Mon, 6 Mar 2017 09:47:50 +0530
-Subject: [PATCH 0245/1029] ASoC: Intel: Skylake: Split dais and add flag for
+Subject: [PATCH 0245/1041] ASoC: Intel: Skylake: Split dais and add flag for
  dynamic dais
 
 Since FE dais can come from topology, split the FE dais from
@@ -226,5 +226,5 @@ index d82573e15988..aa52c465c7a6 100644
  		dev_err(dev, "soc component registration failed %d\n", ret);
  		snd_soc_unregister_platform(dev);
 -- 
-2.17.0
+2.17.1
 

@@ -1,7 +1,7 @@
-From 47661b9fd68bc453302fb800a054e5a4db610efc Mon Sep 17 00:00:00 2001
+From be5e4b16a3d71230779b8f218bd63c3810806064 Mon Sep 17 00:00:00 2001
 From: liuW3X <weix.w.liu@intel.com>
 Date: Tue, 20 Mar 2018 15:10:01 +0800
-Subject: [PATCH 0694/1029] linux/msi.h: compiling fails with arm/arm64 arch
+Subject: [PATCH 0694/1041] linux/msi.h: compiling fails with arm/arm64 arch
 
 __pci_write_msi_msg has its' own implemention on x86 arch,
 using CONFIG_X86 to distinguish x86 arch from non-x86 arch
@@ -26,5 +26,5 @@ index db1f5f84c157..286fa2e3f155 100644
  #define __pci_write_msi_msg write_msi_msg_paravirt
  #else
 -- 
-2.17.0
+2.17.1
 

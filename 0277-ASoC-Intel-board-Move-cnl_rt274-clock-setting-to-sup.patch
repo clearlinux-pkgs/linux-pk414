@@ -1,7 +1,7 @@
-From 881832153deef463d227169101101a8b8fe9f331 Mon Sep 17 00:00:00 2001
+From ca599d37b7eb487b31c3e9993f555dad09baa14e Mon Sep 17 00:00:00 2001
 From: Guneshwor Singh <guneshwor.o.singh@intel.com>
 Date: Tue, 4 Apr 2017 08:34:51 +0530
-Subject: [PATCH 0277/1029] ASoC: Intel: board: Move cnl_rt274 clock setting to
+Subject: [PATCH 0277/1041] ASoC: Intel: board: Move cnl_rt274 clock setting to
  supply widget
 
 During BE-BE loop, codec clocks were not set as it was a part of dai link ops
@@ -159,5 +159,5 @@ index 591aef383650..a43bb53ddbc1 100644
  	{
  		.name = "SSP1-Codec",
 -- 
-2.17.0
+2.17.1
 

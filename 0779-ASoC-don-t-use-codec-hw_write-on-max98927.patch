@@ -1,7 +1,7 @@
-From 9c5f6a8af9647553ee4ec516c57cf8f213499cfd Mon Sep 17 00:00:00 2001
+From 1bb5222a02c383c683c40183f38da919e1ee255c Mon Sep 17 00:00:00 2001
 From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Date: Thu, 9 Nov 2017 01:05:11 +0000
-Subject: [PATCH 0779/1029] ASoC: don't use codec hw_write on max98927
+Subject: [PATCH 0779/1041] ASoC: don't use codec hw_write on max98927
 
 max98927 driver is using codec hw_write/control_data,
 but it is redundant code. This patch cleanup these
@@ -26,5 +26,5 @@ index a1d39353719d..f701fdc81175 100644
  	/* Software Reset */
  	regmap_write(max98927->regmap,
 -- 
-2.17.0
+2.17.1
 

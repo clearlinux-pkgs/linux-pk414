@@ -1,7 +1,7 @@
-From 021c9c24a3a43158444635b882427c940ee82802 Mon Sep 17 00:00:00 2001
+From ab217de0ca40890fb557e9f62159065723d43f03 Mon Sep 17 00:00:00 2001
 From: "Zhang, Qi" <qi1.zhang@intel.com>
 Date: Wed, 28 Jun 2017 06:26:15 +0000
-Subject: [PATCH 0043/1029] check vmm signature for vmm dump
+Subject: [PATCH 0043/1041] check vmm signature for vmm dump
 
 Change-Id: Ibc0e1ebf561b0b4278bb5f2d92d173685810aa22
 Signed-off-by: Zhang, Qi <qi1.zhang@intel.com>
@@ -178,5 +178,5 @@ index f7b0a14c9a1d..aba204b9ff3a 100644
  }
  
 -- 
-2.17.0
+2.17.1
 

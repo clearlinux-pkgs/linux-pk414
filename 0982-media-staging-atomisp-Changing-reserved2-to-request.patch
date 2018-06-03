@@ -1,7 +1,7 @@
-From 94dd01b849908a3d31ee6b237d1c79aef4f2b0dd Mon Sep 17 00:00:00 2001
+From 88879cf2bf7ff8203af43dbf44fb51531c61d5e7 Mon Sep 17 00:00:00 2001
 From: Jiang Kun <kun.jiang@intel.com>
 Date: Fri, 20 Apr 2018 01:43:42 +0800
-Subject: [PATCH 0982/1029] media: staging: atomisp: Changing reserved2 to
+Subject: [PATCH 0982/1041] media: staging: atomisp: Changing reserved2 to
  request
 
 v4l2_buffer renamed reserved2 field to request.
@@ -44,5 +44,5 @@ index 717647951fb6..a5b7c2ba6c44 100644
  }
  
 -- 
-2.17.0
+2.17.1
 

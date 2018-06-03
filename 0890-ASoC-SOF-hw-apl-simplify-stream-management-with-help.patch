@@ -1,7 +1,7 @@
-From c6b4f5927cdc041cc00b8a2ad022453f1dc6eec2 Mon Sep 17 00:00:00 2001
+From 558580b2b6a2fa5404597a0227a069a057adc542 Mon Sep 17 00:00:00 2001
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Date: Mon, 26 Mar 2018 17:35:39 -0500
-Subject: [PATCH 0890/1029] ASoC: SOF: hw-apl: simplify stream management with
+Subject: [PATCH 0890/1041] ASoC: SOF: hw-apl: simplify stream management with
  helpers
 
 use helpers to avoid duplicated loops for capture/trace and
@@ -172,5 +172,5 @@ index 38090dd9fd6d..39c4f6bf07aa 100644
  
  	if (!stream) {
 -- 
-2.17.0
+2.17.1
 

@@ -1,7 +1,7 @@
-From ec3d1dc2c786d1a42f6a8eefffb053bcc860fbf0 Mon Sep 17 00:00:00 2001
+From 175dc3891427d2d0f2face337e29d3927339254c Mon Sep 17 00:00:00 2001
 From: Liam Girdwood <liam.r.girdwood@linux.intel.com>
 Date: Mon, 8 Jan 2018 16:54:19 +0000
-Subject: [PATCH 0828/1029] ASoC: topology: Give more data to clients via
+Subject: [PATCH 0828/1041] ASoC: topology: Give more data to clients via
  callbacks
 
 Give topology clients more access to the topology data by passing index,
@@ -271,5 +271,5 @@ index e5049fbfc4f1..f9110cc5d3e4 100644
  	if (!abi_match)	/* free the duplicated one */
  		kfree(_manifest);
 -- 
-2.17.0
+2.17.1
 

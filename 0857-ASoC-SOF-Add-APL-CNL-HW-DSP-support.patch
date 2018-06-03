@@ -1,7 +1,7 @@
-From 3da9c97efb0d91db973d244e2b078ddc2c53edaf Mon Sep 17 00:00:00 2001
+From daae6457dbbb5927ddad52224b0f1406d10ef12e Mon Sep 17 00:00:00 2001
 From: Liam Girdwood <liam.r.girdwood@linux.intel.com>
 Date: Mon, 8 Jan 2018 20:38:27 +0000
-Subject: [PATCH 0857/1029] ASoC: SOF: Add APL/CNL HW DSP support
+Subject: [PATCH 0857/1041] ASoC: SOF: Add APL/CNL HW DSP support
 
 Add SOF hardware DSP support for Intel Apollolake and Cannonlake based
 devices.
@@ -2653,5 +2653,5 @@ index 000000000000..3db9e6c09c17
 +
 +MODULE_LICENSE("Dual BSD/GPL");
 -- 
-2.17.0
+2.17.1
 

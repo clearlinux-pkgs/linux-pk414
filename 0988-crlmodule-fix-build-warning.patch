@@ -1,7 +1,7 @@
-From e1ef374b06c9b6e709dd2e815cafb072fe20472b Mon Sep 17 00:00:00 2001
+From 1a3e0ede2bd20dd3517dd5f57847257b2cbf521a Mon Sep 17 00:00:00 2001
 From: kbandi <kushal.bandi@intel.com>
 Date: Tue, 8 May 2018 09:54:27 -0700
-Subject: [PATCH 0988/1029] crlmodule: fix build warning
+Subject: [PATCH 0988/1041] crlmodule: fix build warning
 
 Change-Id: Ia65e51a9d4f1ea82f02a86203845cac450a1ac64
 Signed-off-by: kbandi <kushal.bandi@intel.com>
@@ -31,5 +31,5 @@ index 8df4981a3a5d..7a98ce7e18f6 100755
  /* Power items, they are enabled in the order they are listed here */
  static struct crl_power_seq_entity ov13858_power_items[] = {
 -- 
-2.17.0
+2.17.1
 

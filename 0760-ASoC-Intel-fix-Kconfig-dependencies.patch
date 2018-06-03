@@ -1,7 +1,7 @@
-From 62a24dadebe3cf8d0aea2ac48b34404f566456a5 Mon Sep 17 00:00:00 2001
+From b200c4ce64f0ddd888713a5597ebe7fc3cce5f17 Mon Sep 17 00:00:00 2001
 From: Arnd Bergmann <arnd@arndb.de>
 Date: Thu, 2 Nov 2017 12:07:04 +0100
-Subject: [PATCH 0760/1029] ASoC: Intel: fix Kconfig dependencies
+Subject: [PATCH 0760/1041] ASoC: Intel: fix Kconfig dependencies
 
 I ran into multiple problems during randconfig builds of the
 recently changed Kconfig logic for Intel ASoC drivers:
@@ -62,5 +62,5 @@ index 71489eff9dae..36bb1cc13d9f 100644
  	select SND_HDA_DSP_LOADER
  	select SND_SOC_TOPOLOGY
 -- 
-2.17.0
+2.17.1
 

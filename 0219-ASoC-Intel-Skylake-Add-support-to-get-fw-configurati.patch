@@ -1,7 +1,7 @@
-From 97980478b4f6107445cc4b7108f9b2b4dfacc098 Mon Sep 17 00:00:00 2001
+From 936da021bd1ed5a1566ede622f94b7445c04078f Mon Sep 17 00:00:00 2001
 From: Mousumi Jana <mousumix.jana@intel.com>
 Date: Thu, 26 Nov 2015 01:28:34 +0530
-Subject: [PATCH 0219/1029] ASoC: Intel: Skylake:Add support to get fw
+Subject: [PATCH 0219/1041] ASoC: Intel: Skylake:Add support to get fw
  configuration
 
 Debugfs gives the support to get the fw configuration depending on
@@ -320,5 +320,5 @@ index 91b11ae83a9a..5819c10a76c2 100644
  	struct skl_pipe_params *params);
  int skl_dsp_set_dma_control(struct skl_sst *ctx,
 -- 
-2.17.0
+2.17.1
 

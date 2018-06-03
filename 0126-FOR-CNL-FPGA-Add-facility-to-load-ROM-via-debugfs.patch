@@ -1,7 +1,7 @@
-From d5ee55d23b5ccfb9bdf1c2fbd4cf23eae41aabc5 Mon Sep 17 00:00:00 2001
+From 081dade823abc58086931ce7df24ec1ba76b56d8 Mon Sep 17 00:00:00 2001
 From: Guneshwor Singh <guneshwor.o.singh@intel.com>
 Date: Tue, 17 Nov 2015 05:27:39 +0530
-Subject: [PATCH 0126/1029] [FOR CNL FPGA] Add facility to load ROM via debugfs
+Subject: [PATCH 0126/1041] [FOR CNL FPGA] Add facility to load ROM via debugfs
 
 For FPGA images without ROM inbuilt, this adds feature to
 load the ROM manually via debugfs
@@ -326,5 +326,5 @@ index 000000000000..25f3d3c467d3
 +MODULE_LICENSE("GPL");
 +MODULE_DESCRIPTION("Intel HDA CNL FPGA driver");
 -- 
-2.17.0
+2.17.1
 

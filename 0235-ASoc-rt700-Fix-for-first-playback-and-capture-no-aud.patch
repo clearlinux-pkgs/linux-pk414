@@ -1,7 +1,7 @@
-From 4509cf7881d471d3c0fb3bfe362e1f46b9ae70a9 Mon Sep 17 00:00:00 2001
+From 08149c7f2d1b756c86a9a01d95cda73090acaf59 Mon Sep 17 00:00:00 2001
 From: bardliao <bardliao@realtek.com>
 Date: Tue, 10 Jan 2017 10:54:11 +0530
-Subject: [PATCH 0235/1029] ASoc: rt700: Fix for first playback and capture no
+Subject: [PATCH 0235/1041] ASoc: rt700: Fix for first playback and capture no
  audio issue
 
 This patch fixes no audio issue observed with first playback and
@@ -293,5 +293,5 @@ index 8ea91c589823..2d0dee9fc6e7 100644
  	pm_runtime_put_sync_autosuspend(&rt700->sdw->mstr->dev);
  
 -- 
-2.17.0
+2.17.1
 

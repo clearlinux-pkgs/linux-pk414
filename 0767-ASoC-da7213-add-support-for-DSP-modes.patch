@@ -1,7 +1,7 @@
-From b1b8f042b6f8dc150f2a5b78300296d392d90480 Mon Sep 17 00:00:00 2001
+From 0a1479c89aa27d2fd65a61c075cb92a49442004e Mon Sep 17 00:00:00 2001
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Date: Wed, 8 Nov 2017 16:42:31 -0600
-Subject: [PATCH 0767/1029] ASoC: da7213: add support for DSP modes
+Subject: [PATCH 0767/1041] ASoC: da7213: add support for DSP modes
 
 DSP modes are documented in the data sheet but not enabled in the driver.
 The work-around already implemented for DA7218/9 is also required to
@@ -122,5 +122,5 @@ index 16ef56f77cd4..5a78dba1dcb5 100644
  #define DA7213_DAI_WORD_LENGTH_S16_LE				(0x0 << 2)
  #define DA7213_DAI_WORD_LENGTH_S20_LE				(0x1 << 2)
 -- 
-2.17.0
+2.17.1
 

@@ -1,7 +1,7 @@
-From c344f7b938efac491b30cefe0b316148835c12e6 Mon Sep 17 00:00:00 2001
+From cd82ed816bd325b716ebffb74055d523463ff12e Mon Sep 17 00:00:00 2001
 From: "Kareem,Shaik" <kareem.m.shaik@intel.com>
 Date: Thu, 15 Jun 2017 13:25:09 +0530
-Subject: [PATCH 0300/1029] ASoC: Intel: Skylake: Parse manifest data to fill
+Subject: [PATCH 0300/1041] ASoC: Intel: Skylake: Parse manifest data to fill
  DMA control parameters
 
 DMA control parameters are required in order to initialize or
@@ -220,5 +220,5 @@ index a6bf0531a915..85f24c8b4c94 100644
  
  #define skl_to_ebus(s)	(&(s)->ebus)
 -- 
-2.17.0
+2.17.1
 

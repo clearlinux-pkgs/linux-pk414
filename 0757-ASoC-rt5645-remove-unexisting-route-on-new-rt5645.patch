@@ -1,7 +1,7 @@
-From 6ab35f699fb15c22c326b9a6b86dfc4a7551712c Mon Sep 17 00:00:00 2001
+From 76b20b7589d9179d2fd31e0938e2fa6dcb51e652 Mon Sep 17 00:00:00 2001
 From: Bard Liao <bardliao@realtek.com>
 Date: Mon, 30 Oct 2017 15:26:05 +0800
-Subject: [PATCH 0757/1029] ASoC: rt5645: remove unexisting route on new rt5645
+Subject: [PATCH 0757/1041] ASoC: rt5645: remove unexisting route on new rt5645
 
 "SPOL MIX DAC R1 Switch" and "SPOL MIX SPKVOL R Switch" are only
 exist in the early version of rt5645.
@@ -70,5 +70,5 @@ index 4b2dbf0c3409..23cc2cb8393f 100644
  				    ARRAY_SIZE(init_list));
  	if (ret != 0)
 -- 
-2.17.0
+2.17.1
 

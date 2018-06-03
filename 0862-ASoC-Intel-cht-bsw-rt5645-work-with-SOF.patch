@@ -1,7 +1,7 @@
-From c24f417ad9f916c0ff6554d5a45b655c0738b77b Mon Sep 17 00:00:00 2001
+From 6ba00084c7e234e02a761e40ca3564f677458345 Mon Sep 17 00:00:00 2001
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Date: Fri, 10 Nov 2017 14:34:32 -0600
-Subject: [PATCH 0862/1029] ASoC: Intel: cht-bsw-rt5645: work with SOF
+Subject: [PATCH 0862/1041] ASoC: Intel: cht-bsw-rt5645: work with SOF
 
 Disable hard-coded routes when SOF is selected
 TODO: bytcr is not yet supported
@@ -74,5 +74,5 @@ index 31641aab62cd..a159bd0b6161 100644
  
  	if (is_bytcr) {
 -- 
-2.17.0
+2.17.1
 

@@ -1,7 +1,7 @@
-From 690096884a401f2dc23c990bc72f37837f98bbe7 Mon Sep 17 00:00:00 2001
+From f7f506feb95ae1a7daf11a6788f46de69ddeb9fa Mon Sep 17 00:00:00 2001
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Date: Thu, 12 Oct 2017 18:38:04 -0500
-Subject: [PATCH 0738/1029] ASoC: Intel: boards: fix off-by-one dailink id
+Subject: [PATCH 0738/1041] ASoC: Intel: boards: fix off-by-one dailink id
 
 For some reason the Atom/HiFi2 machine drivers use an id=1 instead
 of zero as done on all other platforms. This gets in the way of
@@ -130,5 +130,5 @@ index 1dffe76d5a85..3464cf41c7d1 100644
  		.platform_name = "sst-mfld-platform",
  		.no_pcm = 1,
 -- 
-2.17.0
+2.17.1
 

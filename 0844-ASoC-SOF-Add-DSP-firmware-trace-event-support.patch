@@ -1,7 +1,7 @@
-From a641302d3f1046684851968e98aa3743d21191c5 Mon Sep 17 00:00:00 2001
+From 5175653a0928e8eba40c3d4315dbc1b19d554810 Mon Sep 17 00:00:00 2001
 From: Liam Girdwood <liam.r.girdwood@linux.intel.com>
 Date: Mon, 8 Jan 2018 20:33:15 +0000
-Subject: [PATCH 0844/1029] ASoC: SOF: Add DSP firmware trace event support
+Subject: [PATCH 0844/1041] ASoC: SOF: Add DSP firmware trace event support
 
 Add a trace event buffer that can be used by userspace to read DSP runtime
 trace events alongside bespoke trace data in realtime for firmware debug.
@@ -280,5 +280,5 @@ index 000000000000..ac50a7506fa1
 +}
 +EXPORT_SYMBOL(snd_sof_release_trace);
 -- 
-2.17.0
+2.17.1
 

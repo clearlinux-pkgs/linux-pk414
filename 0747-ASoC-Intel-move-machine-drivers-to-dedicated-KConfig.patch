@@ -1,7 +1,7 @@
-From 448467b0f404e679581ec4bd573f9504c0d1f4b6 Mon Sep 17 00:00:00 2001
+From e83f0938c9e8b4e1f7f71fb98e171617c375c858 Mon Sep 17 00:00:00 2001
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Date: Thu, 12 Oct 2017 18:49:43 -0500
-Subject: [PATCH 0747/1029] ASoC: Intel: move machine drivers to dedicated
+Subject: [PATCH 0747/1041] ASoC: Intel: move machine drivers to dedicated
  KConfig
 
 split Kconfig to prepare for reuse of machine drivers for
@@ -728,5 +728,5 @@ index 000000000000..d341cb912f7e
 +	  Say Y to enable SoundWire aggregation on Master1 and Master2.
 +
 -- 
-2.17.0
+2.17.1
 

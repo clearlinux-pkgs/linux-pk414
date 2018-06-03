@@ -1,7 +1,7 @@
-From 9bec33acd1793d356e476d7a3ea8fc4cc3a031f2 Mon Sep 17 00:00:00 2001
+From 76c258742472102a39d33a8a908dc04c99d1cbd0 Mon Sep 17 00:00:00 2001
 From: Vivek Kasireddy <vivek.kasireddy@intel.com>
 Date: Fri, 27 Apr 2018 10:48:33 -0700
-Subject: [PATCH 0918/1029] INTERNAL [IOTG] drm/i915: Check initial modeset in
+Subject: [PATCH 0918/1041] INTERNAL [IOTG] drm/i915: Check initial modeset in
  max_available_pipes
 
 During testing of the planes restriction feature, it was discovered that
@@ -38,5 +38,5 @@ index 46de16a0c779..84ff28ae684b 100644
  
  	for_each_pipe(dev_priv, pipe) {
 -- 
-2.17.0
+2.17.1
 

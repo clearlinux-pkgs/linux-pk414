@@ -1,7 +1,7 @@
-From 6c1f5f7e9e7032338c56fa3ec4b6bfb862c48c2e Mon Sep 17 00:00:00 2001
+From b8ac50f036c628810db3157a75cd6e49b1ab451f Mon Sep 17 00:00:00 2001
 From: Rakesh Ughreja <rakesh.a.ughreja@intel.com>
 Date: Tue, 24 Oct 2017 18:26:47 +0530
-Subject: [PATCH 0771/1029] ALSA: hda: Abort capability probe on invalid
+Subject: [PATCH 0771/1041] ALSA: hda: Abort capability probe on invalid
  capability
 
 On reading wrong capability pointer values driver may crash, so whenever
@@ -31,5 +31,5 @@ index 85bf9988d4f4..b9ce98c28bb9 100644
  		}
  
 -- 
-2.17.0
+2.17.1
 

@@ -1,7 +1,7 @@
-From 599960d8f98d3ffd5bf1f81b3667772cd7b15852 Mon Sep 17 00:00:00 2001
+From e61a5f5b80422615f5b26eb042b5a7098fdbeb3f Mon Sep 17 00:00:00 2001
 From: Liam Girdwood <liam.r.girdwood@linux.intel.com>
 Date: Mon, 8 Jan 2018 20:37:08 +0000
-Subject: [PATCH 0853/1029] ASoC: SOF: Add Nocodec machine driver support
+Subject: [PATCH 0853/1041] ASoC: SOF: Add Nocodec machine driver support
 
 Add a simple "fallback" machine driver that can be used to enable SOF
 on boards with no codec device. This machine driver can also be forced
@@ -149,5 +149,5 @@ index 000000000000..0685d29f9d28
 +MODULE_LICENSE("Dual BSD/GPL");
 +MODULE_ALIAS("platform:sof-nocodec");
 -- 
-2.17.0
+2.17.1
 

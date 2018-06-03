@@ -1,7 +1,7 @@
-From dcdc421c272aa0be59dd2d741f686c3f2b08d0c2 Mon Sep 17 00:00:00 2001
+From f6fed507356980a3cf02de125c9f680a9931730a Mon Sep 17 00:00:00 2001
 From: Pan Xiuli <xiuli.pan@linux.intel.com>
 Date: Wed, 21 Mar 2018 16:38:56 +0800
-Subject: [PATCH 0880/1029] ASoC: SOF: Add exception memory window support for
+Subject: [PATCH 0880/1041] ASoC: SOF: Add exception memory window support for
  BYT
 
 Use memory window to handle DSP panic.
@@ -61,5 +61,5 @@ index c7a88a2bb2d4..b1ea5f94197f 100644
  
  	/* continue to send any remaining messages... */
 -- 
-2.17.0
+2.17.1
 

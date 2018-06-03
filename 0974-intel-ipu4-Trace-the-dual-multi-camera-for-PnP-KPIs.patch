@@ -1,7 +1,7 @@
-From 04deaacabec66d4627873e2a6cf734f5ee982097 Mon Sep 17 00:00:00 2001
+From 8db8236148d58e89e2fbebe86ad2a3c47609d72b Mon Sep 17 00:00:00 2001
 From: Jiang Kun <kun.jiang@intel.com>
 Date: Mon, 16 Oct 2017 17:28:37 +0800
-Subject: [PATCH 0974/1029] intel-ipu4: Trace the dual/multi camera for PnP
+Subject: [PATCH 0974/1041] intel-ipu4: Trace the dual/multi camera for PnP
  KPIs
 
 add "reserved" in vb2_v4l2_buffer. So the PnP KPI
@@ -39,5 +39,5 @@ index 06f38523ef76..d1995eb7057c 100644
  
  /*
 -- 
-2.17.0
+2.17.1
 

@@ -1,7 +1,7 @@
-From b2fc5d8d10483552d4995354b527cc0ab25f61c1 Mon Sep 17 00:00:00 2001
+From d546c7039bbeb08ad9b3c215573d5b0217a7020b Mon Sep 17 00:00:00 2001
 From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
 Date: Fri, 21 Apr 2017 23:34:27 +0000
-Subject: [PATCH 0113/1029] net: wireless: bcmdhd: make sdio_reset_comm()
+Subject: [PATCH 0113/1041] net: wireless: bcmdhd: make sdio_reset_comm()
  declaration weak
 
 In case if sdio_reset_comm() is not defined in MMC driver, then
@@ -31,5 +31,5 @@ index 199522ef4840..e1c0fb721176 100644
  #define DEFAULT_SDIO_F2_BLKSIZE		512
  #ifndef CUSTOM_SDIO_F2_BLKSIZE
 -- 
-2.17.0
+2.17.1
 

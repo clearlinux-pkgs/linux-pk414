@@ -1,7 +1,7 @@
-From e28c73858fef33f3d8cee08b8695c23857a77e75 Mon Sep 17 00:00:00 2001
+From 76c15722fa1ac634699080f5cf6b0448e00ff455 Mon Sep 17 00:00:00 2001
 From: Hao Li <hao.l.li@intel.com>
 Date: Wed, 3 Jan 2018 13:52:14 -0500
-Subject: [PATCH 0434/1029] VBS-K: added a VBS-K reference driver.
+Subject: [PATCH 0434/1041] VBS-K: added a VBS-K reference driver.
 
 This patch implemented a VBS-K reference driver: virtio RNG.
 
@@ -659,5 +659,5 @@ index 000000000000..5b1354facb08
 +MODULE_LICENSE("GPL and additional rights");
 +MODULE_DESCRIPTION("Virtio Backend Service reference driver on CWP hypervisor");
 -- 
-2.17.0
+2.17.1
 

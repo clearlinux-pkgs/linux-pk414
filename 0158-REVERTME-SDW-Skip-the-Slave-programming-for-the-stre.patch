@@ -1,7 +1,7 @@
-From c73c8c6385e3c5c6bf003e25f82f6cdd2e859790 Mon Sep 17 00:00:00 2001
+From c01e828ec6ac9bfbd2ab4f006ac775f9f10079db Mon Sep 17 00:00:00 2001
 From: Hardik Shah <hardik.t.shah@intel.com>
 Date: Sun, 1 May 2016 18:13:41 +0530
-Subject: [PATCH 0158/1029] REVERTME:SDW: Skip the Slave programming for the
+Subject: [PATCH 0158/1041] REVERTME:SDW: Skip the Slave programming for the
  stream
 
 Aggretation is tested with Maxim Slave device. This is
@@ -147,5 +147,5 @@ index 4c3a6c915f93..e3ae262ec18a 100644
  
  		/*
 -- 
-2.17.0
+2.17.1
 

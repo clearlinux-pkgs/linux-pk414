@@ -1,7 +1,7 @@
-From 6ad9a582764d6a5d95c9c944cb55bbf0eadd26a3 Mon Sep 17 00:00:00 2001
+From 46aa5e4ba7e1d41f22a357dad566596af1baf692 Mon Sep 17 00:00:00 2001
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Date: Thu, 4 Jan 2018 16:35:55 -0600
-Subject: [PATCH 0800/1029] ASoC: Intel: document what Kconfig options do
+Subject: [PATCH 0800/1041] ASoC: Intel: document what Kconfig options do
 
 Document in comments what the options are supposed to mean, before
 clean-up in next patch.
@@ -63,5 +63,5 @@ index 18b7f9092c18..9f38c9d804ba 100644
  config SND_SOC_INTEL_HASWELL
  	tristate "Intel ASoC SST driver for Haswell/Broadwell"
 -- 
-2.17.0
+2.17.1
 

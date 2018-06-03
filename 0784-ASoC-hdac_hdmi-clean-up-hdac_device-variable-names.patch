@@ -1,7 +1,7 @@
-From c8b76af49b254c9b3ebb8ba5d2eb1a4fe586b944 Mon Sep 17 00:00:00 2001
+From eb71ff338bc1265d3b79f5847fb6f435eaf6975b Mon Sep 17 00:00:00 2001
 From: "Ughreja, Rakesh A" <rakesh.a.ughreja@intel.com>
 Date: Fri, 1 Dec 2017 14:43:19 +0530
-Subject: [PATCH 0784/1029] ASoC: hdac_hdmi: clean up hdac_device variable
+Subject: [PATCH 0784/1041] ASoC: hdac_hdmi: clean up hdac_device variable
  names
 
 This patch renames all the variable instances of hdac_device with hdev
@@ -1113,5 +1113,5 @@ index d9009bae0012..18bf959a3d59 100644
  
  	return 0;
 -- 
-2.17.0
+2.17.1
 

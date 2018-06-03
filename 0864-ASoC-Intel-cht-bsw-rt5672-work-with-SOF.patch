@@ -1,7 +1,7 @@
-From 6b81a1f821cd13bc430be50743f373f6ad3d473c Mon Sep 17 00:00:00 2001
+From 721f762ee9a0906be6f9c78a5004a34415eceafe Mon Sep 17 00:00:00 2001
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Date: Wed, 29 Nov 2017 19:14:19 -0600
-Subject: [PATCH 0864/1029] ASoC: Intel: cht-bsw-rt5672: work with SOF
+Subject: [PATCH 0864/1041] ASoC: Intel: cht-bsw-rt5672: work with SOF
 
 Disable hard-coded routes when SOF is enabled
 
@@ -30,5 +30,5 @@ index 49cf30cb471b..0062d73772ad 100644
  	{"Headset Mic", NULL, "Platform Clock"},
  	{"Int Mic", NULL, "Platform Clock"},
 -- 
-2.17.0
+2.17.1
 

@@ -1,7 +1,7 @@
-From 1e334c7461b67e7d68baf41a4062147e7905ee99 Mon Sep 17 00:00:00 2001
+From 87aa1e054bfb1ea6182688620ad65f16617317db Mon Sep 17 00:00:00 2001
 From: Sanyog Kale <sanyog.r.kale@intel.com>
 Date: Sun, 2 Jul 2017 11:48:07 +0530
-Subject: [PATCH 0224/1029] ASoC: Intel: CNL: Platform driver implementation
+Subject: [PATCH 0224/1041] ASoC: Intel: CNL: Platform driver implementation
  for SoundWire BRA feature
 
 This patch adds APIs requied for Soundwire BRA feature.
@@ -834,5 +834,5 @@ index a5470c752847..645336e2ce7c 100644
  
  struct skl_ipc_init_instance_msg {
 -- 
-2.17.0
+2.17.1
 

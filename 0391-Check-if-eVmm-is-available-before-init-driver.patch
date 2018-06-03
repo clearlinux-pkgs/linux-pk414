@@ -1,7 +1,7 @@
-From 0cbbda656f018d1ef5f220d9b1c4e1150151602d Mon Sep 17 00:00:00 2001
+From 5c98f42642e636e743272c08b250435e3af2d2fe Mon Sep 17 00:00:00 2001
 From: Zhou Furong <furong.zhou@intel.com>
 Date: Tue, 21 Nov 2017 14:18:56 +0800
-Subject: [PATCH 0391/1029] Check if eVmm is available before init driver
+Subject: [PATCH 0391/1041] Check if eVmm is available before init driver
 
 eVmm not available in recovery mode, there is a kernel panic if
  trusty driver initialize without check it.
@@ -59,5 +59,5 @@ index 3c33d724b3fa..64368480c309 100644
  
  	s = kzalloc(sizeof(*s), GFP_KERNEL);
 -- 
-2.17.0
+2.17.1
 

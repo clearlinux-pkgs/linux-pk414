@@ -1,7 +1,7 @@
-From 3483db797baa749ad986609e820d8f0842234420 Mon Sep 17 00:00:00 2001
+From ad931c5a524c976aa6ed413489a227633253d4c7 Mon Sep 17 00:00:00 2001
 From: Liam Girdwood <liam.r.girdwood@linux.intel.com>
 Date: Mon, 8 Jan 2018 20:33:05 +0000
-Subject: [PATCH 0843/1029] ASoC: SOF: Add support for loading topologies
+Subject: [PATCH 0843/1041] ASoC: SOF: Add support for loading topologies
 
 SOF uses topology to define the DAPM graphs and widgets, DAIs, PCMs and set
 parameters for init and run time usage. This patch loads topology and
@@ -1631,5 +1631,5 @@ index 000000000000..26063ffa0782
 +}
 +EXPORT_SYMBOL(snd_sof_free_topology);
 -- 
-2.17.0
+2.17.1
 

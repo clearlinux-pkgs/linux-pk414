@@ -1,7 +1,7 @@
-From ac2bd0826945df74981b781d95a389f9d6a4ea8d Mon Sep 17 00:00:00 2001
+From 7bf95bd566c64412d478da1abba947f0666c1f8d Mon Sep 17 00:00:00 2001
 From: Ramalingam C <ramalingam.c@intel.com>
 Date: Mon, 5 Feb 2018 23:02:02 +0530
-Subject: [PATCH 0685/1029] UPSTREAM: drm/i915: Retry HDCP bksv read
+Subject: [PATCH 0685/1041] UPSTREAM: drm/i915: Retry HDCP bksv read
 
 HDCP specification says that when bksv is identified as invalid
 (not with 20 1s), bksv should be re-read and verified.
@@ -66,5 +66,5 @@ index cfd13ee8c534..d7ddd6b28cd7 100644
  	I915_WRITE(PORT_HDCP_BKSVLO(port), bksv.reg[0]);
  	I915_WRITE(PORT_HDCP_BKSVHI(port), bksv.reg[1]);
 -- 
-2.17.0
+2.17.1
 

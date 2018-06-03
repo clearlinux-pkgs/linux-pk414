@@ -1,7 +1,7 @@
-From 284ae40288d53cfb0b047adbea73204c5e7b730c Mon Sep 17 00:00:00 2001
+From 6b19f3529db206243a5262826ae3bed5b557fb0a Mon Sep 17 00:00:00 2001
 From: Yan Wang <yan.wang@linux.intel.com>
 Date: Mon, 19 Mar 2018 21:02:47 +0800
-Subject: [PATCH 0874/1029] ASoC: APL/CNL: Add stream related definition for
+Subject: [PATCH 0874/1041] ASoC: APL/CNL: Add stream related definition for
  DMA trace on APL/CNL.
 
 On APL/CNL, DMA trace is transferred by one capture stream based
@@ -38,5 +38,5 @@ index 5a9f19b2fbca..ea68f4ebcd37 100644
  	wait_queue_head_t trace_sleep;
  	u32 host_offset;
 -- 
-2.17.0
+2.17.1
 

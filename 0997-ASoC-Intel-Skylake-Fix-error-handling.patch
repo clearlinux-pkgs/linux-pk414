@@ -1,7 +1,7 @@
-From 92a89e28505b3b9abec6ca9fdb16de78ff5de5d4 Mon Sep 17 00:00:00 2001
+From ff5a3bfcaa57bf70c93bbac5d848baef73585067 Mon Sep 17 00:00:00 2001
 From: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
 Date: Thu, 14 Dec 2017 14:26:53 +0530
-Subject: [PATCH 0997/1029] ASoC: Intel: Skylake: Fix error handling
+Subject: [PATCH 0997/1041] ASoC: Intel: Skylake: Fix error handling
 
 Single point of exit error handling is not implemented properly for following
 functions
@@ -336,5 +336,5 @@ index 34240e324309..04926b56dcb7 100644
  }
  
 -- 
-2.17.0
+2.17.1
 

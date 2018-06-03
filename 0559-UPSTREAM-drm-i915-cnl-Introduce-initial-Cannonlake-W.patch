@@ -1,7 +1,7 @@
-From d99e6fab2fad218547851058f8b984462421a333 Mon Sep 17 00:00:00 2001
+From e59e084813a067fb64f39a0425f0a9f490c3ae1d Mon Sep 17 00:00:00 2001
 From: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Date: Tue, 15 Aug 2017 16:16:48 -0700
-Subject: [PATCH 0559/1029] UPSTREAM: drm/i915/cnl: Introduce initial
+Subject: [PATCH 0559/1041] UPSTREAM: drm/i915/cnl: Introduce initial
  Cannonlake Workarounds.
 
 Let's inherit workarounds from previous platforms that
@@ -161,5 +161,5 @@ index 84710a8e3be3..fda1312baf3f 100644
  	else if (IS_KABYLAKE(dev_priv) || IS_COFFEELAKE(dev_priv))
  		dev_priv->display.init_clock_gating = kabylake_init_clock_gating;
 -- 
-2.17.0
+2.17.1
 

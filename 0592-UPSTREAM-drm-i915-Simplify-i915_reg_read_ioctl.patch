@@ -1,7 +1,7 @@
-From 40057424bd64c73ee38270107b9ad63cfe273e74 Mon Sep 17 00:00:00 2001
+From 86214d2e983225b75f6bb761c6146fc818a681ba Mon Sep 17 00:00:00 2001
 From: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 Date: Wed, 13 Sep 2017 14:52:55 +0300
-Subject: [PATCH 0592/1029] UPSTREAM: drm/i915: Simplify i915_reg_read_ioctl
+Subject: [PATCH 0592/1041] UPSTREAM: drm/i915: Simplify i915_reg_read_ioctl
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -189,5 +189,5 @@ index 5f2ba0f0391e..489d2b20a1b5 100644
   */
  
 -- 
-2.17.0
+2.17.1
 
