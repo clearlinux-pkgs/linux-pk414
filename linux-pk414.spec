@@ -4,7 +4,7 @@
 
 Name:           linux-pk414
 Version:        4.14.47
-Release:        46
+Release:        47
 License:        GPL-2.0
 Summary:        The Linux kernel
 Url:            http://www.kernel.org/
