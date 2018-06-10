@@ -4,7 +4,7 @@
 
 Name:           linux-pk414
 Version:        4.14.48
-Release:        50
+Release:        51
 License:        GPL-2.0
 Summary:        The Linux kernel
 Url:            http://www.kernel.org/
@@ -41,7 +41,7 @@ Requires: linux-pk414-standard
 %define debug_package %{nil}
 %define __strip /bin/true
 
-# PK XXXX: Series: v20, lts-4.14-base-2018w23.2-143338
+# PK XXXX: Series: v21, lts-4.14-base-2018w23.5-192942
 Patch0001: 0001-greybus-Remove-android-make-file.patch
 Patch0002: 0002-AndroidIA-Allow-RenderNode-to-be-used-for-kms-getter.patch
 Patch0003: 0003-thermal-Add-processor-thermal-device-support.patch
@@ -1082,6 +1082,26 @@ Patch1037: 1037-media-platform-Change-I2C-bus-ID-for-UOS-from-6-to-0.patch
 Patch1038: 1038-crlmodule-lite-Fixing-un-used-variable-warning-issue.patch
 Patch1039: 1039-Integration-of-CBC-line-discipline-kernel-module.patch
 Patch1040: 1040-cbc-Avoid-rx-sequence-counter-mismatch-warnings.patch
+Patch1041: 1041-VHM-bug-fix-on-operating-multi-thread-synchronizatio.patch
+Patch1042: 1042-drm-i915-gvt-set-digital-bit-in-the-virtual-EDID.patch
+Patch1043: 1043-drm-i915-gvt-Adjust-array-size-avoid-out-of-boundary.patch
+Patch1044: 1044-drm-i915-gvt-initialize-the-array-to-zero-via-compil.patch
+Patch1045: 1045-drm-i915-gvt-check-msg-length-before-use-it.patch
+Patch1046: 1046-drm-i915-gvt-Avoid-dereference-a-potential-null-poin.patch
+Patch1047: 1047-drm-i915-gvt-Avoid-division-by-zero.patch
+Patch1048: 1048-drm-i915-gvt-Add-boundary-check-although-is-should-n.patch
+Patch1049: 1049-drm-i915-gvt-removed-unnecessary-boundary-check.patch
+Patch1050: 1050-drm-i915-gvt-Check-index-boundary-before-use-it.patch
+Patch1051: 1051-drm-i915-gvt-use-array-to-avoid-potential-buffer-ove.patch
+Patch1052: 1052-reboot-add-reboot_panic-parameter.patch
+Patch1053: 1053-Debug-Add-register-dump.patch
+Patch1054: 1054-hid-intel-ish-hid-ishtp-add-helper-function-for-driv.patch
+Patch1055: 1055-hid-intel-ish-hid-use-helper-function-for-private-dr.patch
+Patch1056: 1056-hid-intel-ish-hid-ishtp-add-helper-functions-for-cli.patch
+Patch1057: 1057-hid-intel-ish-hid-use-helper-function-to-access-clie.patch
+Patch1058: 1058-hid-intel-ish-hid-ishtp-add-helper-function-for-clie.patch
+Patch1059: 1059-hid-intel-ish-hid-use-helper-function-to-search-clie.patch
+Patch1060: 1060-hid-intel-ish-hid-add-ISH-UART-client-support.patch
 #END XXXX: PK Series
 
 # Clear Linux patch
@@ -2159,6 +2179,26 @@ Linux kernel extra files
 %patch1038 -p1
 %patch1039 -p1
 %patch1040 -p1
+%patch1041 -p1
+%patch1042 -p1
+%patch1043 -p1
+%patch1044 -p1
+%patch1045 -p1
+%patch1046 -p1
+%patch1047 -p1
+%patch1048 -p1
+%patch1049 -p1
+%patch1050 -p1
+%patch1051 -p1
+%patch1052 -p1
+%patch1053 -p1
+%patch1054 -p1
+%patch1055 -p1
+%patch1056 -p1
+%patch1057 -p1
+%patch1058 -p1
+%patch1059 -p1
+%patch1060 -p1
 # End XXXX PK Series
 
 %patch9001 -p1
