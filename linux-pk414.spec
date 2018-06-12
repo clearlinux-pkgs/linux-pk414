@@ -3,13 +3,13 @@
 #
 
 Name:           linux-pk414
-Version:        4.14.48
-Release:        52
+Version:        4.14.49
+Release:        53
 License:        GPL-2.0
 Summary:        The Linux kernel
 Url:            http://www.kernel.org/
 Group:          kernel
-Source0:        https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.14.48.tar.xz
+Source0:        https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.14.49.tar.xz
 Source1:        config-pk414-sos
 Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
@@ -41,7 +41,7 @@ Requires: linux-pk414-standard
 %define debug_package %{nil}
 %define __strip /bin/true
 
-# PK XXXX: Series: v21, lts-4.14-base-2018w23.5-192942
+# PK XXXX: Series: v22, lts-4.14-base-2018w24.2-012841
 Patch0001: 0001-greybus-Remove-android-make-file.patch
 Patch0002: 0002-AndroidIA-Allow-RenderNode-to-be-used-for-kms-getter.patch
 Patch0003: 0003-thermal-Add-processor-thermal-device-support.patch
@@ -1102,6 +1102,7 @@ Patch1057: 1057-hid-intel-ish-hid-use-helper-function-to-access-clie.patch
 Patch1058: 1058-hid-intel-ish-hid-ishtp-add-helper-function-for-clie.patch
 Patch1059: 1059-hid-intel-ish-hid-use-helper-function-to-search-clie.patch
 Patch1060: 1060-hid-intel-ish-hid-add-ISH-UART-client-support.patch
+Patch1061: 1061-UPSTREAM-driver-core-hold-dev-s-parent-lock-when-nee.patch
 #END XXXX: PK Series
 
 # Clear Linux patch
@@ -1136,7 +1137,7 @@ Group:          kernel
 Linux kernel extra files
 
 %prep
-%setup -q -n linux-4.14.48
+%setup -q -n linux-4.14.49
 
 #patchXXXX PK Series
 %patch0001 -p1
@@ -2199,6 +2200,7 @@ Linux kernel extra files
 %patch1058 -p1
 %patch1059 -p1
 %patch1060 -p1
+%patch1061 -p1
 # End XXXX PK Series
 
 %patch9001 -p1
