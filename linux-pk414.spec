@@ -4,7 +4,7 @@
 
 Name:           linux-pk414
 Version:        4.14.49
-Release:        56
+Release:        57
 License:        GPL-2.0
 Summary:        The Linux kernel
 Url:            http://www.kernel.org/
@@ -41,7 +41,7 @@ Requires: linux-pk414-standard
 %define debug_package %{nil}
 %define __strip /bin/true
 
-# PK XXXX: Series: v22, lts-4.14-base-2018w24.2-012841
+# PK XXXX: Series: v23, lts-4.14-base-2018w24.4-174959
 Patch0001: 0001-greybus-Remove-android-make-file.patch
 Patch0002: 0002-AndroidIA-Allow-RenderNode-to-be-used-for-kms-getter.patch
 Patch0003: 0003-thermal-Add-processor-thermal-device-support.patch
@@ -1103,6 +1103,19 @@ Patch1058: 1058-hid-intel-ish-hid-ishtp-add-helper-function-for-clie.patch
 Patch1059: 1059-hid-intel-ish-hid-use-helper-function-to-search-clie.patch
 Patch1060: 1060-hid-intel-ish-hid-add-ISH-UART-client-support.patch
 Patch1061: 1061-UPSTREAM-driver-core-hold-dev-s-parent-lock-when-nee.patch
+Patch1062: 1062-console-introduce-exit-callback.patch
+Patch1063: 1063-serial-8250_port-Don-t-use-power-management-for-kern.patch
+Patch1064: 1064-serial-8250_port-Disable-DMA-operations-for-kernel-c.patch
+Patch1065: 1065-serial-8250_port-properly-handle-runtime-PM-in-IRQ.patch
+Patch1066: 1066-serial-8250_port-factor-out-serial8250_do_restore_co.patch
+Patch1067: 1067-serial-8250_port-Remove-calls-to-runtime-PM.patch
+Patch1068: 1068-serial-core-add-support-of-runtime-PM.patch
+Patch1069: 1069-serial-8250_port-remove-legacy-PM-code.patch
+Patch1070: 1070-serial-8250_dw-Use-a-unified-new-dev-variable-in-rem.patch
+Patch1071: 1071-serial-8250_dw-use-pointer-to-uart-local-variable.patch
+Patch1072: 1072-serial-8250_dw-enable-runtime-PM.patch
+Patch1073: 1073-serial-remove-legacy-pm-hook.patch
+Patch1074: 1074-serial-core-remove-legacy-PM-code.patch
 #END XXXX: PK Series
 
 # Clear Linux patch
@@ -2201,6 +2214,19 @@ Linux kernel extra files
 %patch1059 -p1
 %patch1060 -p1
 %patch1061 -p1
+%patch1062 -p1
+%patch1063 -p1
+%patch1064 -p1
+%patch1065 -p1
+%patch1066 -p1
+%patch1067 -p1
+%patch1068 -p1
+%patch1069 -p1
+%patch1070 -p1
+%patch1071 -p1
+%patch1072 -p1
+%patch1073 -p1
+%patch1074 -p1
 # End XXXX PK Series
 
 %patch9001 -p1
