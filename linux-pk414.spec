@@ -4,7 +4,7 @@
 
 Name:           linux-pk414
 Version:        4.14.51
-Release:        59
+Release:        60
 License:        GPL-2.0
 Summary:        The Linux kernel
 Url:            http://www.kernel.org/
@@ -32,7 +32,7 @@ BuildRequires:  kmod
 BuildRequires:  linux-firmware
 BuildRequires:  lz4
 
-Requires: systemd-console
+Requires: systemd-bin
 Requires: linux-pk414-sos
 Requires: linux-pk414-standard
 
