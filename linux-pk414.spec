@@ -15,6 +15,9 @@ Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
+# kernel-lts-quilt: v26, lts-4.14-base-2018w25.4-191433
+# kernel-config: lts-4.14-base-2018w25.4-191433
+
 %define ktarget0 pk414-sos
 %define kversion0 %{version}-%{release}.%{ktarget0}
 %define ktarget1 pk414-standard
@@ -41,7 +44,7 @@ Requires: linux-pk414-standard
 %define debug_package %{nil}
 %define __strip /bin/true
 
-# PK XXXX: Series: v26, lts-4.14-base-2018w25.4-191433
+# PK XXXX: Series
 Patch0001: 0001-greybus-Remove-android-make-file.patch
 Patch0002: 0002-AndroidIA-Allow-RenderNode-to-be-used-for-kms-getter.patch
 Patch0003: 0003-thermal-Add-processor-thermal-device-support.patch
