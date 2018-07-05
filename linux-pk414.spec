@@ -15,7 +15,7 @@ Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
-# kernel-lts-quilt: v26, lts-4.14-base-2018w25.4-191433
+# kernel-lts-quilt: v33, lts-4.14-base-2018w26.6-002444
 # kernel-config: lts-4.14-base-2018w25.4-191433
 
 %define ktarget0 pk414-sos
@@ -1127,6 +1127,34 @@ Patch1079: 1079-ASoC-Intel-Boards-Add-a-machine-driver-for-BXT-P-IVI.patch
 Patch1080: 1080-ASoC-Intel-Boards-Add-machine-driver-for-generic-top.patch
 Patch1081: 1081-ASoC-Intel-Skylake-Add-RSE-HU-M3-and-generic-machine.patch
 Patch1082: 1082-tpm-separate-cmd_ready-go_idle-from-runtime_pm.patch
+Patch1083: 1083-media-platform-Add-kernel-config-for-ADV7481-I2C-bus.patch
+Patch1084: 1084-ici-Check-null-pointer-to-avoid-null-pointer-derefer.patch
+Patch1085: 1085-media-ici-fix-for-mem-leak-pointed-out-by-KW.patch
+Patch1086: 1086-media-platform-Changed-INTEL_ADV7481_I2C_ID-to-INTEL.patch
+Patch1087: 1087-ici-Change-fourcc-value-for-ICI_FORMAT_RGB888.patch
+Patch1088: 1088-pci-intel-Upgrading-IPU-to-mr4_beta_20180506-FW-rele.patch
+Patch1089: 1089-media-intel-ipu4-imx274-update-min-exposure-value.patch
+Patch1090: 1090-platform-intel-Fixing-warning-for-used-variable.patch
+Patch1091: 1091-Add-dependencies-in-Kconfig-for-ICI.patch
+Patch1092: 1092-Add-dependencies-in-Kconfig-for-IPU.patch
+Patch1093: 1093-media-intel-ipu4-css-scci_stable_iot_mr4_beta_201805.patch
+Patch1094: 1094-media-platform-enable-ipu-for-GP-MRB.patch
+Patch1095: 1095-MUST_REBASE-VPG-drm-i915-Allow-late-GuC-HuC-loading.patch
+Patch1096: 1096-REVERTME-VPG-drm-i915-guc-Turn-guc-submission-on-by-.patch
+Patch1097: 1097-change-GuC-firmware-version-to-latest.patch
+Patch1098: 1098-Revert-hid-intel-ish-hid-add-ISH-UART-client-support.patch
+Patch1099: 1099-HID-intel_ish-hid-Enhance-API-to-get-ring-buffer-siz.patch
+Patch1100: 1100-hid-intel-ish-hid-add-ISH-UART-client-support.patch
+Patch1101: 1101-vhm-add-hypercall-to-set-sstate-data.patch
+Patch1102: 1102-kernel-drm-i915-gvt-use-highpri-workqueue-for-vblank.patch
+Patch1103: 1103-drm-i915-gvt-remove-correlation-between-plane-restri.patch
+Patch1104: 1104-drm-i915-gvt-fix-a-problem-to-set-wrong-register-PLA.patch
+Patch1105: 1105-drm-i915-gvt-fix-i915-boot-issue-when-gvt-is-not-ena.patch
+Patch1106: 1106-usb-gadget-ffs-Fix-BUG-when-userland-exits-with-subm.patch
+Patch1107: 1107-Uninitialized-return-variable-reference-during-modes.patch
+Patch1108: 1108-mfd-intel-lpss-add-children-devices-asynchronously.patch
+Patch1109: 1109-FIXUP-mfd-intel-lpss-Probe-UART-devices-synchronousl.patch
+Patch1110: 1110-mfd-intel-lpss-Make-driver-probe-asynchronous.patch
 #END XXXX: PK Series
 
 # Clear Linux patch
@@ -2246,6 +2274,34 @@ Linux kernel extra files
 %patch1080 -p1
 %patch1081 -p1
 %patch1082 -p1
+%patch1083 -p1
+%patch1084 -p1
+%patch1085 -p1
+%patch1086 -p1
+%patch1087 -p1
+%patch1088 -p1
+%patch1089 -p1
+%patch1090 -p1
+%patch1091 -p1
+%patch1092 -p1
+%patch1093 -p1
+%patch1094 -p1
+%patch1095 -p1
+%patch1096 -p1
+%patch1097 -p1
+%patch1098 -p1
+%patch1099 -p1
+%patch1100 -p1
+%patch1101 -p1
+%patch1102 -p1
+%patch1103 -p1
+%patch1104 -p1
+%patch1105 -p1
+%patch1106 -p1
+%patch1107 -p1
+%patch1108 -p1
+%patch1109 -p1
+%patch1110 -p1
 # End XXXX PK Series
 
 %patch9001 -p1
