@@ -1290,6 +1290,7 @@ Patch1240: 1240-ASoC-SOF-enable-msi-for-sof-hda-audio.patch
 # Clear Linux patch
 # needs to add to PK series
 Patch9001: 9001-init-wait-for-partition-and-retry-scan.patch
+Patch9002: 9002-media-platform-fix-ADV7481-Kconfig.patch
 
 %description
 The Linux kernel.
@@ -2565,6 +2566,7 @@ Linux kernel extra files
 # End XXXX PK Series
 
 %patch9001 -p1
+%patch9002 -p1
 
 cp %{SOURCE1} .
 cp %{SOURCE2} .
