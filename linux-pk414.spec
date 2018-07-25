@@ -15,7 +15,7 @@ Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
-# kernel-lts-quilt: v36, lts-4.14-base-180719T191511Z
+# kernel-lts-quilt: v37, lts-4.14-base-180724T021848Z
 # kernel-config: lts-4.14-base-180724T021848Z
 
 %define ktarget0 pk414-sos
@@ -1285,6 +1285,7 @@ Patch1237: 1237-ASoC-SOF-nocodec-create-BE-DAI-links-based-on-platfo.patch
 Patch1238: 1238-ASoC-core-don-t-override-too-much-for-BE-dai_links.patch
 Patch1239: 1239-ASoC-Intel-bxt-tdf8532-change-probe-and-trace-buffer.patch
 Patch1240: 1240-ASoC-SOF-enable-msi-for-sof-hda-audio.patch
+Patch1241: 1241-media-platform-intel-complete-description-I2C_ID.patch
 #END XXXX: PK Series
 
 # Clear Linux patch
@@ -2563,6 +2564,7 @@ Linux kernel extra files
 %patch1238 -p1
 %patch1239 -p1
 %patch1240 -p1
+%patch1241 -p1
 # End XXXX PK Series
 
 %patch9001 -p1
