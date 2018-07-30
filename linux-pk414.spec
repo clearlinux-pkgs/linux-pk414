@@ -5,7 +5,7 @@
 # There are two subpackages "sos" and "standard"
 #
 # The "sos" kernel is specifically meant to run as DOM0 in an ACRN hypervisor setup
-# The "standard"  kernel is meant for running on bare metal systems as well as arunning as a normal guest
+# The "standard"  kernel is meant for running on bare metal systems as well as running as a "normal" guest in various hypervisors
 #
 
 Name:           linux-pk414
