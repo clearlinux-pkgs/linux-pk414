@@ -1,5 +1,11 @@
 #
-# Production LTS Kernel
+# PK 2017LTS kerel 
+# this kernel is an "enterprise style" kernel with a significant list of backported features
+#
+# There are two subpackages "sos" and "standard"
+#
+# The "sos" kernel is specifically meant to run as DOM0 in an ACRN hypervisor setup
+# The "standard"  kernel is meant for running on bare metal systems as well as arunning as a normal guest
 #
 
 Name:           linux-pk414
