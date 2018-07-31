@@ -9,13 +9,13 @@
 #
 
 Name:           linux-pk414
-Version:        4.14.57
-Release:        69
+Version:        4.14.58
+Release:        70
 License:        GPL-2.0
 Summary:        The Linux kernel
 Url:            http://www.kernel.org/
 Group:          kernel
-Source0:        https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.14.57.tar.xz
+Source0:        https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.14.58.tar.xz
 Source1:        config-pk414-sos
 Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
@@ -1371,7 +1371,7 @@ Group:          kernel
 Linux kernel extra files
 
 %prep
-%setup -q -n linux-4.14.57
+%setup -q -n linux-4.14.58
 
 #patchXXXX PK Series
 %patch0001 -p1
