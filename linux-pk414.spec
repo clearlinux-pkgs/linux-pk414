@@ -21,7 +21,7 @@ Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
-# kernel-lts-quilt: v37, lts-4.14-base-180724T021848Z
+# kernel-lts-quilt: v40, lts-4.14-base-180727T211548Z
 # kernel-config: lts-4.14-base-180724T021848Z
 
 %define ktarget0 pk414-sos
@@ -1292,6 +1292,51 @@ Patch1238: 1238-ASoC-core-don-t-override-too-much-for-BE-dai_links.patch
 Patch1239: 1239-ASoC-Intel-bxt-tdf8532-change-probe-and-trace-buffer.patch
 Patch1240: 1240-ASoC-SOF-enable-msi-for-sof-hda-audio.patch
 Patch1241: 1241-media-platform-intel-complete-description-I2C_ID.patch
+Patch1242: 1242-vhm-Fix-kernel-doc-issues.patch
+Patch1243: 1243-drm-i915-Use-64-bit-write-to-optimize-writing-fence_.patch
+Patch1244: 1244-vhm-add-trusty-init-de-init-support.patch
+Patch1245: 1245-vhm-Rename-the-restart_vm-to-reset_vm.patch
+Patch1246: 1246-drm-i915-gvt-update-comments-for-kerneldoc.patch
+Patch1247: 1247-vhm-fix-kerneldoc-format.patch
+Patch1248: 1248-drm-i915-gvt-don-t-treat-EINVAL-if-trap-pci_command-.patch
+Patch1249: 1249-sof-skylake-fix-build-issue-with-sof-driver.patch
+Patch1250: 1250-refine-work-queue-in-trusty-driver.patch
+Patch1251: 1251-hyper_dmabuf-Fix-array-length-check-issue-in-hyper_d.patch
+Patch1252: 1252-Revert-mei-spd-connect-to-the-rpmb-subsystem.patch
+Patch1253: 1253-Revert-mei-spd-storage-proxy-driver.patch
+Patch1254: 1254-Revert-block-export-block_class-to-be-used-by-class-.patch
+Patch1255: 1255-Revert-scsi-ufs-store-device-serial-number.patch
+Patch1256: 1256-Revert-scsi-ufs-connect-to-RPMB-subsystem.patch
+Patch1257: 1257-Revert-mmc-block-register-RPMB-partition-with-the-RP.patch
+Patch1258: 1258-Revert-char-rpmb-Document-Replay-Protected-Memory-Bl.patch
+Patch1259: 1259-Revert-char-rpmb-add-RPMB-simulation-device.patch
+Patch1260: 1260-Revert-char-rpmb-provide-a-user-space-interface.patch
+Patch1261: 1261-Revert-char-rpmb-add-device-attributes.patch
+Patch1262: 1262-Revert-rpmb-enable-emmc-specific-read-data-fixup.patch
+Patch1263: 1263-Revert-tools-rpmb-add-RPBM-access-tool.patch
+Patch1264: 1264-Revert-rpmb-add-sysfs-class-ABI-documentation.patch
+Patch1265: 1265-Revert-rpmb-add-Replay-Protected-Memory-Block-RPMB-s.patch
+Patch1266: 1266-rpmb-add-Replay-Protected-Memory-Block-RPMB-subsyste.patch
+Patch1267: 1267-rpmb-enable-emmc-specific-read-data-fixup.patch
+Patch1268: 1268-rpmb-add-sysfs-class-ABI-documentation.patch
+Patch1269: 1269-char-rpmb-add-device-attributes.patch
+Patch1270: 1270-char-rpmb-provide-a-user-space-interface.patch
+Patch1271: 1271-char-rpmb-add-RPMB-simulation-device.patch
+Patch1272: 1272-tools-rpmb-add-RPBM-access-tool.patch
+Patch1273: 1273-mmc-block-register-RPMB-partition-with-the-RPMB-subs.patch
+Patch1274: 1274-scsi-ufs-connect-to-RPMB-subsystem.patch
+Patch1275: 1275-scsi-ufs-store-device-serial-number.patch
+Patch1276: 1276-rpmb-add-nvme-rpmb-frame-type.patch
+Patch1277: 1277-tools-rpmb-add-support-for-nvme-device.patch
+Patch1278: 1278-nvme-connect-to-rpmb-layer.patch
+Patch1279: 1279-rpmb-VRPMB-FE-create-virtio-rpmb-frontend-driver.patch
+Patch1280: 1280-char-rpmb-Document-Replay-Protected-Memory-Block-RPM.patch
+Patch1281: 1281-block-export-block_class-to-be-used-by-class-interfa.patch
+Patch1282: 1282-mei-spd-storage-proxy-driver.patch
+Patch1283: 1283-mei-spd-connect-to-the-rpmb-subsystem.patch
+Patch1284: 1284-ACPICA-ACPICA-add-status-check-for-acpi_hw_read-befo.patch
+Patch1285: 1285-Fix-for-memory-leak-in-hdmi-write.patch
+Patch1286: 1286-drm-i915-Fix-memory-leak-in-intel_hdcp-auth.patch
 #END XXXX: PK Series
 
 # Clear Linux patch
@@ -2570,6 +2615,51 @@ Linux kernel extra files
 %patch1239 -p1
 %patch1240 -p1
 %patch1241 -p1
+%patch1242 -p1
+%patch1243 -p1
+%patch1244 -p1
+%patch1245 -p1
+%patch1246 -p1
+%patch1247 -p1
+%patch1248 -p1
+%patch1249 -p1
+%patch1250 -p1
+%patch1251 -p1
+%patch1252 -p1
+%patch1253 -p1
+%patch1254 -p1
+%patch1255 -p1
+%patch1256 -p1
+%patch1257 -p1
+%patch1258 -p1
+%patch1259 -p1
+%patch1260 -p1
+%patch1261 -p1
+%patch1262 -p1
+%patch1263 -p1
+%patch1264 -p1
+%patch1265 -p1
+%patch1266 -p1
+%patch1267 -p1
+%patch1268 -p1
+%patch1269 -p1
+%patch1270 -p1
+%patch1271 -p1
+%patch1272 -p1
+%patch1273 -p1
+%patch1274 -p1
+%patch1275 -p1
+%patch1276 -p1
+%patch1277 -p1
+%patch1278 -p1
+%patch1279 -p1
+%patch1280 -p1
+%patch1281 -p1
+%patch1282 -p1
+%patch1283 -p1
+%patch1284 -p1
+%patch1285 -p1
+%patch1286 -p1
 # End XXXX PK Series
 
 %patch9001 -p1
