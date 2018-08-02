@@ -21,7 +21,7 @@ Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
-# kernel-lts-quilt: v42, lts-4.14-base-180731T203309Z
+# kernel-lts-quilt: lts-4.14-base-180731T203309Z
 # kernel-config: lts-4.14-base-180731T203309Z
 
 %define ktarget0 pk414-sos
