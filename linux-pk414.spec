@@ -21,7 +21,7 @@ Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
-# kernel-lts-quilt: v40, lts-4.14-base-180727T211548Z
+# kernel-lts-quilt: v42, lts-4.14-base-180731T203309Z
 # kernel-config: lts-4.14-base-180724T021848Z
 
 %define ktarget0 pk414-sos
@@ -1337,6 +1337,8 @@ Patch1283: 1283-mei-spd-connect-to-the-rpmb-subsystem.patch
 Patch1284: 1284-ACPICA-ACPICA-add-status-check-for-acpi_hw_read-befo.patch
 Patch1285: 1285-Fix-for-memory-leak-in-hdmi-write.patch
 Patch1286: 1286-drm-i915-Fix-memory-leak-in-intel_hdcp-auth.patch
+Patch1287: 1287-mmc-Move-the-mmc-driver-init-earlier.patch
+Patch1288: 1288-AndroidIA-drm-i915-Sysfs-interface-to-get-GFX-shmem-.patch
 #END XXXX: PK Series
 
 # Clear Linux patch
@@ -2660,6 +2662,8 @@ Linux kernel extra files
 %patch1284 -p1
 %patch1285 -p1
 %patch1286 -p1
+%patch1287 -p1
+%patch1288 -p1
 # End XXXX PK Series
 
 %patch9001 -p1
