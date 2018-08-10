@@ -6405,3 +6405,7 @@ CONFIG_ARCH_HAS_PMEM_API=y
 CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE=y
 CONFIG_SBITMAP=y
 # CONFIG_STRING_SELFTEST is not set
+
+# kernel-config sources:
+# FILEVER=/usr/share/kernel-config/base-4.14-1-4
+# FILEVER=/usr/share/kernel-config/mandatory-4.14-1-4
