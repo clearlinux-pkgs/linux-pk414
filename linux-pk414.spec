@@ -1,5 +1,5 @@
 #
-# PK 2017LTS kerel 
+# PK 2017LTS kernel
 # this kernel is an "enterprise style" kernel with a significant list of backported features
 #
 # There are two subpackages "sos" and "standard"
@@ -10,7 +10,7 @@
 
 Name:           linux-pk414
 Version:        4.14.61
-Release:        76
+Release:        77
 License:        GPL-2.0
 Summary:        The Linux kernel
 Url:            http://www.kernel.org/
