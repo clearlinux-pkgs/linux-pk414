@@ -1423,7 +1423,6 @@ Patch1368: 1368-ASoC-SOF-Remove-redundant-code-in-irq-function-on-cn.patch
 Patch1369: 1369-ASoC-SOF-fix-a-typo.patch
 Patch1370: 1370-Revert-ASoC-SOF-enable-DEBUG-by-default.patch
 Patch1371: 1371-Revert-AndroidIA-drm-i915-Sysfs-interface-to-get-GFX.patch
-Patch1372: 1372-mmc-Move-the-mmc-driver-init-earlier.patch
 Patch1373: 1373-dmaengine-idma64-Support-dmaengine_terminate_sync.patch
 Patch1374: 1374-igb-Clarify-idleslope-config-constraints.patch
 Patch1375: 1375-igb-Fix-the-transmission-mode-of-queue-0-for-Qav-mod.patch
@@ -1475,7 +1474,6 @@ Patch1420: 1420-hyper_dmabuf-Remove-void-cast-in-cpu_access-function.patch
 Patch1421: 1421-hyper_dmabuf-Fix-incorrect-return-in-hyper_dmabuf_op.patch
 Patch1422: 1422-hyper_dmabuf-Check-for-NULL-value-before-access-work.patch
 Patch1423: 1423-hyper_dmabuf-Remove-unused-variable-warnings.patch
-Patch1424: 1424-intel-ipu4-Reversing-Fixed-compilation-error-without.patch
 Patch1425: 1425-media-intel-ipu4-bring-back-platform-ACPI-support.patch
 Patch1426: 1426-media-intel-ipu4-ICI-ACPI-functionality-for-crlmodul.patch
 Patch1427: 1427-media-intel-ipu4-adding-supported-sensor-and-support.patch
@@ -3029,7 +3027,6 @@ Linux kernel extra files
 %patch1369 -p1
 %patch1370 -p1
 %patch1371 -p1
-%patch1372 -p1
 %patch1373 -p1
 %patch1374 -p1
 %patch1375 -p1
@@ -3081,7 +3078,6 @@ Linux kernel extra files
 %patch1421 -p1
 %patch1422 -p1
 %patch1423 -p1
-%patch1424 -p1
 %patch1425 -p1
 %patch1426 -p1
 %patch1427 -p1
