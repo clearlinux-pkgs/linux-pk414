@@ -1238,6 +1238,7 @@ CONFIG_NET_SCH_HTB=y
 # CONFIG_NET_SCH_TEQL is not set
 # CONFIG_NET_SCH_TBF is not set
 # CONFIG_NET_SCH_CBS is not set
+# CONFIG_NET_SCH_ETF is not set
 # CONFIG_NET_SCH_GRED is not set
 # CONFIG_NET_SCH_DSMARK is not set
 # CONFIG_NET_SCH_NETEM is not set
@@ -6148,7 +6149,3 @@ CONFIG_ARCH_HAS_PMEM_API=y
 CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE=y
 CONFIG_SBITMAP=y
 # CONFIG_STRING_SELFTEST is not set
-
-# kernel-config sources:
-# FILEVER=/usr/share/kernel-config/base-4.14-1-4
-# FILEVER=/usr/share/kernel-config/mandatory-4.14-1-4
