@@ -10,7 +10,7 @@
 
 Name:           linux-pk414
 Version:        4.14.61
-Release:        85
+Release:        86
 License:        GPL-2.0
 Summary:        The Linux kernel
 Url:            http://www.kernel.org/
@@ -22,7 +22,7 @@ Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
 # kernel-lts-quilt: lts-4.14-base-180820T090948Z
-# kernel-config: lts-4.14-base-180817T112503Z
+# kernel-config: lts-4.14-base-180821T062927Z
 
 %define ktarget0 pk414-sos
 %define kversion0 %{version}-%{release}.%{ktarget0}
