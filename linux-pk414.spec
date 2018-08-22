@@ -21,7 +21,7 @@ Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
-# kernel-lts-quilt: lts-4.14-base-180817T112503Z
+# kernel-lts-quilt: lts-4.14-base-180820T090948Z
 # kernel-config: lts-4.14-base-180817T112503Z
 
 %define ktarget0 pk414-sos
@@ -1621,6 +1621,23 @@ Patch1566: 1566-drm-i915-gvt-Kick-scheduler-when-new-workload-queued.patch
 Patch1567: 1567-drm-i915-gvt-fix-display-messy-issue-which-is-introd.patch
 Patch1568: 1568-ASoC-Intel-Skylake-Reset-pipeline-before-deletion.patch
 Patch1569: 1569-ALSA-memalloc-Don-t-exceed-over-the-requested-size.patch
+Patch1570: 1570-media-intel-ipu4-strip-node-names-off-i2c-details.patch
+Patch1571: 1571-media-intel-ipu4-VIRT-Base-code-for-IPU-virtio-suppo.patch
+Patch1572: 1572-media-intel-ipu4-VIRT-Adding-Buffer-mapping-virtual-.patch
+Patch1573: 1573-media-intel-ipu4-VIRT-Buffer-mapping-between-sos-uos.patch
+Patch1574: 1574-media-intel-ipu4-VIRT-Creating-ipu-mediation-baselin.patch
+Patch1575: 1575-media-intel-ipu4-VIRT-Virtio-implementation-of-PUT_B.patch
+Patch1576: 1576-media-intel-ipu4-VIRT-Removing-compilation-warnings-.patch
+Patch1577: 1577-media-intel-ipu4-VIRT-Fixing-buffer-lookup-issue.patch
+Patch1578: 1578-media-intel-ipu4-VIRT-Added-32-bit-compatibility-mod.patch
+Patch1579: 1579-media-intel-ipu4-VIRT-Fixing-synchronization-with-lo.patch
+Patch1580: 1580-media-intel-ipu4-VIRT-Implementation-for-2-VQs.patch
+Patch1581: 1581-media-intel-ipu4-VIRT-Implementing-poll-without-wait.patch
+Patch1582: 1582-media-intel-ipu4-VIRT-Fixed-memory-leak-in-BE-get-bu.patch
+Patch1583: 1583-media-intel-ipu4-VIRT-Fix-vq-get-idx-func-handling-o.patch
+Patch1584: 1584-media-intel-ipu4-ici-YUYV-format-support-for-HDMI.patch
+Patch1585: 1585-media-intel-ipu4-VIRT-vhm_request-struct-removed-the.patch
+Patch1586: 1586-check-return-value-of-hypercall.patch
 #END XXXX: PK Series
 
 # Clear Linux patch
@@ -3227,6 +3244,23 @@ Linux kernel extra files
 %patch1567 -p1
 %patch1568 -p1
 %patch1569 -p1
+%patch1570 -p1
+%patch1571 -p1
+%patch1572 -p1
+%patch1573 -p1
+%patch1574 -p1
+%patch1575 -p1
+%patch1576 -p1
+%patch1577 -p1
+%patch1578 -p1
+%patch1579 -p1
+%patch1580 -p1
+%patch1581 -p1
+%patch1582 -p1
+%patch1583 -p1
+%patch1584 -p1
+%patch1585 -p1
+%patch1586 -p1
 # End XXXX PK Series
 
 %patch9001 -p1
