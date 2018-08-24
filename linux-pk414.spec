@@ -21,7 +21,7 @@ Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
-# kernel-lts-quilt: lts-4.14-base-180823T023014Z
+# kernel-lts-quilt: lts-4.14-base-180823T185419Z
 # kernel-config: lts-4.14-base-180823T023014Z
 
 %define ktarget0 pk414-sos
@@ -1634,6 +1634,24 @@ Patch1579: 1579-media-intel-ipu4-VIRT-Fix-vq-get-idx-func-handling-o.patch
 Patch1580: 1580-media-intel-ipu4-ici-YUYV-format-support-for-HDMI.patch
 Patch1581: 1581-media-intel-ipu4-VIRT-vhm_request-struct-removed-the.patch
 Patch1582: 1582-check-return-value-of-hypercall.patch
+Patch1583: 1583-ASoC-SOF-ipc-add-verbose-IPC-logs.patch
+Patch1584: 1584-ASoC-SOF-ipc-fix-typos.patch
+Patch1585: 1585-ASoC-SOF-fix-Kconfig-wording.patch
+Patch1586: 1586-ASoC-SOF-add-suspend-resume-callbacks-for-APL.patch
+Patch1587: 1587-ASoC-SOF-create-route-list-in-snd_sof_dev-to-store-p.patch
+Patch1588: 1588-ASoC-SOF-store-ipc-comp-data-as-private-data.patch
+Patch1589: 1589-ASoC-SOF-move-ipc-for-initializing-trace-into-a-sepa.patch
+Patch1590: 1590-ASoC-SOF-make-sof_complete_pipeline-non-static.patch
+Patch1591: 1591-ASoC-SOF-decrement-device-usage-counter-after-bootin.patch
+Patch1592: 1592-ASoC-SOF-set-kcontrol-cmd-for-pga-widget.patch
+Patch1593: 1593-ASoC-SOF-allow-runtime_pm-for-pci-acpi-spi-device.patch
+Patch1594: 1594-ASoC-SOF-modify-load_firmware-to-indicate-first-boot.patch
+Patch1595: 1595-ASoC-SOF-changes-to-pcm-trigger-to-accomodate-stream.patch
+Patch1596: 1596-ASoC-SOF-suspend-resume-and-runtime-PM-implementatio.patch
+Patch1597: 1597-ASoC-SOF-update-dai-config-after-parsing-pdm-tokens.patch
+Patch1598: 1598-ASoC-SOF-do-nothing-if-dsp-suspend-resume-callbacks-.patch
+Patch1599: 1599-ASoC-SOF-update-dai-config-for-all-dai-with-same-nam.patch
+Patch1600: 1600-ASoC-SOF-do-not-add-virtual-routes-to-route-list.patch
 #END XXXX: PK Series
 
 # Clear Linux patch
@@ -3253,6 +3271,24 @@ Linux kernel extra files
 %patch1580 -p1
 %patch1581 -p1
 %patch1582 -p1
+%patch1583 -p1
+%patch1584 -p1
+%patch1585 -p1
+%patch1586 -p1
+%patch1587 -p1
+%patch1588 -p1
+%patch1589 -p1
+%patch1590 -p1
+%patch1591 -p1
+%patch1592 -p1
+%patch1593 -p1
+%patch1594 -p1
+%patch1595 -p1
+%patch1596 -p1
+%patch1597 -p1
+%patch1598 -p1
+%patch1599 -p1
+%patch1600 -p1
 # End XXXX PK Series
 
 %patch9001 -p1
