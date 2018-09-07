@@ -21,7 +21,7 @@ Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
-# kernel-lts-quilt: lts-4.14-base-180831T192955Z
+# kernel-lts-quilt: lts-4.14-base-180905T220003Z
 # kernel-config: lts-4.14-base-180823T185419Z
 
 %define ktarget0 pk414-sos
@@ -1658,6 +1658,19 @@ Patch1603: 1603-media-omap4iss-fix-build-issue.patch
 Patch1604: 1604-media-bu64295-fix-cross-build-issue.patch
 Patch1605: 1605-media-intel-ipu4-psys-Adding-missing-compact32-membe.patch
 Patch1606: 1606-media-intel-ipu4-VIRT-Adding-x86_64-arch-dependency.patch
+Patch1607: 1607-VHM-remove-panic-action-when-ioreq-fails.patch
+Patch1608: 1608-sos-vhm-add-HC_SETUP_HV_NPK_LOG-hypercall.patch
+Patch1609: 1609-acrn-add-hv_npk_log-module.patch
+Patch1610: 1610-vbs-fix-virtio_vq_index_get-func-handling-of-multi-V.patch
+Patch1611: 1611-vhm-init-client-kthread_exit-true.patch
+Patch1612: 1612-vhm-fix-client-use-after-free.patch
+Patch1613: 1613-Adds-new-API-for-unmap-memseg.patch
+Patch1614: 1614-i915-GVT-g-driver-adopt-AcrnGT-convention-for-GVT-g-.patch
+Patch1615: 1615-drm-i915-gvt-notify-global-gtt-update-through-g2v.patch
+Patch1616: 1616-drm-i915-gvt-handle-global-gtt-update-from-g2v.patch
+Patch1617: 1617-drm-i915-gvt-enable-pv-global-gtt-update-by-default.patch
+Patch1618: 1618-drm-i915-gvt-clean-up-the-cfg-space-and-MMIO-spaces.patch
+Patch1619: 1619-drm-i915-gvt-Check-the-state-of-PVMMIO-gtt-table-to-.patch
 #END XXXX: PK Series
 
 # Clear Linux patch
@@ -3301,6 +3314,19 @@ Linux kernel extra files
 %patch1604 -p1
 %patch1605 -p1
 %patch1606 -p1
+%patch1607 -p1
+%patch1608 -p1
+%patch1609 -p1
+%patch1610 -p1
+%patch1611 -p1
+%patch1612 -p1
+%patch1613 -p1
+%patch1614 -p1
+%patch1615 -p1
+%patch1616 -p1
+%patch1617 -p1
+%patch1618 -p1
+%patch1619 -p1
 # End XXXX PK Series
 
 %patch9001 -p1
