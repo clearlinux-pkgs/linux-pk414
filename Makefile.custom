@@ -9,3 +9,18 @@ config-%: $(SRPMFILE) fragment-%
 
 config: config-pk414-sos config-pk414-standard
 
+genfragment-sos: $(SRPMFILE)
+	$(MOCK) $(MOCK_COMMON_ARGS) --installdeps $(SRPMFILE)
+	$(MOCK) $(MOCK_COMMON_ARGS) --chroot 'rpmbuild -bp /builddir/build/SPECS/$(SPECFILE)'
+	$(MOCK) $(MOCK_COMMON_ARGS) --copyin config-pk414-sos /tmp/
+	$(MOCK) $(MOCK_COMMON_ARGS) --cwd=/builddir/build/BUILD --chroot 'update-fragment /tmp/config-pk414-sos'
+	$(MOCK) $(MOCK_COMMON_ARGS) --copyout /builddir/build/BUILD/linux-*/.fragment fragment-pk414-sos
+
+genfragment-standard: $(SRPMFILE)
+	$(MOCK) $(MOCK_COMMON_ARGS) --installdeps $(SRPMFILE)
+	$(MOCK) $(MOCK_COMMON_ARGS) --chroot 'rpmbuild -bp /builddir/build/SPECS/$(SPECFILE)'
+	$(MOCK) $(MOCK_COMMON_ARGS) --copyin config-pk414-standard /tmp/
+	$(MOCK) $(MOCK_COMMON_ARGS) --cwd=/builddir/build/BUILD --chroot 'update-fragment /tmp/config-pk414-standard'
+	$(MOCK) $(MOCK_COMMON_ARGS) --copyout /builddir/build/BUILD/linux-*/.fragment fragment-pk414-standard
+
+genfragment: genfragment-sos genfragment-standard
