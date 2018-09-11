@@ -21,7 +21,7 @@ Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
-# kernel-lts-quilt: lts-4.14-base-180905T220003Z
+# kernel-lts-quilt: lts-4.14-base-180908T051954Z
 # kernel-config: lts-4.14-base-180905T220003Z
 
 %define ktarget0 pk414-sos
@@ -1671,6 +1671,13 @@ Patch1616: 1616-drm-i915-gvt-handle-global-gtt-update-from-g2v.patch
 Patch1617: 1617-drm-i915-gvt-enable-pv-global-gtt-update-by-default.patch
 Patch1618: 1618-drm-i915-gvt-clean-up-the-cfg-space-and-MMIO-spaces.patch
 Patch1619: 1619-drm-i915-gvt-Check-the-state-of-PVMMIO-gtt-table-to-.patch
+Patch1620: 1620-hyper_dmabuf-virtio-Protect-virtqueue-operations-wit.patch
+Patch1621: 1621-hyper_dmabuf-virtio-Correctly-cleanup-front-end-conn.patch
+Patch1622: 1622-hyper_dmabuf-virtio-bugfix-on-acrn_ioreq_add_iorange.patch
+Patch1623: 1623-hyper_dmabuf-virtio-Add-support-for-VBS_RESET_DEV-io.patch
+Patch1624: 1624-hyper_dmabuf-virtio-Handle-S3-resume-correctly-v2.patch
+Patch1625: 1625-hyper_dmabuf-fix-map-failure-issue-when-assign-4G-me.patch
+Patch1626: 1626-CBC-driver-kernel-crash-fix-during-warm-reboot.patch
 #END XXXX: PK Series
 
 # Clear Linux patch
@@ -3327,6 +3334,13 @@ Linux kernel extra files
 %patch1617 -p1
 %patch1618 -p1
 %patch1619 -p1
+%patch1620 -p1
+%patch1621 -p1
+%patch1622 -p1
+%patch1623 -p1
+%patch1624 -p1
+%patch1625 -p1
+%patch1626 -p1
 # End XXXX PK Series
 
 %patch9001 -p1
