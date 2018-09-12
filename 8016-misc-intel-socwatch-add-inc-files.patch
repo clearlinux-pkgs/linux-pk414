@@ -1,0 +1,1463 @@
+From dd1e160a0d4b392a25bc9cd2a49ac95c9c2550d3 Mon Sep 17 00:00:00 2001
+From: Miguel Bernal Marin <miguel.bernal.marin@linux.intel.com>
+Date: Wed, 29 Aug 2018 06:32:28 -0500
+Subject: [PATCH 8016/8021] misc: intel: socwatch: add inc files
+
+---
+ .../misc/intel/socwatch/inc/sw_collector.h    | 125 +++++++++++++
+ drivers/misc/intel/socwatch/inc/sw_file_ops.h |  70 +++++++
+ .../misc/intel/socwatch/inc/sw_hardware_io.h  | 112 +++++++++++
+ drivers/misc/intel/socwatch/inc/sw_internal.h | 135 ++++++++++++++
+ drivers/misc/intel/socwatch/inc/sw_list.h     |  74 ++++++++
+ .../misc/intel/socwatch/inc/sw_lock_defs.h    |  96 ++++++++++
+ drivers/misc/intel/socwatch/inc/sw_mem.h      |  81 ++++++++
+ .../misc/intel/socwatch/inc/sw_ops_provider.h |  62 +++++++
+ .../intel/socwatch/inc/sw_output_buffer.h     | 135 ++++++++++++++
+ .../socwatch/inc/sw_overhead_measurements.h   | 175 ++++++++++++++++++
+ drivers/misc/intel/socwatch/inc/sw_telem.h    |  75 ++++++++
+ .../socwatch/inc/sw_trace_notifier_provider.h |  81 ++++++++
+ .../socwatch/inc/sw_tracepoint_handlers.h     | 127 +++++++++++++
+ 13 files changed, 1348 insertions(+)
+ create mode 100644 drivers/misc/intel/socwatch/inc/sw_collector.h
+ create mode 100644 drivers/misc/intel/socwatch/inc/sw_file_ops.h
+ create mode 100644 drivers/misc/intel/socwatch/inc/sw_hardware_io.h
+ create mode 100644 drivers/misc/intel/socwatch/inc/sw_internal.h
+ create mode 100644 drivers/misc/intel/socwatch/inc/sw_list.h
+ create mode 100644 drivers/misc/intel/socwatch/inc/sw_lock_defs.h
+ create mode 100644 drivers/misc/intel/socwatch/inc/sw_mem.h
+ create mode 100644 drivers/misc/intel/socwatch/inc/sw_ops_provider.h
+ create mode 100644 drivers/misc/intel/socwatch/inc/sw_output_buffer.h
+ create mode 100644 drivers/misc/intel/socwatch/inc/sw_overhead_measurements.h
+ create mode 100644 drivers/misc/intel/socwatch/inc/sw_telem.h
+ create mode 100644 drivers/misc/intel/socwatch/inc/sw_trace_notifier_provider.h
+ create mode 100644 drivers/misc/intel/socwatch/inc/sw_tracepoint_handlers.h
+
+diff --git a/drivers/misc/intel/socwatch/inc/sw_collector.h b/drivers/misc/intel/socwatch/inc/sw_collector.h
+new file mode 100644
+index 000000000000..6dfdb314b145
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/inc/sw_collector.h
+@@ -0,0 +1,125 @@
++/*
++
++  This file is provided under a dual BSD/GPLv2 license.  When using or
++  redistributing this file, you may do so under either license.
++
++  GPL LICENSE SUMMARY
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of version 2 of the GNU General Public License as
++  published by the Free Software Foundation.
++
++  This program is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  General Public License for more details.
++
++  Contact Information:
++  SoC Watch Developer Team <socwatchdevelopers@intel.com>
++  Intel Corporation,
++  1906 Fox Drive,
++  Champaign, IL 61820
++
++  BSD LICENSE
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of Intel Corporation nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++*/
++#ifndef __SW_COLLECTOR_H__
++
++#include "sw_internal.h"
++
++/*
++ * Forward declaration
++ */
++struct sw_hw_ops;
++
++// TODO: convert from 'list_head' to 'hlist_head'
++/**
++ * struct - sw_collector_data
++ * Information about the collector to be invoked at collection time.
++ *
++ * The collector_lists array holds linked lists of collectors to
++ * be exercised at specific points in time during the collection
++ * (e.g. begin, poll, end, etc.).  At a trigger time, the driver walks
++ * that time's list of nodes, and exercises the collectors on that list.
++ *
++ * @list:                   List/link implementation
++ * @cpumask:                Collect if cpu matches mask
++ * @info:                   Ptr to metric info
++ * @ops:                    Ptr to collector's operations
++ * @last_update_jiffies:    Indicates when this node was last exercised.
++ * @per_msg_payload_size:   Data size
++ * @msg:                    Ptr to collected data
++ */
++typedef struct sw_collector_data {
++    SW_LIST_ENTRY(list, sw_collector_data);
++    struct cpumask                  cpumask;
++    struct sw_driver_interface_info *info;
++    const struct sw_hw_ops          **ops;
++    size_t                          per_msg_payload_size;
++    u64                             last_update_jiffies;
++    struct sw_driver_msg *msg;
++} sw_collector_data_t;
++#define GET_MSG_SLOT_FOR_CPU(msgs, cpu, size) ( (struct sw_driver_msg *) &(((char *)(msgs))[(cpu) * (sizeof(struct sw_driver_msg) + (size))]) )
++
++struct sw_collector_data *sw_alloc_collector_node(void);
++void sw_free_collector_node(struct sw_collector_data *node);
++int sw_handle_collector_node(struct sw_collector_data *data);
++int sw_handle_collector_node_on_cpu(struct sw_collector_data *data, int cpu);
++int sw_write_collector_node(struct sw_collector_data *data);
++
++void sw_init_collector_list(void *list_head);
++void sw_destroy_collector_list(void *list_head);
++int sw_handle_collector_list(void *list_head, int (*func)(struct sw_collector_data *data));
++int sw_handle_collector_list_on_cpu(void *list_head, int (*func)(struct sw_collector_data *data, int cpu), int cpu);
++
++int sw_handle_driver_io_descriptor(char *dst_vals, int cpu, const struct sw_driver_io_descriptor *descriptor, const struct sw_hw_ops *hw_ops);
++int sw_init_driver_io_descriptor(struct sw_driver_io_descriptor *descriptor);
++int sw_reset_driver_io_descriptor(struct sw_driver_io_descriptor *descriptor);
++
++int sw_add_driver_info(void *list_head, const struct sw_driver_interface_info *info);
++
++void sw_handle_per_cpu_msg(void *info);
++void sw_handle_per_cpu_msg_no_sched(void *info);
++void sw_handle_per_cpu_msg_on_cpu(int cpu, void *info);
++
++void sw_set_collector_ops(const struct sw_hw_ops *hw_ops);
++
++/**
++ * Process all messages for the given time.
++ * @param[in]   when    The time period e.g. 'BEGIN' or 'END'
++ *
++ * @returns     0   on success, non-zero on error
++ */
++extern int sw_process_snapshot(enum sw_when_type when);
++extern int sw_process_snapshot_on_cpu(enum sw_when_type when, int cpu);
++#endif // __SW_COLLECTOR_H__
+diff --git a/drivers/misc/intel/socwatch/inc/sw_file_ops.h b/drivers/misc/intel/socwatch/inc/sw_file_ops.h
+new file mode 100644
+index 000000000000..81b77c811ea7
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/inc/sw_file_ops.h
+@@ -0,0 +1,70 @@
++/*
++
++  This file is provided under a dual BSD/GPLv2 license.  When using or
++  redistributing this file, you may do so under either license.
++
++  GPL LICENSE SUMMARY
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of version 2 of the GNU General Public License as
++  published by the Free Software Foundation.
++
++  This program is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  General Public License for more details.
++
++  Contact Information:
++  SoC Watch Developer Team <socwatchdevelopers@intel.com>
++  Intel Corporation,
++  1906 Fox Drive,
++  Champaign, IL 61820
++
++  BSD LICENSE
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of Intel Corporation nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++*/
++#ifndef __SW_FILE_OPS_H__
++#define __SW_FILE_OPS_H__
++
++enum sw_driver_collection_cmd;
++struct sw_file_ops {
++    long (*ioctl_handler)(unsigned int ioctl_num, void *local_args);
++    int (*stop_handler)(void);
++    enum sw_driver_collection_cmd (*get_current_cmd)(void);
++    bool (*should_flush)(void);
++};
++
++int sw_register_dev(struct sw_file_ops *ops);
++void sw_unregister_dev(void);
++
++#endif // __SW_FILE_OPS_H__
+diff --git a/drivers/misc/intel/socwatch/inc/sw_hardware_io.h b/drivers/misc/intel/socwatch/inc/sw_hardware_io.h
+new file mode 100644
+index 000000000000..8bbb37df3ed0
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/inc/sw_hardware_io.h
+@@ -0,0 +1,112 @@
++/*
++
++  This file is provided under a dual BSD/GPLv2 license.  When using or
++  redistributing this file, you may do so under either license.
++
++  GPL LICENSE SUMMARY
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of version 2 of the GNU General Public License as
++  published by the Free Software Foundation.
++
++  This program is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  General Public License for more details.
++
++  Contact Information:
++  SoC Watch Developer Team <socwatchdevelopers@intel.com>
++  Intel Corporation,
++  1906 Fox Drive,
++  Champaign, IL 61820
++
++  BSD LICENSE
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of Intel Corporation nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++*/
++#ifndef __SW_HARDWARE_IO_H__
++#define __SW_HARDWARE_IO_H__
++
++#include "sw_structs.h"
++
++typedef int (*sw_io_desc_init_func_t)(struct sw_driver_io_descriptor *descriptor);
++typedef void (*sw_hardware_op_func_t)(char *dst_vals, int cpu, const struct sw_driver_io_descriptor *descriptor, u16 counter_size_in_bytes);
++typedef int (*sw_io_desc_print_func_t)(const struct sw_driver_io_descriptor *descriptor);
++typedef int (*sw_io_desc_reset_func_t)(const struct sw_driver_io_descriptor *descriptor);
++typedef bool (*sw_io_desc_available_func_t)(void);
++typedef bool (*sw_hw_op_post_config_func_t)(void);
++
++/**
++ * struct sw_hw_ops - Operations for each of the HW collection mechanisms
++ *                    in swkernelcollector.
++ * @name:           A descriptive name used to identify this particular operation.
++ * @init:           Initialize a metric's collection.
++ * @read:           Read a metric's data.
++ * @write:          Write to the HW for the metric(?).
++ * @print:          Print out the data.
++ * @reset:          Opposite of init--called after we're done collecting.
++ * @available:      Decide whether this H/W op is available on the current platform.
++ * @post_config:    Perform any post-configuration steps.
++ */
++struct sw_hw_ops {
++    const char *name;
++    sw_io_desc_init_func_t       init;
++    sw_hardware_op_func_t        read;
++    sw_hardware_op_func_t        write;
++    sw_io_desc_print_func_t      print;
++    sw_io_desc_reset_func_t      reset;
++    sw_io_desc_available_func_t  available;
++    sw_hw_op_post_config_func_t  post_config;
++};
++
++bool sw_is_valid_hw_op_id(int id);
++int sw_get_hw_op_id(const struct sw_hw_ops *op);
++const struct sw_hw_ops *sw_get_hw_ops_for(int id);
++const char *sw_get_hw_op_abstract_name(const struct sw_hw_ops *op);
++
++int sw_for_each_hw_op(int (*func)(const struct sw_hw_ops *op, void *priv),
++                      void *priv, bool return_on_error);
++
++/**
++ * Add an operation to the list of providers.
++ */
++int sw_register_hw_op(const struct sw_hw_ops *ops);
++/**
++ * Register all H/W operations.
++ */
++int sw_register_hw_ops(void);
++/**
++ * Unregister previously registered H/W operations.
++ */
++void sw_free_hw_ops(void);
++
++#endif // __SW_HARDWARE_IO_H__
+diff --git a/drivers/misc/intel/socwatch/inc/sw_internal.h b/drivers/misc/intel/socwatch/inc/sw_internal.h
+new file mode 100644
+index 000000000000..ca55b0740a6f
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/inc/sw_internal.h
+@@ -0,0 +1,135 @@
++/*
++
++  This file is provided under a dual BSD/GPLv2 license.  When using or
++  redistributing this file, you may do so under either license.
++
++  GPL LICENSE SUMMARY
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of version 2 of the GNU General Public License as
++  published by the Free Software Foundation.
++
++  This program is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  General Public License for more details.
++
++  Contact Information:
++  SoC Watch Developer Team <socwatchdevelopers@intel.com>
++  Intel Corporation,
++  1906 Fox Drive,
++  Champaign, IL 61820
++
++  BSD LICENSE
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of Intel Corporation nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++*/
++#ifndef __SW_DATA_STRUCTS_H__
++#define __SW_DATA_STRUCTS_H__
++
++/*
++ * Taken from 'sw_driver'
++ * TODO: move to separate file?
++ */
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/cpumask.h>
++#include <linux/hrtimer.h>
++#include <linux/fs.h>      // inode
++#include <linux/device.h>  // class_create
++#include <linux/cdev.h>    // cdev_alloc
++#include <linux/vmalloc.h> // vmalloc
++#include <linux/sched.h>   // TASK_INTERRUPTIBLE
++#include <linux/wait.h>    // wait_event_interruptible
++#include <linux/pci.h>     // pci_get_bus_and_slot
++#include <linux/version.h> // LINUX_VERSION_CODE
++#include <linux/sfi.h>     // For SFI F/W version
++#include <asm/hardirq.h>
++#include <linux/cpufreq.h>
++#include <asm/local.h>     // local_t
++#include <linux/hardirq.h> // "in_atomic"
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4,12,0)
++    #include <asm/uaccess.h>   // copy_to_user
++#else
++    #include <linux/uaccess.h>   // copy_to_user
++#endif // LINUX_VERSION_CODE
++
++#ifdef CONFIG_X86_WANT_INTEL_MID
++    #include <asm/intel-mid.h>
++#endif // CONFIG_X86_WANT_INTEL_MID
++/*
++ * End taken from sw_driver
++ */
++
++#include "sw_structs.h"
++#include "sw_ioctl.h"
++#include "sw_list.h"
++
++/* ******************************************
++ * Compile time constants
++ * ******************************************
++ */
++#define GET_POLLED_CPU() (sw_max_num_cpus)
++
++/* ******************************************
++ * Function declarations.
++ * ******************************************
++ */
++/*
++ * Output to user.
++ */
++unsigned long sw_copy_to_user(void *dst, char *src, size_t bytes_to_copy);
++bool sw_check_output_buffer_params(void *buffer, size_t bytes_to_read, size_t buff_size);
++/*
++ * smp call function.
++ */
++void sw_schedule_work(const struct cpumask *mask, void (*work)(void *), void *data);
++/*
++ * Save IRQ flags and retrieve cpu number.
++ */
++int sw_get_cpu(unsigned long *flags);
++/*
++ * Restore IRQ flags.
++ */
++void sw_put_cpu(unsigned long flags);
++/*
++ * Set module scope for cpu frequencies.
++ */
++int sw_set_module_scope_for_cpus(void);
++/*
++ * reset module scope for cpu frequencies.
++ */
++int sw_reset_module_scope_for_cpus(void);
++
++#endif // __SW_DATA_STRUCTS_H__
+diff --git a/drivers/misc/intel/socwatch/inc/sw_list.h b/drivers/misc/intel/socwatch/inc/sw_list.h
+new file mode 100644
+index 000000000000..8d26aa05c589
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/inc/sw_list.h
+@@ -0,0 +1,74 @@
++/*
++
++  This file is provided under a dual BSD/GPLv2 license.  When using or
++  redistributing this file, you may do so under either license.
++
++  GPL LICENSE SUMMARY
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of version 2 of the GNU General Public License as
++  published by the Free Software Foundation.
++
++  This program is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  General Public License for more details.
++
++  Contact Information:
++  SoC Watch Developer Team <socwatchdevelopers@intel.com>
++  Intel Corporation,
++  1906 Fox Drive,
++  Champaign, IL 61820
++
++  BSD LICENSE
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of Intel Corporation nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++*/
++#ifndef __SW_LIST_H__
++#define __SW_LIST_H__
++
++#include <linux/list.h>
++
++#define SW_DEFINE_LIST_HEAD(name, dummy)            struct list_head name
++#define SW_DECLARE_LIST_HEAD(name, dummy)           extern struct list_head name
++#define SW_LIST_ENTRY(name, dummy)                  struct list_head name
++#define SW_LIST_HEAD_VAR(dummy)                     struct list_head
++#define SW_LIST_HEAD_INIT(head)                     INIT_LIST_HEAD(head)
++#define SW_LIST_ENTRY_INIT(node, field)             INIT_LIST_HEAD(&node->field)
++#define SW_LIST_ADD(head, node, field)              list_add_tail(&node->field, head)
++#define SW_LIST_GET_HEAD_ENTRY(head, type, field)   list_first_entry(head, struct type, field)
++#define SW_LIST_UNLINK(node, field)                 list_del(&node->field)
++#define SW_LIST_FOR_EACH_ENTRY(node, head, field)   list_for_each_entry(node, head, field)
++#define SW_LIST_EMPTY(head)                         list_empty(head)
++#define SW_LIST_HEAD_INITIALIZER(head)              LIST_HEAD_INIT(head)
++
++#endif // __SW_LIST_H__
+diff --git a/drivers/misc/intel/socwatch/inc/sw_lock_defs.h b/drivers/misc/intel/socwatch/inc/sw_lock_defs.h
+new file mode 100644
+index 000000000000..88590bf9c551
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/inc/sw_lock_defs.h
+@@ -0,0 +1,96 @@
++/*
++
++  This file is provided under a dual BSD/GPLv2 license.  When using or
++  redistributing this file, you may do so under either license.
++
++  GPL LICENSE SUMMARY
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of version 2 of the GNU General Public License as
++  published by the Free Software Foundation.
++
++  This program is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  General Public License for more details.
++
++  Contact Information:
++  SoC Watch Developer Team <socwatchdevelopers@intel.com>
++  Intel Corporation,
++  1906 Fox Drive,
++  Champaign, IL 61820
++
++  BSD LICENSE
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of Intel Corporation nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++*/
++
++/*
++ * Description: file containing locking routines
++ * used by the power driver.
++ */
++
++#ifndef __SW_LOCK_DEFS_H__
++#define __SW_LOCK_DEFS_H__
++
++#define SW_DEFINE_SPINLOCK(s)   DEFINE_SPINLOCK(s)
++#define SW_DECLARE_SPINLOCK(s)  static spinlock_t s
++
++#define SW_INIT_SPINLOCK(s)     spin_lock_init(&s)
++#define SW_DESTROY_SPINLOCK(s)  /* NOP */
++
++#define LOCK(l) { \
++    unsigned long _tmp_l_flags; \
++    spin_lock_irqsave(&(l), _tmp_l_flags);
++
++#define UNLOCK(l) \
++    spin_unlock_irqrestore(&(l), _tmp_l_flags); \
++    }
++
++#define READ_LOCK(l) { \
++    unsigned long _tmp_l_flags; \
++    read_lock_irqsave(&(l), _tmp_l_flags);
++
++#define READ_UNLOCK(l) \
++    read_unlock_irqrestore(&(l), _tmp_l_flags); \
++    }
++
++#define WRITE_LOCK(l) { \
++    unsigned long _tmp_l_flags; \
++    write_lock_irqsave(&(l), _tmp_l_flags);
++
++#define WRITE_UNLOCK(l) \
++    write_unlock_irqrestore(&(l), _tmp_l_flags); \
++    }
++
++
++#endif // __SW_LOCK_DEFS_H__
+diff --git a/drivers/misc/intel/socwatch/inc/sw_mem.h b/drivers/misc/intel/socwatch/inc/sw_mem.h
+new file mode 100644
+index 000000000000..ccf9b75fae47
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/inc/sw_mem.h
+@@ -0,0 +1,81 @@
++/*
++
++  This file is provided under a dual BSD/GPLv2 license.  When using or
++  redistributing this file, you may do so under either license.
++
++  GPL LICENSE SUMMARY
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of version 2 of the GNU General Public License as
++  published by the Free Software Foundation.
++
++  This program is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  General Public License for more details.
++
++  Contact Information:
++  SoC Watch Developer Team <socwatchdevelopers@intel.com>
++  Intel Corporation,
++  1906 Fox Drive,
++  Champaign, IL 61820
++
++  BSD LICENSE
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of Intel Corporation nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++*/
++
++/*
++ * Description: file containing memory management routines
++ * used by the power driver.
++ */
++
++#ifndef _SW_MEM_H_
++#define _SW_MEM_H_ 1
++
++#include "sw_types.h"
++
++void *sw_kmalloc(size_t size, unsigned flags);
++void sw_kfree(const void *obj);
++/*
++ * Allocate free pages.
++ */
++unsigned long sw_allocate_pages(unsigned int flags, unsigned int alloc_size_in_bytes);
++/*
++ * Free up previously allocated pages.
++ */
++void sw_release_pages(unsigned long addr, unsigned int alloc_size_in_bytes);
++
++u64 sw_get_total_bytes_alloced(void);
++u64 sw_get_max_bytes_alloced(void);
++u64 sw_get_curr_bytes_alloced(void);
++#endif // _SW_MEM_H_
+diff --git a/drivers/misc/intel/socwatch/inc/sw_ops_provider.h b/drivers/misc/intel/socwatch/inc/sw_ops_provider.h
+new file mode 100644
+index 000000000000..d45a78a777d2
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/inc/sw_ops_provider.h
+@@ -0,0 +1,62 @@
++/*
++
++  This file is provided under a dual BSD/GPLv2 license.  When using or
++  redistributing this file, you may do so under either license.
++
++  GPL LICENSE SUMMARY
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of version 2 of the GNU General Public License as
++  published by the Free Software Foundation.
++
++  This program is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  General Public License for more details.
++
++  Contact Information:
++  SoC Watch Developer Team <socwatchdevelopers@intel.com>
++  Intel Corporation,
++  1906 Fox Drive,
++  Champaign, IL 61820
++
++  BSD LICENSE
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of Intel Corporation nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++*/
++#ifndef __SW_OPS_PROVIDER_H__
++#define __SW_OPS_PROVIDER_H__
++
++int sw_register_ops_providers(void);
++void sw_free_ops_providers(void);
++
++#endif // __SW_OPS_PROVIDER_H__
+diff --git a/drivers/misc/intel/socwatch/inc/sw_output_buffer.h b/drivers/misc/intel/socwatch/inc/sw_output_buffer.h
+new file mode 100644
+index 000000000000..f86ef04d3db5
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/inc/sw_output_buffer.h
+@@ -0,0 +1,135 @@
++/*
++
++  This file is provided under a dual BSD/GPLv2 license.  When using or
++  redistributing this file, you may do so under either license.
++
++  GPL LICENSE SUMMARY
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of version 2 of the GNU General Public License as
++  published by the Free Software Foundation.
++
++  This program is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  General Public License for more details.
++
++  Contact Information:
++  SoC Watch Developer Team <socwatchdevelopers@intel.com>
++  Intel Corporation,
++  1906 Fox Drive,
++  Champaign, IL 61820
++
++  BSD LICENSE
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of Intel Corporation nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++*/
++
++#ifndef _SW_OUTPUT_BUFFER_H_
++#define _SW_OUTPUT_BUFFER_H_ 1
++/*
++ * Special mask for the case where all buffers have been flushed.
++ */
++// #define sw_ALL_WRITES_DONE_MASK 0xffffffff
++#define SW_ALL_WRITES_DONE_MASK ((u32)-1)
++/*
++ * Special mask for the case where no data is available to be read.
++ */
++#define SW_NO_DATA_AVAIL_MASK ((u32)-2)
++
++/*
++ * Forward declarations.
++ */
++struct sw_driver_msg;
++
++/*
++ * Data structures.
++ */
++enum sw_wakeup_action {
++    SW_WAKEUP_ACTION_DIRECT,
++    SW_WAKEUP_ACTION_TIMER,
++    SW_WAKEUP_ACTION_NONE,
++};
++
++/*
++ * Variable declarations.
++ */
++extern u64 sw_num_samples_produced, sw_num_samples_dropped;
++extern unsigned long sw_buffer_alloc_size;
++extern int sw_max_num_cpus;
++extern wait_queue_head_t sw_reader_queue;
++
++/*
++ * Public API.
++ */
++int sw_init_per_cpu_buffers(void);
++void sw_destroy_per_cpu_buffers(void);
++void sw_reset_per_cpu_buffers(void);
++
++void sw_count_samples_produced_dropped(void);
++
++int sw_produce_generic_msg(struct sw_driver_msg *, enum sw_wakeup_action);
++
++bool sw_any_seg_full(u32 *val, bool is_flush_mode);
++size_t sw_consume_data(u32 mask, void *buffer, size_t bytes_to_read);
++
++unsigned int sw_get_output_buffer_size(void);
++
++void sw_wait_once(void);
++void sw_wakeup(void);
++
++void sw_print_output_buffer_overheads(void);
++
++/*
++ * Init reader queue.
++ */
++int sw_init_reader_queue(void);
++/*
++ * Destroy reader queue.
++ */
++void sw_destroy_reader_queue(void);
++/*
++ * Wakeup client waiting for a full buffer.
++ */
++void sw_wakeup_reader(enum sw_wakeup_action);
++/*
++ * Wakeup client waiting for a full buffer, and
++ * cancel any timers initialized by the reader
++ * subsys.
++ */
++void sw_cancel_reader(void);
++/*
++ * Print some stats about the reader subsys.
++ */
++void sw_print_reader_stats(void);
++
++#endif // _SW_OUTPUT_BUFFER_H_
+diff --git a/drivers/misc/intel/socwatch/inc/sw_overhead_measurements.h b/drivers/misc/intel/socwatch/inc/sw_overhead_measurements.h
+new file mode 100644
+index 000000000000..8899c64c7b2b
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/inc/sw_overhead_measurements.h
+@@ -0,0 +1,175 @@
++/*
++
++  This file is provided under a dual BSD/GPLv2 license.  When using or
++  redistributing this file, you may do so under either license.
++
++  GPL LICENSE SUMMARY
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of version 2 of the GNU General Public License as
++  published by the Free Software Foundation.
++
++  This program is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  General Public License for more details.
++
++  Contact Information:
++  SoC Watch Developer Team <socwatchdevelopers@intel.com>
++  Intel Corporation,
++  1906 Fox Drive,
++  Champaign, IL 61820
++
++  BSD LICENSE
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of Intel Corporation nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++*/
++
++/*
++ * Description: file containing overhead measurement
++ * routines used by the power driver.
++ */
++
++#ifndef _PW_OVERHEAD_MEASUREMENTS_H_
++#define _PW_OVERHEAD_MEASUREMENTS_H_
++
++/*
++ * Helper macro to declare variables required
++ * for conducting overhead measurements.
++ */
++/*
++ * For each function that you want to profile,
++ * do the following (e.g. function 'foo'):
++ * **************************************************
++ * DECLARE_OVERHEAD_VARS(foo);
++ * **************************************************
++ * This will declare the two variables required
++ * to keep track of overheads incurred in
++ * calling/servicing 'foo'. Note that the name
++ * that you declare here *MUST* match the function name!
++ */
++
++#if DO_OVERHEAD_MEASUREMENTS
++
++#ifndef __get_cpu_var
++    /*
++     * Kernels >= 3.19 don't include a definition
++     * of '__get_cpu_var'. Create one now.
++     */
++    #define __get_cpu_var(var) *this_cpu_ptr(&var)
++#endif // __get_cpu_var
++#ifndef __raw_get_cpu_var
++    /*
++     * Kernels >= 3.19 don't include a definition
++     * of '__raw_get_cpu_var'. Create one now.
++     */
++    #define __raw_get_cpu_var(var) *raw_cpu_ptr(&var)
++#endif // __get_cpu_var
++
++extern u64 sw_timestamp(void);
++
++#define DECLARE_OVERHEAD_VARS(name)					\
++    static DEFINE_PER_CPU(u64, name##_elapsed_time) = 0;				\
++    static DEFINE_PER_CPU(local_t, name##_num_iters) = LOCAL_INIT(0);		\
++									\
++    static inline u64 get_my_cumulative_elapsed_time_##name(void){		\
++	return *(&__get_cpu_var(name##_elapsed_time));			\
++    }									\
++    static inline int get_my_cumulative_num_iters_##name(void){		\
++	return local_read(&__get_cpu_var(name##_num_iters));		\
++    }									\
++									\
++    static inline u64 name##_get_cumulative_elapsed_time_for(int cpu){	\
++	return *(&per_cpu(name##_elapsed_time, cpu));			\
++    }									\
++									\
++    static inline int name##_get_cumulative_num_iters_for(int cpu){	\
++    	return local_read(&per_cpu(name##_num_iters, cpu));		\
++    }									\
++									\
++    static inline void name##_get_cumulative_overhead_params(u64 *time,	\
++							     int *iters){ \
++	int cpu = 0;							\
++	*time = 0; *iters = 0;						\
++	for_each_online_cpu(cpu){					\
++	    *iters += name##_get_cumulative_num_iters_for(cpu);		\
++	    *time += name##_get_cumulative_elapsed_time_for(cpu);	\
++	}								\
++	return;								\
++    }									\
++	\
++static inline void name##_print_cumulative_overhead_params(const char *str){\
++	int num = 0; \
++	u64 time = 0; \
++	name##_get_cumulative_overhead_params(&time, &num); \
++	printk(KERN_INFO "%s: %d iters took %llu nano seconds!\n", str, num, time); \
++}
++
++#define DO_PER_CPU_OVERHEAD_FUNC(func, ...) do{		\
++	u64 *__v = &__raw_get_cpu_var(func##_elapsed_time);	\
++	u64 tmp_1 = 0, tmp_2 = 0;			\
++	local_inc(&__raw_get_cpu_var(func##_num_iters));	\
++	tmp_1 = sw_timestamp();				\
++	{						\
++	    func(__VA_ARGS__);				\
++	}						\
++	tmp_2 = sw_timestamp();				\
++	*(__v) += (tmp_2 - tmp_1);			\
++    }while(0)
++
++#define DO_PER_CPU_OVERHEAD_FUNC_RET(type, func, ...) ({	\
++        type __ret;                                     \
++	u64 *__v = &__raw_get_cpu_var(func##_elapsed_time);	\
++	u64 tmp_1 = 0, tmp_2 = 0;				\
++	local_inc(&__raw_get_cpu_var(func##_num_iters));        \
++	tmp_1 = sw_timestamp();				        \
++	{							\
++	    __ret = func(__VA_ARGS__);				\
++	}							\
++	tmp_2 = sw_timestamp();				        \
++	*(__v) += (tmp_2 - tmp_1);				\
++        __ret;                                                  \
++    })
++
++#else // !DO_OVERHEAD_MEASUREMENTS
++#define DECLARE_OVERHEAD_VARS(name) \
++    static inline void name##_print_cumulative_overhead_params(const char *str) { /* NOP */ }
++
++#define DO_PER_CPU_OVERHEAD_FUNC(func, ...) func(__VA_ARGS__)
++#define DO_PER_CPU_OVERHEAD_FUNC_RET(type, func, ...) func(__VA_ARGS__)
++
++#endif // DO_OVERHEAD_MEASUREMENTS
++
++#define PRINT_CUMULATIVE_OVERHEAD_PARAMS(name, str) \
++    name##_print_cumulative_overhead_params(str)
++
++#endif // _PW_OVERHEAD_MEASUREMENTS_H_
+diff --git a/drivers/misc/intel/socwatch/inc/sw_telem.h b/drivers/misc/intel/socwatch/inc/sw_telem.h
+new file mode 100644
+index 000000000000..27fb612ba808
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/inc/sw_telem.h
+@@ -0,0 +1,75 @@
++/*
++
++  This file is provided under a dual BSD/GPLv2 license.  When using or
++  redistributing this file, you may do so under either license.
++
++  GPL LICENSE SUMMARY
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of version 2 of the GNU General Public License as
++  published by the Free Software Foundation.
++
++  This program is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  General Public License for more details.
++
++  Contact Information:
++  SoC Watch Developer Team <socwatchdevelopers@intel.com>
++  Intel Corporation,
++  1906 Fox Drive,
++  Champaign, IL 61820
++
++  BSD LICENSE
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of Intel Corporation nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++*/
++
++#ifndef _SW_TELEM_H_
++#define _SW_TELEM_H_ 1
++
++#include "sw_structs.h"      // sw_driver_io_descriptor
++#include "sw_types.h"        // u8 and other types
++
++int sw_telem_init_func(struct sw_driver_io_descriptor *descriptor);
++void sw_read_telem_info(char *dst_vals, int cpu,
++                          const struct sw_driver_io_descriptor *descriptor,
++                          u16 counter_size_in_bytes);
++void sw_write_telem_info(char *dst_vals, int cpu,
++                           const struct sw_driver_io_descriptor *descriptor,
++                           u16 counter_size_in_bytes);
++int sw_reset_telem(const struct sw_driver_io_descriptor *descriptor);
++bool sw_telem_available(void);
++bool sw_telem_post_config(void);
++
++
++#endif /* SW_TELEM_H */
+diff --git a/drivers/misc/intel/socwatch/inc/sw_trace_notifier_provider.h b/drivers/misc/intel/socwatch/inc/sw_trace_notifier_provider.h
+new file mode 100644
+index 000000000000..cdcb771318e0
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/inc/sw_trace_notifier_provider.h
+@@ -0,0 +1,81 @@
++/*
++
++  This file is provided under a dual BSD/GPLv2 license.  When using or
++  redistributing this file, you may do so under either license.
++
++  GPL LICENSE SUMMARY
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of version 2 of the GNU General Public License as
++  published by the Free Software Foundation.
++
++  This program is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  General Public License for more details.
++
++  Contact Information:
++  SoC Watch Developer Team <socwatchdevelopers@intel.com>
++  Intel Corporation,
++  1906 Fox Drive,
++  Champaign, IL 61820
++
++  BSD LICENSE
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of Intel Corporation nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++*/
++#ifndef __SW_TRACE_NOTIFIER_PROVIDER_H__
++#define __SW_TRACE_NOTIFIER_PROVIDER_H__
++
++/*
++ * Some architectures and OS versions require a "discovery"
++ * phase for tracepoints and/or notifiers. Allow for that here.
++ */
++int sw_extract_trace_notifier_providers(void);
++/*
++ * Reset trace/notifier providers at the end
++ * of a collection.
++ */
++void sw_reset_trace_notifier_providers(void);
++/*
++ * Print statistics on trace/notifier provider overheads.
++ */
++void sw_print_trace_notifier_provider_overheads(void);
++/*
++ * Add all trace/notifier providers.
++ */
++int sw_add_trace_notifier_providers(void);
++/*
++ * Remove previously added providers.
++ */
++void sw_remove_trace_notifier_providers(void);
++#endif // __SW_TRACE_NOTIFIER_PROVIDER_H__
+diff --git a/drivers/misc/intel/socwatch/inc/sw_tracepoint_handlers.h b/drivers/misc/intel/socwatch/inc/sw_tracepoint_handlers.h
+new file mode 100644
+index 000000000000..82ccc406d642
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/inc/sw_tracepoint_handlers.h
+@@ -0,0 +1,127 @@
++/*
++
++  This file is provided under a dual BSD/GPLv2 license.  When using or
++  redistributing this file, you may do so under either license.
++
++  GPL LICENSE SUMMARY
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of version 2 of the GNU General Public License as
++  published by the Free Software Foundation.
++
++  This program is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++  General Public License for more details.
++
++  Contact Information:
++  SoC Watch Developer Team <socwatchdevelopers@intel.com>
++  Intel Corporation,
++  1906 Fox Drive,
++  Champaign, IL 61820
++
++  BSD LICENSE
++
++  Copyright(c) 2014 - 2017 Intel Corporation.
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of Intel Corporation nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++*/
++#ifndef __SW_TRACEPOINT_HANDLERS_H__
++#define __SW_TRACEPOINT_HANDLERS_H__
++
++#include "sw_internal.h"
++
++extern pw_u16_t sw_min_polling_interval_msecs;
++
++enum sw_trace_data_type {
++    SW_TRACE_COLLECTOR_TRACEPOINT,
++    SW_TRACE_COLLECTOR_NOTIFIER
++};
++
++struct sw_trace_notifier_name {
++    const char *kernel_name; // The tracepoint name; used by the kernel to identify tracepoints
++    const char *abstract_name; // An abstract name used by plugins to specify tracepoints-of-interest; shared with Ring-3
++};
++
++typedef struct sw_trace_notifier_data sw_trace_notifier_data_t;
++typedef int (*sw_trace_notifier_register_func)(struct sw_trace_notifier_data *node);
++typedef int (*sw_trace_notifier_unregister_func)(struct sw_trace_notifier_data *node);
++
++struct sw_trace_notifier_data {
++    enum sw_trace_data_type type; // Tracepoint or Notifier
++    const struct sw_trace_notifier_name *name; // Tracepoint name(s)
++    sw_trace_notifier_register_func probe_register; // probe register function
++    sw_trace_notifier_unregister_func probe_unregister; // probe unregister function
++    struct tracepoint *tp;
++    bool always_register; // Set to TRUE if this tracepoint/notifier must ALWAYS be registered, regardless
++                          // of whether the user has specified anything to collect
++    bool was_registered;
++    SW_DEFINE_LIST_HEAD(list, sw_collector_data); // List of 'sw_collector_data' instances for this tracepoint or notifier
++};
++
++struct sw_topology_node {
++    struct sw_driver_topology_change change;
++    SW_LIST_ENTRY(list, sw_topology_node);
++};
++SW_DECLARE_LIST_HEAD(sw_topology_list, sw_topology_node); // List of entries tracking changes in CPU topology
++extern size_t sw_num_topology_entries; // Size of the 'sw_topology_list'
++
++int sw_extract_tracepoints(void);
++int sw_register_trace_notifiers(void);
++int sw_unregister_trace_notifiers(void);
++
++/*
++ * Register a single TRACE/NOTIFY provider.
++ */
++int sw_register_trace_notify_provider(struct sw_trace_notifier_data *tnode);
++/*
++ * Add all TRACE/NOTIFY providers.
++ */
++int sw_add_trace_notify(void);
++void sw_remove_trace_notify(void);
++
++void sw_reset_trace_notifier_lists(void);
++
++void sw_print_trace_notifier_overheads(void);
++
++int sw_for_each_tracepoint_node(int (*func)(struct sw_trace_notifier_data *node, void *priv), void *priv, bool return_on_error);
++int sw_for_each_notifier_node(int (*func)(struct sw_trace_notifier_data *node, void *priv), void *priv, bool return_on_error);
++
++int sw_get_trace_notifier_id(struct sw_trace_notifier_data *node);
++
++const char *sw_get_trace_notifier_kernel_name(struct sw_trace_notifier_data *node);
++const char *sw_get_trace_notifier_abstract_name(struct sw_trace_notifier_data *node);
++
++/*
++ * Clear out the topology list.
++ */
++void sw_clear_topology_list(void);
++
++#endif // __SW_TRACEPOINT_HANDLERS_H__
+-- 
+2.18.0
+

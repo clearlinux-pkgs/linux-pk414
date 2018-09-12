@@ -1,0 +1,4419 @@
+From 1d066658628b17aa53882c75985fc7ea7f83f3e3 Mon Sep 17 00:00:00 2001
+From: Miguel Bernal Marin <miguel.bernal.marin@linux.intel.com>
+Date: Fri, 17 Aug 2018 17:08:13 -0500
+Subject: [PATCH 8003/8021] misc: intel: sepdk: add inc files from sep
+
+---
+ drivers/misc/intel/sepdk/inc/apic.h           | 114 ++++
+ drivers/misc/intel/sepdk/inc/asm_helper.h     | 180 ++++++
+ drivers/misc/intel/sepdk/inc/chap.h           |  34 ++
+ drivers/misc/intel/sepdk/inc/control.h        | 525 +++++++++++++++++
+ drivers/misc/intel/sepdk/inc/core2.h          |  52 ++
+ drivers/misc/intel/sepdk/inc/cpumon.h         |  57 ++
+ drivers/misc/intel/sepdk/inc/ecb_iterators.h  | 379 +++++++++++++
+ drivers/misc/intel/sepdk/inc/eventmux.h       |  54 ++
+ drivers/misc/intel/sepdk/inc/gfx.h            |  55 ++
+ drivers/misc/intel/sepdk/inc/gmch.h           |  35 ++
+ drivers/misc/intel/sepdk/inc/haswellunc_sa.h  |  66 +++
+ drivers/misc/intel/sepdk/inc/jkt_unc_ha.h     |  41 ++
+ drivers/misc/intel/sepdk/inc/jkt_unc_qpill.h  |  58 ++
+ drivers/misc/intel/sepdk/inc/linuxos.h        | 102 ++++
+ drivers/misc/intel/sepdk/inc/lwpmudrv.h       | 278 +++++++++
+ drivers/misc/intel/sepdk/inc/msrdefs.h        |  88 +++
+ drivers/misc/intel/sepdk/inc/output.h         | 114 ++++
+ drivers/misc/intel/sepdk/inc/pci.h            | 211 +++++++
+ drivers/misc/intel/sepdk/inc/pebs.h           | 532 +++++++++++++++++
+ drivers/misc/intel/sepdk/inc/perfver4.h       |  54 ++
+ drivers/misc/intel/sepdk/inc/pmi.h            |  63 +++
+ drivers/misc/intel/sepdk/inc/sepdrv_p_state.h |  48 ++
+ drivers/misc/intel/sepdk/inc/silvermont.h     |  44 ++
+ drivers/misc/intel/sepdk/inc/sys_info.h       |  70 +++
+ drivers/misc/intel/sepdk/inc/unc_common.h     | 238 ++++++++
+ drivers/misc/intel/sepdk/inc/unc_gt.h         |  90 +++
+ drivers/misc/intel/sepdk/inc/utility.h        | 533 ++++++++++++++++++
+ .../misc/intel/sepdk/inc/valleyview_sochap.h  |  69 +++
+ 28 files changed, 4184 insertions(+)
+ create mode 100644 drivers/misc/intel/sepdk/inc/apic.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/asm_helper.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/chap.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/control.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/core2.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/cpumon.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/ecb_iterators.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/eventmux.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/gfx.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/gmch.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/haswellunc_sa.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/jkt_unc_ha.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/jkt_unc_qpill.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/linuxos.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/lwpmudrv.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/msrdefs.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/output.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/pci.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/pebs.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/perfver4.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/pmi.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/sepdrv_p_state.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/silvermont.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/sys_info.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/unc_common.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/unc_gt.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/utility.h
+ create mode 100644 drivers/misc/intel/sepdk/inc/valleyview_sochap.h
+
+diff --git a/drivers/misc/intel/sepdk/inc/apic.h b/drivers/misc/intel/sepdk/inc/apic.h
+new file mode 100644
+index 000000000000..392fbd2ca644
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/apic.h
+@@ -0,0 +1,114 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++#ifndef _APIC_H_
++#define _APIC_H_
++
++#include <stddef.h>
++#include <linux/irq.h>
++
++typedef U64 *PHYSICAL_ADDRESS;
++/**
++// Data Types and Macros
++*/
++/*
++// APIC registers and constants
++*/
++// APIC base MSR
++#define DRV_APIC_BASE_MSR   0x001b
++
++// APIC registers
++#define DRV_APIC_LCL_ID     0x0020
++#define DRV_APIC_LCL_TSKPRI 0x0080
++#define DRV_APIC_LCL_PPR    0x00a0
++#define DRV_APIC_LCL_EOI    0x00b0
++#define DRV_APIC_LCL_LDEST  0x00d0
++#define DRV_APIC_LCL_DSTFMT 0x00e0
++#define DRV_APIC_LCL_SVR    0x00f0
++#define DRV_APIC_LCL_ICR    0x0300
++#define DRV_APIC_LVT_TIMER  0x0320
++#define DRV_APIC_LVT_PMI    0x0340
++#define DRV_APIC_LVT_LINT0  0x0350
++#define DRV_APIC_LVT_LINT1  0x0360
++#define DRV_APIC_LVT_ERROR  0x0370
++
++#define DRV_APIC_LCL_ID_MSR     0x802
++#define DRV_APIC_LCL_TSKPRI_MSR 0x808
++#define DRV_APIC_LCL_PPR_MSR    0x80a
++#define DRV_APIC_LCL_EOI_MSR    0x80b
++#define DRV_APIC_LCL_LDEST_MSR  0x80d
++#define DRV_APIC_LCL_DSTFMT_MSR 0x80e
++#define DRV_APIC_LCL_SVR_MSR    0x80f
++#define DRV_APIC_LCL_ICR_MSR    0x830
++#define DRV_APIC_LVT_TIMER_MSR  0x832
++#define DRV_APIC_LVT_PMI_MSR    0x834
++#define DRV_APIC_LVT_LINT0_MSR  0x835
++#define DRV_APIC_LVT_LINT1_MSR  0x836
++#define DRV_APIC_LVT_ERROR_MSR  0x837
++
++// masks for LVT
++#define DRV_LVT_MASK        0x10000
++#define DRV_LVT_EDGE        0x00000
++#define DRV_LVT_LEVEL       0x08000
++#define DRV_LVT_EXTINT      0x00700
++#define DRV_LVT_NMI         0x00400
++
++// task priorities
++#define DRV_APIC_TSKPRI_LO  0x0000
++#define DRV_APIC_TSKPRI_HI  0x00f0
++
++#define DRV_X2APIC_ENABLED  0xc00LL
++
++//// Interrupt vector for PMU overflow event
++//
++//     Choose the highest unused IDT vector possible so that our
++//     callback routine runs at the highest priority allowed;
++//     must avoid using pre-defined vectors in,
++//              include/asm/irq.h
++//              include/asm/hw_irq.h
++//              include/asm/irq_vectors.h
++//
++// FIRST_DEVICE_VECTOR should be valid for kernels 2.6.33 and earlier
++#define CPU_PERF_VECTOR     DRV_LVT_NMI
++// Has the APIC Been enabled
++#define DRV_APIC_BASE_GLOBAL_ENABLED(a)    ((a) & 1 << 11)
++#define DRV_APIC_VIRTUAL_WIRE_ENABLED(a)   ((a) & 0x100)
++
++/**
++// Function Declarations
++*/
++
++/*
++// APIC control functions
++*/
++extern VOID APIC_Enable_Pmi(VOID);
++extern VOID APIC_Init(PVOID param);
++extern VOID APIC_Install_Interrupt_Handler(PVOID param);
++extern VOID APIC_Restore_LVTPC(PVOID param);
++
++#endif 
+diff --git a/drivers/misc/intel/sepdk/inc/asm_helper.h b/drivers/misc/intel/sepdk/inc/asm_helper.h
+new file mode 100644
+index 000000000000..0b24829fca2d
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/asm_helper.h
+@@ -0,0 +1,180 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++#ifndef _ASM_HELPER_H_
++#define _ASM_HELPER_H_
++
++#include <linux/version.h>
++
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0)
++
++#include <asm/dwarf2.h>
++#include <asm/calling.h>
++
++#else
++
++#ifdef CONFIG_AS_CFI
++
++#define CFI_STARTPROC         .cfi_startproc
++#define CFI_ENDPROC           .cfi_endproc
++#define CFI_ADJUST_CFA_OFFSET .cfi_adjust_cfa_offset
++#define CFI_REL_OFFSET        .cfi_rel_offset
++#define CFI_RESTORE           .cfi_restore
++
++#else
++
++.macro cfi_ignore a=0, b=0, c=0, d=0
++.endm
++
++#define CFI_STARTPROC           cfi_ignore
++#define CFI_ENDPROC             cfi_ignore
++#define CFI_ADJUST_CFA_OFFSET   cfi_ignore
++#define CFI_REL_OFFSET          cfi_ignore
++#define CFI_RESTORE             cfi_ignore
++#endif
++
++#ifdef CONFIG_X86_64
++    .macro SAVE_C_REGS_HELPER offset=0 rax=1 rcx=1 r8910=1 r11=1
++    .if \r11
++    movq %r11, 6*8+\offset(%rsp)
++    CFI_REL_OFFSET r11, \offset
++    .endif
++    .if \r8910
++    movq %r10, 7*8+\offset(%rsp)
++    CFI_REL_OFFSET r10, \offset
++    movq %r9,  8*8+\offset(%rsp)
++    CFI_REL_OFFSET r9, \offset
++    movq %r8,  9*8+\offset(%rsp)
++    CFI_REL_OFFSET r8, \offset
++    .endif
++    .if \rax
++    movq %rax, 10*8+\offset(%rsp)
++    CFI_REL_OFFSET rax, \offset
++    .endif
++    .if \rcx
++    movq %rcx, 11*8+\offset(%rsp)
++    CFI_REL_OFFSET rcx, \offset
++    .endif
++    movq %rdx, 12*8+\offset(%rsp)
++    CFI_REL_OFFSET rdx, \offset
++    movq %rsi, 13*8+\offset(%rsp)
++    CFI_REL_OFFSET rsi, \offset
++    movq %rdi, 14*8+\offset(%rsp)
++    CFI_REL_OFFSET rdi, \offset
++    .endm
++    .macro SAVE_C_REGS offset=0
++    SAVE_C_REGS_HELPER \offset, 1, 1, 1, 1
++    .endm
++    .macro SAVE_EXTRA_REGS offset=0
++    movq %r15, 0*8+\offset(%rsp)
++    CFI_REL_OFFSET r15, \offset
++    movq %r14, 1*8+\offset(%rsp)
++    CFI_REL_OFFSET r14, \offset
++    movq %r13, 2*8+\offset(%rsp)
++    CFI_REL_OFFSET r13, \offset
++    movq %r12, 3*8+\offset(%rsp)
++    CFI_REL_OFFSET r12, \offset
++    movq %rbp, 4*8+\offset(%rsp)
++    CFI_REL_OFFSET rbp, \offset
++    movq %rbx, 5*8+\offset(%rsp)
++    CFI_REL_OFFSET rbx, \offset
++    .endm
++
++    .macro RESTORE_EXTRA_REGS offset=0
++    movq 0*8+\offset(%rsp), %r15
++    CFI_RESTORE r15
++    movq 1*8+\offset(%rsp), %r14
++    CFI_RESTORE r14
++    movq 2*8+\offset(%rsp), %r13
++    CFI_RESTORE r13
++    movq 3*8+\offset(%rsp), %r12
++    CFI_RESTORE r12
++    movq 4*8+\offset(%rsp), %rbp
++    CFI_RESTORE rbp
++    movq 5*8+\offset(%rsp), %rbx
++    CFI_RESTORE rbx
++    .endm
++    .macro RESTORE_C_REGS_HELPER rstor_rax=1, rstor_rcx=1, rstor_r11=1, rstor_r8910=1, rstor_rdx=1
++    .if \rstor_r11
++    movq 6*8(%rsp), %r11
++    CFI_RESTORE r11
++    .endif
++    .if \rstor_r8910
++    movq 7*8(%rsp), %r10
++    CFI_RESTORE r10
++    movq 8*8(%rsp), %r9
++    CFI_RESTORE r9
++    movq 9*8(%rsp), %r8
++    CFI_RESTORE r8
++    .endif
++    .if \rstor_rax
++    movq 10*8(%rsp), %rax
++    CFI_RESTORE rax
++    .endif
++    .if \rstor_rcx
++    movq 11*8(%rsp), %rcx
++    CFI_RESTORE rcx
++    .endif
++    .if \rstor_rdx
++    movq 12*8(%rsp), %rdx
++    CFI_RESTORE rdx
++    .endif
++    movq 13*8(%rsp), %rsi
++    CFI_RESTORE rsi
++    movq 14*8(%rsp), %rdi
++    CFI_RESTORE rdi
++    .endm
++    .macro RESTORE_C_REGS
++    RESTORE_C_REGS_HELPER 1,1,1,1,1
++    .endm
++
++    .macro ALLOC_PT_GPREGS_ON_STACK addskip=0
++    subq    $15*8+\addskip, %rsp
++    CFI_ADJUST_CFA_OFFSET 15*8+\addskip
++    .endm
++
++    .macro REMOVE_PT_GPREGS_FROM_STACK addskip=0
++    addq $15*8+\addskip, %rsp
++    CFI_ADJUST_CFA_OFFSET -(15*8+\addskip)
++    .endm
++
++    .macro SAVE_ALL
++    ALLOC_PT_GPREGS_ON_STACK
++    SAVE_C_REGS
++    SAVE_EXTRA_REGS
++    .endm
++
++    .macro RESTORE_ALL
++    RESTORE_EXTRA_REGS
++    RESTORE_C_REGS
++    REMOVE_PT_GPREGS_FROM_STACK
++    .endm
++#endif //CONFIG_X86_64
++#endif
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/chap.h b/drivers/misc/intel/sepdk/inc/chap.h
+new file mode 100644
+index 000000000000..0a0504393ecc
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/chap.h
+@@ -0,0 +1,34 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++#ifndef _CHAP_H_
++#define _CHAP_H_
++
++extern CS_DISPATCH_NODE  chap_dispatch;
++
++#endif 
+diff --git a/drivers/misc/intel/sepdk/inc/control.h b/drivers/misc/intel/sepdk/inc/control.h
+new file mode 100644
+index 000000000000..8f92083c136b
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/control.h
+@@ -0,0 +1,525 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++#ifndef _CONTROL_H_
++#define _CONTROL_H_
++
++#include <linux/smp.h>
++#include <linux/timer.h>
++#if defined(DRV_IA32)
++#include <asm/apic.h>
++#endif
++#include <asm/io.h>
++#if defined(DRV_IA32)
++#include <asm/msr.h>
++#endif
++#include <asm/atomic.h>
++#include <linux/interrupt.h>
++
++#include "lwpmudrv_defines.h"
++#include "lwpmudrv.h"
++#include "lwpmudrv_types.h"
++#if defined(BUILD_CHIPSET)
++#include "lwpmudrv_chipset.h"
++#endif
++
++// large memory allocation will be used if the requested size (in bytes) is
++// above this threshold
++#define  MAX_KMALLOC_SIZE ((1<<17)-1)
++
++// check whether Linux driver should use unlocked ioctls (not protected by BKL)
++#if defined(HAVE_UNLOCKED_IOCTL)
++#define DRV_USE_UNLOCKED_IOCTL
++#endif
++#if defined(DRV_USE_UNLOCKED_IOCTL)
++#define IOCTL_OP .unlocked_ioctl
++#define IOCTL_OP_TYPE long
++#define IOCTL_USE_INODE
++#else
++#define IOCTL_OP .ioctl
++#define IOCTL_OP_TYPE S32
++#define IOCTL_USE_INODE struct   inode  *inode,
++#endif
++
++// Information about the state of the driver
++typedef struct GLOBAL_STATE_NODE_S  GLOBAL_STATE_NODE;
++typedef        GLOBAL_STATE_NODE   *GLOBAL_STATE;
++struct GLOBAL_STATE_NODE_S {
++    volatile S32    cpu_count;
++    volatile S32    dpc_count;
++
++    S32             num_cpus;       // Number of CPUs in the system
++    S32             active_cpus;    // Number of active CPUs - some cores can be
++                                    // deactivated by the user / admin
++    S32             num_em_groups;
++    S32             num_descriptors;
++    volatile S32    current_phase;
++    U32             num_modules;
++};
++
++// Access Macros
++#define  GLOBAL_STATE_num_cpus(x)          ((x).num_cpus)
++#define  GLOBAL_STATE_active_cpus(x)       ((x).active_cpus)
++#define  GLOBAL_STATE_cpu_count(x)         ((x).cpu_count)
++#define  GLOBAL_STATE_dpc_count(x)         ((x).dpc_count)
++#define  GLOBAL_STATE_num_em_groups(x)     ((x).num_em_groups)
++#define  GLOBAL_STATE_num_descriptors(x)   ((x).num_descriptors)
++#define  GLOBAL_STATE_current_phase(x)     ((x).current_phase)
++#define  GLOBAL_STATE_sampler_id(x)        ((x).sampler_id)
++#define  GLOBAL_STATE_num_modules(x)       ((x).num_modules)
++
++/*
++ *
++ *
++ * CPU State data structure and access macros
++ *
++ */
++typedef struct CPU_STATE_NODE_S  CPU_STATE_NODE;
++typedef        CPU_STATE_NODE   *CPU_STATE;
++struct CPU_STATE_NODE_S {
++    S32         apic_id;             // Processor ID on the system bus
++    PVOID       apic_linear_addr;    // linear address of local apic
++    PVOID       apic_physical_addr;  // physical address of local apic
++
++    PVOID       idt_base;            // local IDT base address
++    atomic_t    in_interrupt;
++
++#if defined(DRV_IA32)
++    U64         saved_ih;            // saved perfvector to restore
++#endif
++#if defined(DRV_EM64T)
++    PVOID       saved_ih;            // saved perfvector to restore
++#endif
++
++    U64         last_mperf;          // previous value of MPERF, needed for calculating delta MPERF
++    U64         last_aperf;          // previous value of APERF, needed for calculating delta MPERF
++    DRV_BOOL    last_p_state_valid;  // are the previous values valid? (e.g., the first measurement does not have
++                                     // a previous value for calculating the delta's.
++    DRV_BOOL    p_state_counting;    // Flag to mark PMI interrupt from fixed event
++
++    S64        *em_tables;           // holds the data that is saved/restored
++                                     // during event multiplexing
++    U32         em_table_offset;
++
++    struct timer_list *em_timer;
++    U32         current_group;
++    S32         trigger_count;
++    S32         trigger_event_num;
++
++    DISPATCH    dispatch;
++    PVOID       lbr_area;
++    PVOID       old_dts_buffer;
++    PVOID       dts_buffer;
++    U32         dts_buffer_size;
++    U32         dts_buffer_offset;
++    U32         initial_mask;
++    U32         accept_interrupt;
++
++#if defined(BUILD_CHIPSET)
++    // Chipset counter stuff
++    U32         chipset_count_init;  // flag to initialize the last MCH and ICH arrays below.
++    U64         last_mch_count[8];
++    U64         last_ich_count[8];
++    U64         last_gmch_count[MAX_CHIPSET_COUNTERS];
++    U64         last_mmio_count[32]; // it's only 9 now but the next generation may have 29.
++#endif
++
++    U64        *pmu_state;           // holds PMU state (e.g., MSRs) that will be
++                                     // saved before and restored after collection
++    S32         socket_master;
++    S32         core_master;
++    S32         thr_master;
++    U64         num_samples;
++    U64         reset_mask;
++    U64         group_swap;
++    U64         last_visa_count[16];
++    U16         cpu_module_num;
++    U16         cpu_module_master;
++    S32         system_master;
++    DRV_BOOL    offlined;
++    U32         nmi_handled;
++    struct tasklet_struct nmi_tasklet;
++    U32         em_timer_delay;
++    U32         core_type;
++};
++
++#define CPU_STATE_apic_id(cpu)              (cpu)->apic_id
++#define CPU_STATE_apic_linear_addr(cpu)     (cpu)->apic_linear_addr
++#define CPU_STATE_apic_physical_addr(cpu)   (cpu)->apic_physical_addr
++#define CPU_STATE_idt_base(cpu)             (cpu)->idt_base
++#define CPU_STATE_in_interrupt(cpu)         (cpu)->in_interrupt
++#define CPU_STATE_saved_ih(cpu)             (cpu)->saved_ih
++#define CPU_STATE_saved_ih_hi(cpu)          (cpu)->saved_ih_hi
++#define CPU_STATE_dpc(cpu)                  (cpu)->dpc
++#define CPU_STATE_em_tables(cpu)            (cpu)->em_tables
++#define CPU_STATE_em_table_offset(cpu)      (cpu)->em_table_offset
++#define CPU_STATE_pmu_state(cpu)            (cpu)->pmu_state
++#define CPU_STATE_em_dpc(cpu)               (cpu)->em_dpc
++#define CPU_STATE_em_timer(cpu)             (cpu)->em_timer
++#define CPU_STATE_current_group(cpu)        (cpu)->current_group
++#define CPU_STATE_trigger_count(cpu)        (cpu)->trigger_count
++#define CPU_STATE_trigger_event_num(cpu)    (cpu)->trigger_event_num
++#define CPU_STATE_dispatch(cpu)             (cpu)->dispatch
++#define CPU_STATE_lbr(cpu)                  (cpu)->lbr
++#define CPU_STATE_old_dts_buffer(cpu)       (cpu)->old_dts_buffer
++#define CPU_STATE_dts_buffer(cpu)           (cpu)->dts_buffer
++#define CPU_STATE_dts_buffer_size(cpu)      (cpu)->dts_buffer_size
++#define CPU_STATE_dts_buffer_offset(cpu)    (cpu)->dts_buffer_offset
++#define CPU_STATE_initial_mask(cpu)         (cpu)->initial_mask
++#define CPU_STATE_accept_interrupt(cpu)     (cpu)->accept_interrupt
++#define CPU_STATE_msr_value(cpu)            (cpu)->msr_value
++#define CPU_STATE_msr_addr(cpu)             (cpu)->msr_addr
++#define CPU_STATE_socket_master(cpu)        (cpu)->socket_master
++#define CPU_STATE_core_master(cpu)          (cpu)->core_master
++#define CPU_STATE_thr_master(cpu)           (cpu)->thr_master
++#define CPU_STATE_num_samples(cpu)          (cpu)->num_samples
++#define CPU_STATE_reset_mask(cpu)           (cpu)->reset_mask
++#define CPU_STATE_group_swap(cpu)           (cpu)->group_swap
++#define CPU_STATE_last_mperf(cpu)           (cpu)->last_mperf
++#define CPU_STATE_last_aperf(cpu)           (cpu)->last_aperf
++#define CPU_STATE_last_p_state_valid(cpu)   (cpu)->last_p_state_valid
++#define CPU_STATE_cpu_module_num(cpu)       (cpu)->cpu_module_num
++#define CPU_STATE_cpu_module_master(cpu)    (cpu)->cpu_module_master
++#define CPU_STATE_p_state_counting(cpu)     (cpu)->p_state_counting
++#define CPU_STATE_system_master(cpu)        (cpu)->system_master
++#define CPU_STATE_offlined(cpu)             (cpu)->offlined
++#define CPU_STATE_nmi_handled(cpu)          (cpu)->nmi_handled
++#define CPU_STATE_nmi_tasklet(cpu)          (cpu)->nmi_tasklet
++#define CPU_STATE_em_timer_delay(cpu)       (cpu)->em_timer_delay
++#define CPU_STATE_core_type(cpu)            (cpu)->core_type
++
++/*
++ * For storing data for --read/--write-msr command line options
++ */
++typedef struct MSR_DATA_NODE_S MSR_DATA_NODE;
++typedef        MSR_DATA_NODE  *MSR_DATA;
++struct MSR_DATA_NODE_S {
++    U64         value;             // Used for emon, for read/write-msr value
++    U64         addr;
++};
++
++#define MSR_DATA_value(md)   (md)->value
++#define MSR_DATA_addr(md)    (md)->addr
++
++/*
++ * Memory Allocation tracker
++ *
++ * Currently used to track large memory allocations
++ */
++
++typedef struct MEM_EL_NODE_S  MEM_EL_NODE;
++typedef        MEM_EL_NODE   *MEM_EL;
++struct MEM_EL_NODE_S {
++    PVOID     address;         // pointer to piece of memory we're tracking
++    S32       size;            // size (bytes) of the piece of memory
++    U32       is_addr_vmalloc; // flag to check if the memory is allocated using vmalloc
++};
++
++// accessors for MEM_EL defined in terms of MEM_TRACKER below
++
++#define MEM_EL_MAX_ARRAY_SIZE  32   // minimum is 1, nominal is 64
++
++typedef struct MEM_TRACKER_NODE_S  MEM_TRACKER_NODE;
++typedef        MEM_TRACKER_NODE   *MEM_TRACKER;
++struct MEM_TRACKER_NODE_S {
++    U16         max_size;            // MAX number of elements in the array (default: MEM_EL_MAX_ARRAY_SIZE)
++    U16         elements;            // number of elements available in this array
++    U16         node_vmalloc;        // flag to check whether the node struct is allocated using vmalloc
++    U16         array_vmalloc;       // flag to check whether the list of mem el is allocated using vmalloc
++    MEM_EL      mem;                 // array of large memory items we're tracking
++    MEM_TRACKER prev,next;           // enables bi-directional scanning of linked list
++};
++#define MEM_TRACKER_max_size(mt)         ((mt)->max_size)
++#define MEM_TRACKER_node_vmalloc(mt)     ((mt)->node_vmalloc)
++#define MEM_TRACKER_array_vmalloc(mt)    ((mt)->array_vmalloc)
++#define MEM_TRACKER_elements(mt)         ((mt)->elements)
++#define MEM_TRACKER_mem(mt)              ((mt)->mem)
++#define MEM_TRACKER_prev(mt)             ((mt)->prev)
++#define MEM_TRACKER_next(mt)             ((mt)->next)
++#define MEM_TRACKER_mem_address(mt, i)   ((MEM_TRACKER_mem(mt)[(i)].address))
++#define MEM_TRACKER_mem_size(mt, i)      ((MEM_TRACKER_mem(mt)[(i)].size))
++#define MEM_TRACKER_mem_vmalloc(mt, i)   ((MEM_TRACKER_mem(mt)[(i)].is_addr_vmalloc))
++
++/****************************************************************************
++ ** Global State variables exported
++ ***************************************************************************/
++extern   CPU_STATE            pcb;
++extern   U64                 *cpu_tsc;
++extern   GLOBAL_STATE_NODE    driver_state;
++extern   MSR_DATA             msr_data;
++extern   U32                 *core_to_package_map;
++extern   U32                 *core_to_dev_map;
++extern   U32                 *core_to_phys_core_map;
++extern   U32                 *core_to_thread_map;
++extern   U32                  threads_per_core;
++extern   U32                  num_packages;
++extern   U64                 *restore_bl_bypass;
++extern   U32                 **restore_ha_direct2core;
++extern   U32                 **restore_qpi_direct2core;
++extern   U32                 *occupied_core_ids;
++/****************************************************************************
++ **  Handy Short cuts
++ ***************************************************************************/
++
++/*
++ * CONTROL_THIS_CPU()
++ *     Parameters
++ *         None
++ *     Returns
++ *         CPU number of the processor being executed on
++ *
++ */
++#define CONTROL_THIS_CPU()      smp_processor_id()
++
++/*
++ * CONTROL_THIS_RAW_CPU()
++ *     Parameters
++ *         None
++ *     Returns
++ *         CPU number of the processor being executed on
++ *
++ */
++#define CONTROL_THIS_RAW_CPU() (raw_smp_processor_id())
++/****************************************************************************
++ **  Interface definitions
++ ***************************************************************************/
++
++/*
++ *  Execution Control Functions
++ */
++
++extern VOID
++CONTROL_Invoke_Cpu (
++    S32   cpuid,
++    VOID  (*func)(PVOID),
++    PVOID ctx
++);
++
++/*
++ * @fn VOID CONTROL_Invoke_Parallel_Service(func, ctx, blocking, exclude)
++ *
++ * @param    func     - function to be invoked by each core in the system
++ * @param    ctx      - pointer to the parameter block for each function invocation
++ * @param    blocking - Wait for invoked function to complete
++ * @param    exclude  - exclude the current core from executing the code
++ *
++ * @returns  none
++ *
++ * @brief    Service routine to handle all kinds of parallel invoke on all CPU calls
++ *
++ * <I>Special Notes:</I>
++ *         Invoke the function provided in parallel in either a blocking/non-blocking mode.
++ *         The current core may be excluded if desired.
++ *         NOTE - Do not call this function directly from source code.  Use the aliases
++ *         CONTROL_Invoke_Parallel(), CONTROL_Invoke_Parallel_NB(), CONTROL_Invoke_Parallel_XS().
++ *
++ */
++extern VOID
++CONTROL_Invoke_Parallel_Service (
++        VOID   (*func)(PVOID),
++        PVOID  ctx,
++        S32    blocking,
++        S32    exclude
++);
++
++/*
++ * @fn VOID CONTROL_Invoke_Parallel(func, ctx)
++ *
++ * @param    func     - function to be invoked by each core in the system
++ * @param    ctx      - pointer to the parameter block for each function invocation
++ *
++ * @returns  none
++ *
++ * @brief    Invoke the named function in parallel. Wait for all the functions to complete.
++ *
++ * <I>Special Notes:</I>
++ *        Invoke the function named in parallel, including the CPU that the control is
++ *        being invoked on
++ *        Macro built on the service routine
++ *
++ */
++#define CONTROL_Invoke_Parallel(a,b)      CONTROL_Invoke_Parallel_Service((a),(b),TRUE,FALSE)
++
++/*
++ * @fn VOID CONTROL_Invoke_Parallel_NB(func, ctx)
++ *
++ * @param    func     - function to be invoked by each core in the system
++ * @param    ctx      - pointer to the parameter block for each function invocation
++ *
++ * @returns  none
++ *
++ * @brief    Invoke the named function in parallel. DO NOT Wait for all the functions to complete.
++ *
++ * <I>Special Notes:</I>
++ *        Invoke the function named in parallel, including the CPU that the control is
++ *        being invoked on
++ *        Macro built on the service routine
++ *
++ */
++#define CONTROL_Invoke_Parallel_NB(a,b)   CONTROL_Invoke_Parallel_Service((a),(b),FALSE,FALSE)
++
++/*
++ * @fn VOID CONTROL_Invoke_Parallel_XS(func, ctx)
++ *
++ * @param    func     - function to be invoked by each core in the system
++ * @param    ctx      - pointer to the parameter block for each function invocation
++ *
++ * @returns  none
++ *
++ * @brief    Invoke the named function in parallel. Wait for all the functions to complete.
++ *
++ * <I>Special Notes:</I>
++ *        Invoke the function named in parallel, excluding the CPU that the control is
++ *        being invoked on
++ *        Macro built on the service routine
++ *
++ */
++#define CONTROL_Invoke_Parallel_XS(a,b)   CONTROL_Invoke_Parallel_Service((a),(b),TRUE,TRUE)
++
++
++/*
++ * @fn VOID CONTROL_Memory_Tracker_Init(void)
++ *
++ * @param    None
++ *
++ * @returns  None
++ *
++ * @brief    Initializes Memory Tracker
++ *
++ * <I>Special Notes:</I>
++ *           This should only be called when the
++ *           the driver is being loaded.
++ */
++extern VOID
++CONTROL_Memory_Tracker_Init (
++    VOID
++);
++
++/*
++ * @fn VOID CONTROL_Memory_Tracker_Free(void)
++ *
++ * @param    None
++ *
++ * @returns  None
++ *
++ * @brief    Frees memory used by Memory Tracker
++ *
++ * <I>Special Notes:</I>
++ *           This should only be called when the
++ *           driver is being unloaded.
++ */
++extern VOID
++CONTROL_Memory_Tracker_Free (
++    VOID
++);
++
++/*
++ * @fn VOID CONTROL_Memory_Tracker_Compaction(void)
++ *
++ * @param    None
++ *
++ * @returns  None
++ *
++ * @brief    Compacts the memory allocator if holes are detected
++ *
++ * <I>Special Notes:</I>
++ *           At end of collection (or at other safe sync point),
++ *           reclaim/compact space used by mem tracker
++ */
++extern VOID
++CONTROL_Memory_Tracker_Compaction (
++    void
++);
++
++/*
++ * @fn PVOID CONTROL_Allocate_Memory(size)
++ *
++ * @param    IN size     - size of the memory to allocate
++ *
++ * @returns  char*       - pointer to the allocated memory block
++ *
++ * @brief    Allocate and zero memory
++ *
++ * <I>Special Notes:</I>
++ *           Allocate memory in the GFP_KERNEL pool.
++ *
++ *           Use this if memory is to be allocated within a context where
++ *           the allocator can block the allocation (e.g., by putting
++ *           the caller to sleep) while it tries to free up memory to
++ *           satisfy the request.  Otherwise, if the allocation must
++ *           occur atomically (e.g., caller cannot sleep), then use
++ *           CONTROL_Allocate_KMemory instead.
++ */
++extern PVOID
++CONTROL_Allocate_Memory (
++    size_t    size
++);
++
++/*
++ * @fn PVOID CONTROL_Allocate_KMemory(size)
++ *
++ * @param    IN size     - size of the memory to allocate
++ *
++ * @returns  char*       - pointer to the allocated memory block
++ *
++ * @brief    Allocate and zero memory
++ *
++ * <I>Special Notes:</I>
++ *           Allocate memory in the GFP_ATOMIC pool.
++ *
++ *           Use this if memory is to be allocated within a context where
++ *           the allocator cannot block the allocation (e.g., by putting
++ *           the caller to sleep) as it tries to free up memory to
++ *           satisfy the request.  Examples include interrupt handlers,
++ *           process context code holding locks, etc.
++ */
++extern PVOID
++CONTROL_Allocate_KMemory (
++    size_t  size
++);
++
++/*
++ * @fn PVOID CONTROL_Free_Memory(location)
++ *
++ * @param    IN location  - size of the memory to allocate
++ *
++ * @returns  pointer to the allocated memory block
++ *
++ * @brief    Frees the memory block
++ *
++ * <I>Special Notes:</I>
++ *           Does not try to free memory if fed with a NULL pointer
++ *           Expected usage:
++ *               ptr = CONTROL_Free_Memory(ptr);
++ */
++extern PVOID
++CONTROL_Free_Memory (
++    PVOID    location
++);
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/core2.h b/drivers/misc/intel/sepdk/inc/core2.h
+new file mode 100644
+index 000000000000..8453da870236
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/core2.h
+@@ -0,0 +1,52 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++ 
++    This file is part of SEP Development Kit
++ 
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++ 
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++ 
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++ 
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++#ifndef _CORE2_H_
++#define _CORE2_H_
++
++#include "msrdefs.h"
++
++extern DISPATCH_NODE  core2_dispatch;
++extern DISPATCH_NODE  corei7_dispatch;
++extern DISPATCH_NODE  corei7_dispatch_nehalem;
++extern DISPATCH_NODE  corei7_dispatch_htoff_mode;
++extern DISPATCH_NODE  corei7_dispatch_2;
++extern DISPATCH_NODE  corei7_dispatch_htoff_mode_2;
++
++#define CORE2UNC_BLBYPASS_BITMASK      0x00000001
++#define CORE2UNC_DISABLE_BL_BYPASS_MSR 0x39C
++
++#if defined(DRV_IA32)
++#define CORE2_LBR_DATA_BITS            32
++#else
++#define CORE2_LBR_DATA_BITS            48
++#endif
++
++#define CORE2_LBR_BITMASK                    ((1ULL << CORE2_LBR_DATA_BITS) -1)
++
++#endif 
+diff --git a/drivers/misc/intel/sepdk/inc/cpumon.h b/drivers/misc/intel/sepdk/inc/cpumon.h
+new file mode 100644
+index 000000000000..9c7fd6739f82
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/cpumon.h
+@@ -0,0 +1,57 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++ 
++    This file is part of SEP Development Kit
++ 
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++ 
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++ 
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++ 
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++#ifndef _CPUMON_H_
++#define _CPUMON_H_
++
++#include <linux/version.h>
++#include "lwpmudrv_defines.h"
++
++/*
++ *  Defines
++ */
++
++
++/**
++ * Function Declarations
++ */
++
++/*
++ * CPUMON control functions
++ */
++
++extern VOID CPUMON_Install_Cpuhooks(VOID);
++extern VOID CPUMON_Remove_Cpuhooks(VOID);
++#if defined(DRV_CPU_HOTPLUG)
++extern DRV_BOOL CPUMON_is_Online_Allowed(VOID);
++extern DRV_BOOL CPUMON_is_Offline_Allowed(VOID);
++extern VOID CPUMON_Online_Cpu(PVOID parm);
++extern VOID CPUMON_Offline_Cpu(PVOID parm);
++#endif
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/ecb_iterators.h b/drivers/misc/intel/sepdk/inc/ecb_iterators.h
+new file mode 100644
+index 000000000000..1a6e58304a82
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/ecb_iterators.h
+@@ -0,0 +1,379 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++#ifndef _ECB_ITERATORS_H_
++#define _ECB_ITERATORS_H_
++
++#if defined(__cplusplus)
++extern "C" {
++#endif
++
++//
++// Loop macros to walk through the event control block
++// Use for access only in the kernel mode
++// To Do - Control access from kernel mode by a macro
++//
++#define FOR_EACH_CCCR_REG(pecb,idx) {                                                  \
++    U32        (idx);                                                                  \
++    U32        this_cpu__ = CONTROL_THIS_CPU();                                        \
++    CPU_STATE  pcpu__  = &pcb[this_cpu__];                                             \
++    U32        (dev_idx) = core_to_dev_map[this_cpu__];                                \
++    U32        (cur_grp) = CPU_STATE_current_group(pcpu__);                            \
++    ECB        (pecb) = LWPMU_DEVICE_PMU_register_data(&devices[dev_idx])[cur_grp];    \
++    if ((pecb)) {                                                                      \
++        for ((idx) = ECB_cccr_start(pecb);                                             \
++             (idx) < ECB_cccr_start(pecb)+ECB_cccr_pop(pecb);                          \
++             (idx)++) {                                                                \
++            if (ECB_entries_reg_id((pecb),(idx)) == 0) {                               \
++                continue;                                                              \
++            }
++
++#define END_FOR_EACH_CCCR_REG  }}}
++
++#define FOR_EACH_CCCR_GP_REG(pecb,idx) {                                               \
++    U32        (idx);                                                                  \
++    U32        this_cpu__ = CONTROL_THIS_CPU();                                        \
++    CPU_STATE  pcpu__  = &pcb[this_cpu__];                                             \
++    U32        (dev_idx) = core_to_dev_map[this_cpu__];                                \
++    U32        (cur_grp) = CPU_STATE_current_group(pcpu__);                            \
++    ECB        (pecb) = LWPMU_DEVICE_PMU_register_data(&devices[dev_idx])[cur_grp];    \
++    if ((pecb)) {                                                                      \
++        for ((idx) = ECB_cccr_start(pecb);                                             \
++             (idx) < ECB_cccr_start(pecb)+ECB_cccr_pop(pecb);                          \
++             (idx)++) {                                                                \
++            if (ECB_entries_is_gp_reg_get((pecb),(idx)) == 0) {                        \
++                continue;                                                              \
++            }
++
++#define END_FOR_EACH_CCCR_GP_REG  }}}
++
++#define FOR_EACH_ESCR_REG(pecb,idx) {                                                  \
++    U32        (idx);                                                                  \
++    U32        this_cpu__ = CONTROL_THIS_CPU();                                        \
++    CPU_STATE  pcpu__  = &pcb[this_cpu__];                                             \
++    U32        (dev_idx) = core_to_dev_map[this_cpu__];                                \
++    U32        (cur_grp) = CPU_STATE_current_group(pcpu__);                            \
++    ECB        (pecb) = LWPMU_DEVICE_PMU_register_data(&devices[dev_idx])[cur_grp];    \
++    if ((pecb)) {                                                                      \
++        for ((idx) = ECB_escr_start(pecb);                                             \
++             (idx) < ECB_escr_start(pecb)+ECB_escr_pop(pecb);                          \
++             (idx)++) {                                                                \
++            if (ECB_entries_reg_id((pecb),(idx)) == 0) {                               \
++                continue;                                                              \
++            }
++
++#define END_FOR_EACH_ESCR_REG  }}}
++
++#define FOR_EACH_DATA_REG(pecb,idx) {                                                  \
++    U32        (idx);                                                                  \
++    U32        this_cpu__ = CONTROL_THIS_CPU();                                        \
++    CPU_STATE  pcpu__  = &pcb[this_cpu__];                                             \
++    U32        (dev_idx) = core_to_dev_map[this_cpu__];                                \
++    U32        (cur_grp) = CPU_STATE_current_group(pcpu__);                            \
++    ECB        (pecb) = LWPMU_DEVICE_PMU_register_data(&devices[dev_idx])[cur_grp];    \
++    if ((pecb)) {                                                                      \
++        for ((idx) = ECB_data_start(pecb);                                             \
++             (idx) < ECB_data_start(pecb)+ECB_data_pop(pecb);                          \
++             (idx)++) {                                                                \
++            if (ECB_entries_reg_id((pecb),(idx)) == 0) {                               \
++                continue;                                                              \
++            }
++
++#define END_FOR_EACH_DATA_REG  }}}
++
++#define FOR_EACH_DATA_REG_UNC(pecb,device_idx,idx) {                                      \
++    U32        (idx);                                                                     \
++    U32        (cpu)     = CONTROL_THIS_CPU();                                            \
++    U32        (pkg)     = core_to_package_map[cpu];                                      \
++    U32        (cur_grp) = LWPMU_DEVICE_cur_group(&devices[(device_idx)])[(pkg)];         \
++    ECB        (pecb) = LWPMU_DEVICE_PMU_register_data(&devices[(device_idx)])[cur_grp];  \
++    if ((pecb)) {                                                                         \
++      for ((idx) = ECB_data_start(pecb);                                                  \
++           (idx) < ECB_data_start(pecb)+ECB_data_pop(pecb);                               \
++           (idx)++) {                                                                     \
++          if (ECB_entries_reg_id((pecb),(idx)) == 0) {                                    \
++              continue;                                                                   \
++    }
++
++#define END_FOR_EACH_DATA_REG_UNC  }}}
++
++#define FOR_EACH_DATA_REG_UNC_VER2(pecb,i,idx ) {                                         \
++    U32        (idx);                                                                     \
++    if ((pecb)) {                                                                         \
++      for ((idx) = ECB_data_start(pecb);                                                  \
++           (idx) < ECB_data_start(pecb)+ECB_data_pop(pecb);                               \
++           (idx)++) {                                                                     \
++          if (ECB_entries_reg_id((pecb),(idx)) == 0) {                                    \
++              continue;                                                                   \
++    }    
++
++#define END_FOR_EACH_DATA_REG_UNC_VER2    } } }
++
++#define FOR_EACH_DATA_GP_REG(pecb,idx) {                                               \
++    U32        (idx);                                                                  \
++    U32        this_cpu__ = CONTROL_THIS_CPU();                                        \
++    CPU_STATE  pcpu__  = &pcb[this_cpu__];                                             \
++    U32        (dev_idx) = core_to_dev_map[this_cpu__];                                \
++    U32        (cur_grp) = CPU_STATE_current_group(pcpu__);                            \
++    ECB        (pecb) = LWPMU_DEVICE_PMU_register_data(&devices[dev_idx])[cur_grp];    \
++    if ((pecb)) {                                                                      \
++        for ((idx) = ECB_data_start(pecb);                                             \
++             (idx) < ECB_data_start(pecb)+ECB_data_pop(pecb);                          \
++             (idx)++) {                                                                \
++            if (ECB_entries_is_gp_reg_get((pecb),(idx)) == 0) {                        \
++                continue;                                                              \
++            }
++
++#define END_FOR_EACH_DATA_GP_REG  }}}
++
++#define FOR_EACH_DATA_GENERIC_REG(pecb,idx) {                                          \
++    U32        (idx);                                                                  \
++    U32        this_cpu__ = CONTROL_THIS_CPU();                                        \
++    CPU_STATE  pcpu__  = &pcb[this_cpu__];                                             \
++    U32        (dev_idx) = core_to_dev_map[this_cpu__];                                \
++    U32        (cur_grp) = CPU_STATE_current_group(pcpu__);                            \
++    ECB        (pecb) = LWPMU_DEVICE_PMU_register_data(&devices[dev_idx])[cur_grp];    \
++    if ((pecb)) {                                                                      \
++        for ((idx) = ECB_data_start(pecb);                                             \
++             (idx) < ECB_data_start(pecb)+ECB_data_pop(pecb);                          \
++             (idx)++) {                                                                \
++            if (ECB_entries_is_generic_reg_get((pecb),(idx)) == 0) {                   \
++                continue;                                                              \
++            }
++
++#define END_FOR_EACH_DATA_GENERIC_REG  }}}
++
++#define FOR_EACH_REG_ENTRY(pecb,idx) {                                                 \
++    U32        (idx);                                                                  \
++    U32        this_cpu__ = CONTROL_THIS_CPU();                                        \
++    CPU_STATE  pcpu__  = &pcb[this_cpu__];                                             \
++    U32        (dev_idx) = core_to_dev_map[this_cpu__];                                \
++    U32        (cur_grp) = CPU_STATE_current_group(pcpu__);                            \
++    ECB        (pecb) = LWPMU_DEVICE_PMU_register_data(&devices[dev_idx])[cur_grp];    \
++    if ((pecb)) {                                                                      \
++    for ((idx) = 0; (idx) < ECB_num_entries(pecb); (idx)++) {                          \
++        if (ECB_entries_reg_id((pecb),(idx)) == 0) {                                   \
++            continue;                                                                  \
++        }
++
++#define END_FOR_EACH_REG_ENTRY  }}}
++
++#define FOR_EACH_REG_ENTRY_UNC(pecb,device_idx,idx) {                                          \
++    U32        (idx);                                                                          \
++    U32        (cpu)     = CONTROL_THIS_CPU();                                                 \
++    U32        (pkg)     = core_to_package_map[cpu];                                           \
++    U32        (cur_grp) = LWPMU_DEVICE_cur_group(&devices[(device_idx)])[(pkg)];              \
++    ECB        (pecb)    = LWPMU_DEVICE_PMU_register_data(&devices[(device_idx)])[(cur_grp)];  \
++    if ((pecb)) {                                                                              \
++        for ((idx) = 0; (idx) < ECB_num_entries(pecb); (idx)++) {                              \
++            if (ECB_entries_reg_id((pecb),(idx)) == 0) {                                       \
++                continue;                                                                      \
++            }
++
++#define END_FOR_EACH_REG_ENTRY_UNC  }}}
++
++#define FOR_EACH_PCI_DATA_REG(pecb,i, device_idx, offset_delta) {                                       \
++    U32                 (i)       = 0;                                                                  \
++    U32                 (cpu)     = CONTROL_THIS_CPU();                                                 \
++    U32                 (pkg)     = core_to_package_map[cpu];                                           \
++    U32                 (cur_grp) = LWPMU_DEVICE_cur_group(&devices[(device_idx)])[(pkg)];              \
++    ECB                 (pecb)    = LWPMU_DEVICE_PMU_register_data(&devices[(device_idx)])[(cur_grp)];  \
++    if ((pecb)) {                                                                                       \
++        for ((i) = ECB_data_start(pecb);                                                                \
++             (i) < ECB_data_start(pecb)+ECB_data_pop(pecb);                                             \
++             (i)++) {                                                                                   \
++            if (ECB_entries_reg_offset((pecb),(i)) == 0) {                                           \
++                continue;                                                                               \
++            }                                                                                           \
++            (offset_delta) =  ECB_entries_reg_offset(pecb,i) -                                       \
++                              DRV_PCI_DEVICE_ENTRY_base_offset_for_mmio(&ECB_pcidev_entry_node(pecb));
++
++#define END_FOR_EACH_PCI_DATA_REG    } } }
++
++#define FOR_EACH_PCI_DATA_REG_VER2(pecb,i, device_idx, offset_delta) {                                  \
++    U32                 (i)    = 0;                                                                     \
++    if ((pecb)) {                                                                                       \
++        for ((i) = ECB_data_start(pecb);                                                                \
++             (i) < ECB_data_start(pecb)+ECB_data_pop(pecb);                                             \
++             (i)++) {                                                                                   \
++            if (ECB_entries_reg_offset((pecb),(i)) == 0) {                                           \
++                continue;                                                                               \
++            }                                                                                           \
++            (offset_delta) =  ECB_entries_reg_offset(pecb,i) -                                       \
++                              DRV_PCI_DEVICE_ENTRY_base_offset_for_mmio(&ECB_pcidev_entry_node(pecb));
++
++#define END_FOR_EACH_PCI_DATA_REG_VER2    } } }
++
++#define FOR_EACH_PCI_DATA_REG_RAW(pecb,i, device_idx ) {                                                \
++    U32                 (i)       = 0;                                                                  \
++    U32                 (cpu)     = CONTROL_THIS_CPU();                                                 \
++    U32                 (pkg)     = core_to_package_map[cpu];                                           \
++    U32                 (cur_grp) = LWPMU_DEVICE_cur_group(&devices[(device_idx)])[(pkg)];              \
++    ECB                 (pecb)    = LWPMU_DEVICE_PMU_register_data(&devices[(device_idx)])[(cur_grp)];  \
++    if ((pecb)) {                                                                                       \
++        for ((i) = ECB_data_start(pecb);                                                                \
++             (i) < ECB_data_start(pecb)+ECB_data_pop(pecb);                                             \
++             (i)++) {                                                                                   \
++            if (ECB_entries_reg_offset((pecb),(i)) == 0) {                                           \
++                continue;                                                                               \
++            }
++
++#define END_FOR_EACH_PCI_DATA_REG_RAW    } } }
++
++#define FOR_EACH_PCI_CCCR_REG_RAW(pecb,i, device_idx ) {                                            \
++    U32              (i)       = 0;                                                                 \
++    U32              (cpu)     = CONTROL_THIS_CPU();                                                \
++    U32              (pkg)     = core_to_package_map[cpu];                                          \
++    U32              (cur_grp) = LWPMU_DEVICE_cur_group(&devices[(device_idx)])[(pkg)];             \
++    ECB              (pecb)    = LWPMU_DEVICE_PMU_register_data(&devices[(device_idx)])[(cur_grp)]; \
++    if ((pecb)) {                                                                                   \
++        for ((i) = ECB_cccr_start(pecb);                                                            \
++             (i) < ECB_cccr_start(pecb)+ECB_cccr_pop(pecb);                                         \
++             (i)++) {                                                                               \
++            if (ECB_entries_reg_offset((pecb),(i)) == 0) {                                       \
++                continue;                                                                           \
++            }
++
++#define END_FOR_EACH_PCI_CCCR_REG_RAW   } } }
++
++#define FOR_EACH_PCI_REG_RAW(pecb, i, device_idx ) {                                                   \
++    U32                 (i)       = 0;                                                                 \
++    U32                 (cpu)     = CONTROL_THIS_CPU();                                                \
++    U32                 (pkg)     = core_to_package_map[cpu];                                          \
++    U32                 (cur_grp) = LWPMU_DEVICE_cur_group(&devices[(device_idx)])[(pkg)];             \
++    ECB                 (pecb)    = LWPMU_DEVICE_PMU_register_data(&devices[(device_idx)])[(cur_grp)]; \
++    if ((pecb)) {                                                                                      \
++        for ((i) = 0;                                                                                  \
++             (i) < ECB_num_entries(pecb);                                                              \
++             (i)++) {                                                                                  \
++            if (ECB_entries_reg_offset((pecb),(i)) == 0) {                                          \
++                continue;                                                                              \
++            }
++
++#define END_FOR_EACH_PCI_REG_RAW   } } }
++
++#define FOR_EACH_PCI_REG_RAW_GROUP(pecb,i, device_idx, cur_grp ) {                                  \
++    U32              (i)       = 0;                                                                 \
++    ECB              (pecb)    = LWPMU_DEVICE_PMU_register_data(&devices[(device_idx)])[(cur_grp)]; \
++    if ((pecb)) {                                                                                   \
++        for ((i) = 0;                                                                               \
++             (i) < ECB_num_entries(pecb);                                                           \
++             (i)++) {                                                                               \
++            if (ECB_entries_reg_offset((pecb),(i)) == 0) {                                       \
++                continue;                                                                           \
++            }
++
++#define END_FOR_EACH_PCI_REG_RAW_GROUP   } } }
++
++#define CHECK_SAVE_RESTORE_EVENT_INDEX(prev_ei, cur_ei, evt_index)  {                                   \
++        if (prev_ei == -1) {                                                                            \
++            prev_ei = cur_ei;                                                                           \
++        }                                                                                               \
++        if (prev_ei < cur_ei) {                                                                         \
++            prev_ei = cur_ei;                                                                           \
++            evt_index++;                                                                                \
++        }                                                                                               \
++        else {                                                                                          \
++             evt_index = 0;                                                                             \
++             prev_ei = cur_ei;                                                                          \
++        }}
++
++
++#define FOR_EACH_REG_ENTRY_UNC_WRITE_MSR(pecb, device_idx, idx) {                                          \
++    U32        (idx);                                                                          \
++    U32        (cpu)     = CONTROL_THIS_CPU();                                                 \
++    U32        (pkg)     = core_to_package_map[cpu];                                           \
++    U32        (cur_grp) = LWPMU_DEVICE_cur_group(&devices[(device_idx)])[(pkg)];              \
++    ECB        (pecb)    = LWPMU_DEVICE_PMU_register_data(&devices[(device_idx)])[(cur_grp)];  \
++    if ((pecb)) {                                                                              \
++        for ((idx) = 0; (idx) < ECB_num_entries(pecb); (idx)++) {                              \
++            if (ECB_entries_reg_id((pecb),(idx)) == 0) {                                       \
++                continue;                                                                      \
++            }
++
++#define END_FOR_EACH_REG_ENTRY_UNC  }}}
++
++
++#define FOR_EACH_REG_UNC_OPERATION(pecb, device_idx, idx, operation) {                         \
++    U32        (idx);                                                                          \
++    U32        (cpu)     = CONTROL_THIS_CPU();                                                 \
++    U32        (pkg)     = core_to_package_map[cpu];                                           \
++    U32        (cur_grp) = LWPMU_DEVICE_cur_group(&devices[(device_idx)])[(pkg)];              \
++    ECB        (pecb)    = LWPMU_DEVICE_PMU_register_data(&devices[(device_idx)])[(cur_grp)];  \
++    if ((pecb)) {                                                                              \
++         for ((idx) = ECB_operations_register_start(pecb, (operation));                        \
++              (idx) < ECB_operations_register_start(pecb, (operation)) +                       \
++                      ECB_operations_register_len(pecb, (operation)); (idx)++) {               \
++            if (ECB_entries_reg_id((pecb),(idx)) == 0) {                                       \
++                continue;                                                                      \
++            }
++
++#define END_FOR_EACH_REG_UNC_OPERATION  }}}
++
++#define FOR_EACH_NONEVENT_REG(pecb,idx) {                                              \
++    U32        (idx);                                                                  \
++    U32        this_cpu__ = CONTROL_THIS_CPU();                                        \
++    CPU_STATE  pcpu__  = &pcb[this_cpu__];                                             \
++    U32        (dev_idx) = core_to_dev_map[this_cpu__];                                \
++    U32        (cur_grp) = CPU_STATE_current_group(pcpu__);                            \
++    ECB        (pecb) = LWPMU_DEVICE_PMU_register_data(&devices[dev_idx])[cur_grp];    \
++    if ((pecb)) {                                                                      \
++        for ((idx) = ECB_metric_start(pecb);                                           \
++             (idx) < ECB_metric_start(pecb)+ECB_metric_pop(pecb);                      \
++             (idx)++) {                                                                \
++            if (ECB_entries_reg_id((pecb),(idx)) == 0) {                               \
++                continue;                                                              \
++            }
++
++#define END_FOR_EACH_NONEVENT_REG  }}}
++
++#define FOR_EACH_REG_CORE_OPERATION(pecb, idx, operation) {                            \
++    U32        (idx);                                                                  \
++    U32        this_cpu__ = CONTROL_THIS_CPU();                                        \
++    CPU_STATE  pcpu__  = &pcb[this_cpu__];                                             \
++    U32        cur_grp = CPU_STATE_current_group(pcpu__);                              \
++    U32        dev_idx = core_to_dev_map[this_cpu__];                                  \
++    ECB        (pecb)  = LWPMU_DEVICE_PMU_register_data(&devices[dev_idx])[cur_grp];   \
++    if ((pecb)) {                                                                              \
++         for ((idx) = ECB_operations_register_start(pecb, (operation));                        \
++              (idx) < ECB_operations_register_start(pecb, (operation)) +                       \
++                      ECB_operations_register_len(pecb, (operation)); (idx)++) {               \
++            if (ECB_entries_reg_id((pecb),(idx)) == 0) {                                       \
++                continue;                                                                      \
++            }
++
++#define END_FOR_EACH_REG_CORE_OPERATION  }}}
++
++#define ECB_SECTION_REG_INDEX(pecb, idx, operation)    (ECB_operations_register_start(pecb, operation) + (idx))
++
++
++#if defined(__cplusplus)
++}
++#endif
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/eventmux.h b/drivers/misc/intel/sepdk/inc/eventmux.h
+new file mode 100644
+index 000000000000..54f30961153f
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/eventmux.h
+@@ -0,0 +1,54 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++ 
++    This file is part of SEP Development Kit
++ 
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++ 
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++ 
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++ 
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++/*
++ *  cvs_id[] = "$Id$"
++ */
++
++#ifndef _EVENTMUX_H_
++#define _EVENTMUX_H_
++
++#include "lwpmudrv_ecb.h"
++#include "lwpmudrv_types.h"
++
++extern VOID 
++EVENTMUX_Start (
++    VOID
++);
++
++extern VOID
++EVENTMUX_Initialize (
++    VOID
++);
++
++extern VOID
++EVENTMUX_Destroy (
++    VOID
++);
++
++#endif /* _EVENTMUX_H_ */
+diff --git a/drivers/misc/intel/sepdk/inc/gfx.h b/drivers/misc/intel/sepdk/inc/gfx.h
+new file mode 100644
+index 000000000000..148d7ef2152f
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/gfx.h
+@@ -0,0 +1,55 @@
++/*
++    Copyright(C) 2009-2018 Intel Corporation.
++ 
++    This file is part of SEP Development Kit
++ 
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++ 
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++ 
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++ 
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++
++#ifndef _GFX_H_
++#define _GFX_H_
++
++#include "lwpmudrv_ioctl.h"
++
++extern OS_STATUS
++GFX_Read (
++    S8 *buffer
++);
++
++extern OS_STATUS
++GFX_Set_Event_Code (
++    IOCTL_ARGS arg
++);
++
++extern OS_STATUS
++GFX_Start (
++    void
++);
++
++extern OS_STATUS
++GFX_Stop (
++    void
++);
++
++#endif  
+diff --git a/drivers/misc/intel/sepdk/inc/gmch.h b/drivers/misc/intel/sepdk/inc/gmch.h
+new file mode 100644
+index 000000000000..3b3e4ecff120
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/gmch.h
+@@ -0,0 +1,35 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++
++#ifndef _GMCH_H_
++#define _GMCH_H_
++
++extern  CS_DISPATCH_NODE  gmch_dispatch;
++
++#endif 
+diff --git a/drivers/misc/intel/sepdk/inc/haswellunc_sa.h b/drivers/misc/intel/sepdk/inc/haswellunc_sa.h
+new file mode 100644
+index 000000000000..6c02c0575dde
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/haswellunc_sa.h
+@@ -0,0 +1,66 @@
++/****
++    Copyright(C) 2011-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit.
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++****/
++
++
++
++
++
++#ifndef _HSWUNC_SA_H_INC_
++#define _HSWUNC_SA_H_INC_
++
++/*
++ * Local to this architecture: Haswell uncore SA unit 
++ * 
++ */
++#define HSWUNC_SA_DESKTOP_DID                 0x000C04
++#define HSWUNC_SA_NEXT_ADDR_OFFSET            4
++#define HSWUNC_SA_BAR_ADDR_SHIFT              32
++#define HSWUNC_SA_BAR_ADDR_MASK               0x0007FFFFFF000LL
++#define HSWUNC_SA_MAX_PCI_DEVICES             16
++#define HSWUNC_SA_MAX_COUNT                   0x00000000FFFFFFFFLL
++#define HSWUNC_SA_MAX_COUNTERS                8
++
++#define HSWUNC_SA_MCHBAR_MMIO_PAGE_SIZE       8*4096
++#define HSWUNC_SA_PCIEXBAR_MMIO_PAGE_SIZE     57*4096
++#define HSWUNC_SA_OTHER_BAR_MMIO_PAGE_SIZE    4096
++#define HSWUNC_SA_GDXCBAR_OFFSET_LO           0x5420
++#define HSWUNC_SA_GDXCBAR_OFFSET_HI           0x5424
++#define HSWUNC_SA_GDXCBAR_MASK                0x7FFFFFF000LL
++#define HSWUNC_SA_CHAP_SAMPLE_DATA            0x00020000
++#define HSWUNC_SA_CHAP_STOP                   0x00040000
++#define HSWUNC_SA_CHAP_CTRL_REG_OFFSET        0x0
++
++#define HSWUNC_SA_PAGE_MASK                   0xfffffffffffff000
++#define HSWUNC_SA_PAGE_OFFSET_MASK            0xfff
++#define HSWUNC_SA_PAGE_SIZE                   0x1000
++
++
++extern DISPATCH_NODE  hswunc_sa_dispatch;
++
++#endif
++
+diff --git a/drivers/misc/intel/sepdk/inc/jkt_unc_ha.h b/drivers/misc/intel/sepdk/inc/jkt_unc_ha.h
+new file mode 100644
+index 000000000000..563baff87983
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/jkt_unc_ha.h
+@@ -0,0 +1,41 @@
++/*
++    Copyright(C) 2012-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++
++#ifndef _JKTUNC_HA_H_INC_
++#define _JKTUNC_HA_H_INC_
++
++#define JKTUNC_HA_DID                       0x3C46
++#define JKTUNC_HA_DEVICE_NO                 14
++#define JKTUNC_HA_FUNC_NO                   1
++#define JKTUNC_HA_D2C_OFFSET                0x84
++#define JKTUNC_HA_D2C_BITMASK               0x00000002
++#define JKTUNC_HA_D2C_DID                   0x3CA0
++#define JKTUNC_HA_D2C_FUNC_NO               0
++
++#endif 
+diff --git a/drivers/misc/intel/sepdk/inc/jkt_unc_qpill.h b/drivers/misc/intel/sepdk/inc/jkt_unc_qpill.h
+new file mode 100644
+index 000000000000..0d5680574bc7
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/jkt_unc_qpill.h
+@@ -0,0 +1,58 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++
++#ifndef _JKTUNC_QPILL_H_INC_
++#define _JKTUNC_QPILL_H_INC_
++
++/*
++ * Local to this architecture: JKT uncore QPILL unit 
++ * 
++ */
++#define JKTUNC_QPILL0_DID                  0x3C41 // --- QPILL0 PerfMon DID --- B:D 1:8:2
++#define JKTUNC_QPILL_MM0_DID               0x3C86 // --- QPILL0 PerfMon MM Config DID --- B:D 1:8:6
++#define JKTUNC_QPILL1_DID                  0x3C42 // --- QPILL1 PerfMon DID --- B:D 1:9:2
++#define JKTUNC_QPILL2_DID                  0x3C44 // --- QPILL0 PerfMon DID --- B:D 1:8:2
++#define JKTUNC_QPILL3_DID                  0x3C45 // --- QPILL0 PerfMon DID --- B:D 1:8:2
++#define JKTUNC_QPILL_MM1_DID               0x3C96 // --- QPILL1 PerfMon MM Config DID --- B:D 1:9:6
++#define JKTUNC_QPILL_MCFG_DID              0x3C28 // --- QPILL1 PerfMon MCFG DID --- B:D 0:5:0
++#define JKTUNC_QPILL0_D2C_DID              0x3C80 // --- D2C QPILL Port 1 config DID B:D:F X:8:0
++#define JKTUNC_QPILL1_D2C_DID              0x3C90 // --- D2C QPILL Port 2 config DID B:D:F X:9:0
++
++#define JKTUNC_QPILL_PERF_GLOBAL_CTRL      0x391
++
++#define IA32_DEBUG_CTRL                    0x1D9
++
++#define JKTUNC_QPILL_D2C_OFFSET            0x80
++#define JKTUNC_QPILL_D2C_BITMASK           0x00000002
++#define JKTUNC_QPILL_FUNC_NO               2
++#define JKTUNC_QPILL_D2C_FUNC_NO           0
++
++extern DISPATCH_NODE  jktunc_qpill_dispatch;
++
++#endif 
+diff --git a/drivers/misc/intel/sepdk/inc/linuxos.h b/drivers/misc/intel/sepdk/inc/linuxos.h
+new file mode 100644
+index 000000000000..80414b4b7d9d
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/linuxos.h
+@@ -0,0 +1,102 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++ 
++    This file is part of SEP Development Kit
++ 
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++ 
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++ 
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++ 
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++#ifndef _LINUXOS_H_
++#define _LINUXOS_H_
++
++// defines for options parameter of samp_load_image_notify_routine()
++#define LOPTS_1ST_MODREC     0x1
++#define LOPTS_GLOBAL_MODULE  0x2
++#define LOPTS_EXE            0x4
++
++#define FOR_EACH_TASK        for_each_process
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,19,00)
++#define DRV_F_DENTRY f_path.dentry
++#else
++#define DRV_F_DENTRY    f_dentry
++#endif
++
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,25)
++#define D_PATH(vm_file, name, maxlen)     \
++    d_path((vm_file)->f_dentry, (vm_file)->f_vfsmnt, (name), (maxlen))
++#else
++#define D_PATH(vm_file, name, maxlen)     \
++    d_path(&((vm_file)->f_path), (name), (maxlen))
++#endif
++
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
++#define DRV_VM_MOD_EXECUTABLE(vma)    \
++    (vma->vm_flags & VM_EXECUTABLE)
++#else
++#define DRV_VM_MOD_EXECUTABLE(vma)    \
++    (linuxos_Equal_VM_Exe_File(vma))
++#define DRV_MM_EXE_FILE_PRESENT
++#endif
++
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,32)
++#define DRV_ALLOW_VDSO
++#endif
++
++#if defined(DRV_IA32)
++#define FIND_VMA(mm, data)   find_vma ((mm), (U32)(data));
++#endif
++#if defined(DRV_EM64T)
++#define FIND_VMA(mm, data)   find_vma ((mm), (U64)(data));
++#endif
++
++extern VOID
++LINUXOS_Install_Hooks (
++    VOID
++);
++
++extern VOID
++LINUXOS_Uninstall_Hooks (
++    VOID
++);
++
++extern OS_STATUS
++LINUXOS_Enum_Process_Modules (
++    DRV_BOOL at_end
++);
++
++extern DRV_BOOL
++LINUXOS_Check_KVM_Guest_Process (
++    VOID
++);
++#if defined(DRV_CPU_HOTPLUG)
++extern VOID
++LINUXOS_Register_Hotplug(
++    VOID
++);
++
++extern VOID
++LINUXOS_Unregister_Hotplug(
++    VOID
++);
++#endif
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/lwpmudrv.h b/drivers/misc/intel/sepdk/inc/lwpmudrv.h
+new file mode 100644
+index 000000000000..74e51f17c7cd
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/lwpmudrv.h
+@@ -0,0 +1,278 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++
++#ifndef _LWPMUDRV_H_
++#define _LWPMUDRV_H_
++
++#include <linux/version.h>
++#include <linux/kernel.h>
++#include <linux/compat.h>
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4,12,0)
++#include <asm/uaccess.h>
++#else
++#include <linux/uaccess.h>
++#endif
++#include <asm/cpufeature.h>
++
++#include "lwpmudrv_defines.h"
++#include "lwpmudrv_types.h"
++#include "lwpmudrv_ecb.h"
++#include "lwpmudrv_version.h"
++#include "lwpmudrv_struct.h"
++#include "pebs.h"
++#if defined(BUILD_CHIPSET)
++#include "lwpmudrv_chipset.h"
++#endif
++
++#if defined(X86_FEATURE_KAISER) || defined(CONFIG_KAISER) || defined(KAISER_HEADER_PRESENT)
++#define  DRV_USE_KAISER
++#elif defined(X86_FEATURE_PTI)
++#define  DRV_USE_PTI
++#endif
++
++/*
++ * Print macros for driver messages
++ */
++
++#if defined(MYDEBUG)
++#define SEP_PRINT_DEBUG(fmt,args...) { printk(KERN_INFO SEP_MSG_PREFIX" [DEBUG] " fmt,##args); }
++#else
++#define SEP_PRINT_DEBUG(fmt,args...) {;}
++#endif
++
++#define SEP_PRINT(fmt,args...) { printk(KERN_INFO SEP_MSG_PREFIX" " fmt,##args); }
++
++#define SEP_PRINT_WARNING(fmt,args...) { printk(KERN_ALERT SEP_MSG_PREFIX" [Warning] " fmt,##args); }
++
++#define SEP_PRINT_ERROR(fmt,args...) { printk(KERN_CRIT SEP_MSG_PREFIX" [ERROR] " fmt,##args); }
++
++// Macro to return the thread group id
++#define GET_CURRENT_TGID() (current->tgid)
++
++#define OVERFLOW_ARGS  U64*, U64*
++
++typedef struct DRV_EVENT_MASK_NODE_S  DRV_EVENT_MASK_NODE;
++typedef        DRV_EVENT_MASK_NODE    *DRV_EVENT_MASK;
++
++struct DRV_EVENT_MASK_NODE_S {
++    U16 event_idx;    // 0 <= index < MAX_EVENTS
++    U16 reserved1;
++    union {
++        U32 bitFields1;
++        struct {
++            U32 precise              : 1;
++            U32 lbr_capture          : 1;
++            U32 dear_capture         : 1;  // Indicates which events need to have additional registers read
++                                           // because they are DEAR events.
++            U32 iear_capture         : 1;  // Indicates which events need to have additional registers read
++                                           // because they are IEAR events.
++            U32 btb_capture          : 1;  // Indicates which events need to have additional registers read
++                                           // because they are BTB events.
++            U32 ipear_capture        : 1;  // Indicates which events need to have additional registers read
++                                           // because they are IPEAR events.
++            U32 uncore_capture       : 1;
++            U32 branch               : 1;  // Indicates whether the event is related to branch opertion or
++                                           // not
++            U32 perf_metrics_capture : 1;  // Indicates whether the event is related to perf_metrics or not
++            U32 reserved             : 23;
++        } s1;
++    } u1;
++};
++
++#define DRV_EVENT_MASK_event_idx(d)             (d)->event_idx
++#define DRV_EVENT_MASK_bitFields1(d)            (d)->u1.bitFields1
++#define DRV_EVENT_MASK_precise(d)               (d)->u1.s1.precise
++#define DRV_EVENT_MASK_lbr_capture(d)           (d)->u1.s1.lbr_capture
++#define DRV_EVENT_MASK_dear_capture(d)          (d)->u1.s1.dear_capture
++#define DRV_EVENT_MASK_iear_capture(d)          (d)->u1.s1.iear_capture
++#define DRV_EVENT_MASK_btb_capture(d)           (d)->u1.s1.btb_capture
++#define DRV_EVENT_MASK_ipear_capture(d)         (d)->u1.s1.ipear_capture
++#define DRV_EVENT_MASK_uncore_capture(d)        (d)->u1.s1.uncore_capture
++#define DRV_EVENT_MASK_branch(d)                (d)->u1.s1.branch
++#define DRV_EVENT_MASK_perf_metrics_capture(d)  (d)->u1.s1.perf_metrics_capture
++
++#define MAX_OVERFLOW_EVENTS 16    // This defines the maximum number of overflow events per interrupt.
++                                  // In order to reduce memory footprint, the value should be at least
++                                  // the number of fixed and general PMU registers.
++                                  // Sandybridge with HT off has 11 PMUs(3 fixed and 8 generic)
++
++typedef struct DRV_MASKS_NODE_S  DRV_MASKS_NODE;
++typedef        DRV_MASKS_NODE    *DRV_MASKS;
++
++/*
++ * @macro DRV_EVENT_MASK_NODE_S
++ * @brief
++ * The structure is used to store overflow events when handling PMU interrupt.
++ * This approach should be more efficient than checking all event masks
++ * if there are many events to be monitored
++ * and only a few events among them have overflow per interrupt.
++ */
++struct DRV_MASKS_NODE_S {
++    DRV_EVENT_MASK_NODE eventmasks[MAX_OVERFLOW_EVENTS];
++    U8                  masks_num; // 0 <= mask_num <= MAX_OVERFLOW_EVENTS
++};
++
++#define DRV_MASKS_masks_num(d)           (d)->masks_num
++#define DRV_MASKS_eventmasks(d)          (d)->eventmasks
++
++
++/*
++ *  Dispatch table for virtualized functions.
++ *  Used to enable common functionality for different
++ *  processor microarchitectures
++ */
++typedef struct DISPATCH_NODE_S  DISPATCH_NODE;
++typedef        DISPATCH_NODE   *DISPATCH;
++
++struct DISPATCH_NODE_S {
++    VOID (*init)(PVOID);
++    VOID (*fini)(PVOID);
++    VOID (*write)(PVOID);
++    VOID (*freeze)(PVOID);
++    VOID (*restart)(PVOID);
++    VOID (*read_data)(PVOID);
++    VOID (*check_overflow)(DRV_MASKS);
++    VOID (*swap_group)(DRV_BOOL);
++    U64  (*read_lbrs)(PVOID);
++    VOID (*cleanup)(PVOID);
++    VOID (*hw_errata)(VOID);
++    VOID (*read_power)(PVOID);
++    U64  (*check_overflow_errata)(ECB, U32, U64);
++    VOID (*read_counts)(PVOID, U32);
++    U64  (*check_overflow_gp_errata)(ECB,U64*);
++    VOID (*read_ro)(PVOID, U32, U32);
++    VOID (*platform_info)(PVOID);
++    VOID (*trigger_read)(PVOID, U32);    // Counter reads triggered/initiated by User mode timer
++    VOID (*scan_for_uncore)(PVOID);
++    VOID (*read_metrics)(PVOID);
++};
++
++#if defined(BUILD_CHIPSET)
++/*
++ *  Dispatch table for virtualized functions.
++ *  Used to enable common functionality for different
++ *  chipset types
++ */
++typedef struct CS_DISPATCH_NODE_S  CS_DISPATCH_NODE;
++typedef        CS_DISPATCH_NODE   *CS_DISPATCH;
++struct CS_DISPATCH_NODE_S {
++    U32  (*init_chipset)(VOID);    // initialize chipset (must be called before the others!)
++    VOID (*start_chipset)(VOID);   // start the chipset counters
++    VOID (*read_counters)(PVOID);  // at interrupt time, read out the chipset counters
++    VOID (*stop_chipset)(VOID);    // stop the chipset counters
++    VOID (*fini_chipset)(VOID);    // clean up resources and reset chipset state (called last)
++    VOID (*Trigger_Read)(VOID);    // GMCH counter reads triggered/initiated by User mode timer
++};
++extern CS_DISPATCH    cs_dispatch;
++#endif
++
++extern VOID         **PMU_register_data;
++extern VOID         **desc_data;
++extern U64           *prev_counter_data;
++
++/*!
++ * @struct LWPMU_DEVICE_NODE_S
++ * @brief  Struct to hold fields per device
++ *           PMU_register_data_unc - MSR info
++ *           dispatch_unc          - dispatch table
++ *           em_groups_counts_unc  - # groups
++ *           pcfg_unc              - config struct
++ */
++typedef struct LWPMU_DEVICE_NODE_S  LWPMU_DEVICE_NODE;
++typedef        LWPMU_DEVICE_NODE   *LWPMU_DEVICE;
++
++struct LWPMU_DEVICE_NODE_S {
++    VOID         **PMU_register_data;
++    DISPATCH       dispatch;
++    S32            em_groups_count;
++    VOID          *pcfg;
++    U64          **unc_prev_value;
++    U64         ***unc_acc_value;
++    U64            counter_mask;
++    U64            num_events;
++    U32            num_units;
++    VOID          *ec;
++    S32           *cur_group;
++    S32            pci_dev_node_index;
++    U32            device_type;
++    LBR            lbr;
++    PWR            pwr;
++    PEBS_INFO_NODE pebs_info_node;
++};
++
++#define LWPMU_DEVICE_PMU_register_data(dev)   (dev)->PMU_register_data
++#define LWPMU_DEVICE_dispatch(dev)            (dev)->dispatch
++#define LWPMU_DEVICE_em_groups_count(dev)     (dev)->em_groups_count
++#define LWPMU_DEVICE_pcfg(dev)                (dev)->pcfg
++#define LWPMU_DEVICE_prev_value(dev)          (dev)->unc_prev_value
++#define LWPMU_DEVICE_acc_value(dev)           (dev)->unc_acc_value
++#define LWPMU_DEVICE_counter_mask(dev)        (dev)->counter_mask
++#define LWPMU_DEVICE_num_events(dev)          (dev)->num_events
++#define LWPMU_DEVICE_num_units(dev)           (dev)->num_units
++#define LWPMU_DEVICE_ec(dev)                  (dev)->ec
++#define LWPMU_DEVICE_cur_group(dev)           (dev)->cur_group
++#define LWPMU_DEVICE_pci_dev_node_index(dev)  (dev)->pci_dev_node_index
++#define LWPMU_DEVICE_device_type(dev)         (dev)->device_type
++#define LWPMU_DEVICE_lbr(dev)                 (dev)->lbr
++#define LWPMU_DEVICE_pwr(dev)                 (dev)->pwr
++#define LWPMU_DEVICE_pebs_dispatch(dev)       (dev)->pebs_info_node.pebs_dispatch
++#define LWPMU_DEVICE_pebs_record_size(dev)    (dev)->pebs_info_node.pebs_record_size
++#define LWPMU_DEVICE_apebs_basic_offset(dev)  (dev)->pebs_info_node.apebs_basic_offset
++#define LWPMU_DEVICE_apebs_mem_offset(dev)    (dev)->pebs_info_node.apebs_mem_offset
++#define LWPMU_DEVICE_apebs_gpr_offset(dev)    (dev)->pebs_info_node.apebs_gpr_offset
++#define LWPMU_DEVICE_apebs_xmm_offset(dev)    (dev)->pebs_info_node.apebs_xmm_offset
++#define LWPMU_DEVICE_apebs_lbr_offset(dev)    (dev)->pebs_info_node.apebs_lbr_offset
++
++
++extern U32            num_devices;
++extern U32            cur_devices;
++extern LWPMU_DEVICE   devices;
++extern U64           *pmu_state;
++
++// Handy macro
++#define TSC_SKEW(this_cpu)     (cpu_tsc[this_cpu] - cpu_tsc[0])
++
++/*
++ *  The IDT / GDT descriptor for use in identifying code segments
++ */
++#if defined(DRV_EM64T)
++#pragma pack(push,1)
++typedef struct _idtgdtDesc {
++    U16    idtgdt_limit;
++    PVOID  idtgdt_base;
++} IDTGDT_DESC;
++#pragma pack(pop)
++
++extern IDTGDT_DESC         gdt_desc;
++#endif
++
++extern DRV_BOOL            NMI_mode;
++extern DRV_BOOL            KVM_guest_mode;
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/msrdefs.h b/drivers/misc/intel/sepdk/inc/msrdefs.h
+new file mode 100644
+index 000000000000..6a7d44fedfd9
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/msrdefs.h
+@@ -0,0 +1,88 @@
++/*
++    Copyright(C) 2011-2018 Intel Corporation.  All Rights Reserved.
++ 
++    This file is part of SEP Development Kit
++ 
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++ 
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++ 
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++ 
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++
++#ifndef _MSRDEFS_H_
++#define _MSRDEFS_H_
++
++/*
++ * Arch Perf monitoring version 3
++ */
++#define IA32_PMC0                   0x0C1
++#define IA32_PMC1                   0x0C2
++#define IA32_PMC2                   0x0C3
++#define IA32_PMC3                   0x0C4
++#define IA32_PMC4                   0x0C5
++#define IA32_PMC5                   0x0C6
++#define IA32_PMC6                   0x0C7
++#define IA32_PMC7                   0x0C8
++#define IA32_FULL_PMC0              0x4C1
++#define IA32_FULL_PMC1              0x4C2
++#define IA32_PERFEVTSEL0            0x186
++#define IA32_PERFEVTSEL1            0x187
++#define IA32_FIXED_CTR0             0x309
++#define IA32_FIXED_CTR1             0x30A
++#define IA32_FIXED_CTR2             0x30B
++#define IA32_FIXED_CTR3             0x30C
++#define IA32_PERF_CAPABILITIES      0x345
++#define IA32_FIXED_CTRL             0x38D
++#define IA32_PERF_GLOBAL_STATUS     0x38E
++#define IA32_PERF_GLOBAL_CTRL       0x38F
++#define IA32_PERF_GLOBAL_OVF_CTRL   0x390
++#define IA32_PEBS_ENABLE            0x3F1
++#define IA32_MISC_ENABLE            0x1A0
++#define IA32_DS_AREA                0x600
++#define IA32_DEBUG_CTRL             0x1D9
++#undef  IA32_LBR_FILTER_SELECT
++#define IA32_LBR_FILTER_SELECT      0x1c8
++#define IA32_PEBS_FRONTEND          0x3F7
++#define IA32_PERF_METRICS           0x329
++
++#define COMPOUND_CTR_CTL            0x306
++#define COMPOUND_PERF_CTR           0x307
++#define COMPOUND_CTR_OVF_BIT        0x800
++#define COMPOUND_CTR_OVF_SHIFT      12
++
++#define FIXED_CORE_CYCLE_GLOBAL_CTRL_MASK       0x200000000
++#define FIXED_CORE_CYCLE_FIXED_CTRL_MASK        0xF0
++
++// REG INDEX inside GLOBAL CTRL SECTION
++enum {
++    GLOBAL_CTRL_REG_INDEX = 0,
++    GLOBAL_OVF_CTRL_REG_INDEX,
++    PEBS_ENABLE_REG_INDEX,
++    DEBUG_CTRL_REG_INDEX,
++    FIXED_CTRL_REG_INDEX,
++};
++
++// REG INDEX inside GLOBAL STATUS SECTION
++enum {
++    GLOBAL_STATUS_REG_INDEX = 0,
++};
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/output.h b/drivers/misc/intel/sepdk/inc/output.h
+new file mode 100644
+index 000000000000..79108ad249d5
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/output.h
+@@ -0,0 +1,114 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++ 
++    This file is part of SEP Development Kit
++ 
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++ 
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++ 
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++ 
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++#ifndef _OUTPUT_H_
++#define _OUTPUT_H_
++
++#include <linux/timer.h>
++#include <linux/vmalloc.h>
++
++/*
++ * Initial allocation
++ * Size of buffer     = 512KB (2^19)
++ * number of buffers  = 2
++ * The max size of the buffer cannot exceed 1<<22 i.e. 4MB
++ */
++#define OUTPUT_SMALL_BUFFER        (1<<15)
++#define OUTPUT_LARGE_BUFFER        (1<<19)
++#define OUTPUT_CP_BUFFER           (1<<22)
++#define OUTPUT_MEMORY_THRESHOLD    0x8000000
++
++extern U32                         output_buffer_size;
++extern U32                         saved_buffer_size;
++#define OUTPUT_BUFFER_SIZE         output_buffer_size
++#define OUTPUT_NUM_BUFFERS         2
++#if defined (DRV_ANDROID)
++#define MODULE_BUFF_SIZE           1
++#else
++#define MODULE_BUFF_SIZE           2
++#endif
++
++
++/*
++ *  Data type declarations and accessors macros
++ */
++typedef struct {
++    spinlock_t  buffer_lock;
++    U32         remaining_buffer_size;
++    U32         current_buffer;
++    U32         total_buffer_size;
++    U32         next_buffer[OUTPUT_NUM_BUFFERS];
++    U32         buffer_full[OUTPUT_NUM_BUFFERS];
++    U8         *buffer[OUTPUT_NUM_BUFFERS];
++    U32         signal_full;
++    DRV_BOOL    tasklet_queued;
++} OUTPUT_NODE, *OUTPUT;
++
++#define OUTPUT_buffer_lock(x)            (x)->buffer_lock
++#define OUTPUT_remaining_buffer_size(x)  (x)->remaining_buffer_size
++#define OUTPUT_total_buffer_size(x)      (x)->total_buffer_size
++#define OUTPUT_buffer(x,y)               (x)->buffer[(y)]
++#define OUTPUT_buffer_full(x,y)          (x)->buffer_full[(y)]
++#define OUTPUT_current_buffer(x)         (x)->current_buffer
++#define OUTPUT_signal_full(x)            (x)->signal_full
++#define OUTPUT_tasklet_queued(x)         (x)->tasklet_queued
++/*
++ *  Add an array of control buffer for per-cpu
++ */
++typedef struct {
++    wait_queue_head_t queue;
++    OUTPUT_NODE      outbuf;
++    U32              sample_count;
++} BUFFER_DESC_NODE, *BUFFER_DESC;
++
++#define BUFFER_DESC_queue(a)          (a)->queue
++#define BUFFER_DESC_outbuf(a)         (a)->outbuf
++#define BUFFER_DESC_sample_count(a)   (a)->sample_count
++
++extern BUFFER_DESC   cpu_buf;  // actually an array of BUFFER_DESC_NODE
++extern BUFFER_DESC   unc_buf;
++extern BUFFER_DESC   module_buf;
++extern BUFFER_DESC   cpu_sideband_buf;
++/*
++ *  Interface Functions
++ */
++
++extern int       OUTPUT_Module_Fill (PVOID data, U16 size, U8 in_notification);
++extern OS_STATUS OUTPUT_Initialize (void);
++extern OS_STATUS OUTPUT_Initialize_UNC (void);
++extern void      OUTPUT_Cleanup (VOID);
++extern void      OUTPUT_Cleanup (VOID);
++extern int       OUTPUT_Destroy (VOID);
++extern int       OUTPUT_Flush (VOID);
++extern ssize_t   OUTPUT_Module_Read (struct file *filp, char *buf, size_t count, loff_t *f_pos);
++extern ssize_t   OUTPUT_Sample_Read (struct file *filp, char *buf, size_t count, loff_t *f_pos);
++extern ssize_t   OUTPUT_UncSample_Read (struct file *filp, char *buf, size_t count, loff_t *f_pos);
++extern ssize_t   OUTPUT_SidebandInfo_Read (struct file *filp, char *buf, size_t count, loff_t *f_pos);
++extern void*     OUTPUT_Reserve_Buffer_Space (BUFFER_DESC  bd, U32 size, DRV_BOOL defer, U8 in_notification);
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/pci.h b/drivers/misc/intel/sepdk/inc/pci.h
+new file mode 100644
+index 000000000000..a0d340dc43d0
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/pci.h
+@@ -0,0 +1,211 @@
++/*
++    Copyright(C) 2012-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++#ifndef _PCI_H_
++#define _PCI_H_
++
++#include "lwpmudrv_defines.h"
++
++/*
++ * PCI Config Address macros
++ */
++#define PCI_ENABLE                          0x80000000
++
++#define PCI_ADDR_IO                         0xCF8
++#define PCI_DATA_IO                         0xCFC
++
++#define BIT0                                0x1
++#define BIT1                                0x2
++
++/*
++ * Macro for forming a PCI configuration address
++ */
++#define FORM_PCI_ADDR(bus,dev,fun,off)     (((PCI_ENABLE))          |   \
++                                            ((bus & 0xFF) << 16)    |   \
++                                            ((dev & 0x1F) << 11)    |   \
++                                            ((fun & 0x07) <<  8)    |   \
++                                            ((off & 0xFF) <<  0))
++
++#define VENDOR_ID_MASK                        0x0000FFFF
++#define DEVICE_ID_MASK                        0xFFFF0000
++#define DEVICE_ID_BITSHIFT                    16
++#define LOWER_4_BYTES_MASK                    0x00000000FFFFFFFF
++#define MAX_BUSNO                             256
++#define NEXT_ADDR_OFFSET                      4
++#define NEXT_ADDR_SHIFT                       32
++#define DRV_IS_PCI_VENDOR_ID_INTEL            0x8086
++#define MAX_PCI_DEVS                          32
++
++#define CONTINUE_IF_NOT_GENUINE_INTEL_DEVICE(value, vendor_id, device_id)    \
++    {                                                                        \
++        vendor_id = value & VENDOR_ID_MASK;                                  \
++        device_id = (value & DEVICE_ID_MASK) >> DEVICE_ID_BITSHIFT;          \
++                                                                             \
++        if (vendor_id != DRV_IS_PCI_VENDOR_ID_INTEL) {                       \
++            continue;                                                        \
++        }                                                                    \
++                                                                             \
++    }
++
++#define CHECK_IF_GENUINE_INTEL_DEVICE(value, vendor_id, device_id, valid)    \
++    {                                                                        \
++        vendor_id = value & VENDOR_ID_MASK;                                  \
++        device_id = (value & DEVICE_ID_MASK) >> DEVICE_ID_BITSHIFT;          \
++                                                                             \
++        valid = 1;                                                           \
++        if (vendor_id != DRV_IS_PCI_VENDOR_ID_INTEL) {                       \
++            valid = 0;                                                       \
++        }                                                                    \
++                                                                             \
++    }
++
++
++typedef struct SEP_MMIO_NODE_S SEP_MMIO_NODE;
++
++struct SEP_MMIO_NODE_S {
++    U64    physical_address;
++    U64    virtual_address;
++    U64    map_token;
++    U32    size;
++};
++
++#define SEP_MMIO_NODE_physical_address(x)   ((x)->physical_address)
++#define SEP_MMIO_NODE_virtual_address(x)    ((x)->virtual_address)
++#define SEP_MMIO_NODE_map_token(x)          ((x)->map_token)
++#define SEP_MMIO_NODE_size(x)               ((x)->size)
++
++
++extern OS_STATUS
++PCI_Map_Memory (
++    SEP_MMIO_NODE *node,
++    U64            phy_address,
++    U32            map_size
++);
++
++extern void
++PCI_Unmap_Memory (
++    SEP_MMIO_NODE *node
++);
++
++extern int
++PCI_Read_From_Memory_Address (
++    U32 addr,
++    U32* val
++);
++
++extern int
++PCI_Write_To_Memory_Address (
++    U32 addr,
++    U32 val
++);
++
++
++
++/*** UNIVERSAL PCI ACCESSORS ***/
++
++extern VOID PCI_Initialize (
++    VOID
++);
++
++extern U32 PCI_Read_U32 (
++    U32    bus,
++    U32    device,
++    U32    function,
++    U32    offset
++);
++
++extern U32 PCI_Read_U32_Valid (
++    U32    bus,
++    U32    device,
++    U32    function,
++    U32    offset,
++    U32    invalid_value
++);
++
++extern U64 PCI_Read_U64 (
++    U32    bus,
++    U32    device,
++    U32    function,
++    U32    offset
++);
++
++extern U64 PCI_Read_U64_Valid (
++    U32    bus,
++    U32    device,
++    U32    function,
++    U32    offset,
++    U64    invalid_value
++);
++
++extern U32 PCI_Write_U32 (
++    U32    bus,
++    U32    device,
++    U32    function,
++    U32    offset,
++    U32    value
++);
++
++extern U32 PCI_Write_U64 (
++    U32    bus,
++    U32    device,
++    U32    function,
++    U32    offset,
++    U64    value
++);
++
++
++/*** UNIVERSAL MMIO ACCESSORS ***/
++
++extern U32
++PCI_MMIO_Read_U32 (
++    U64    virtual_address_base,
++    U32    offset
++);
++
++extern U64
++PCI_MMIO_Read_U64 (
++    U64    virtual_address_base,
++    U32    offset
++);
++
++extern void
++PCI_MMIO_Write_U32 (
++    U64    virtual_address_base,
++    U32    offset,
++    U32    value
++);
++
++extern void
++PCI_MMIO_Write_U64 (
++    U64    virtual_address_base,
++    U32    offset,
++    U64    value
++);
++
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/pebs.h b/drivers/misc/intel/sepdk/inc/pebs.h
+new file mode 100644
+index 000000000000..3ab0e8e0105e
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/pebs.h
+@@ -0,0 +1,532 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++
++#ifndef _PEBS_H_
++#define _PEBS_H_
++
++typedef struct PEBS_REC_NODE_S  PEBS_REC_NODE;
++
++struct PEBS_REC_NODE_S {
++    U64 r_flags;             // Offset 0x00
++    U64 linear_ip;           // Offset 0x08
++    U64 rax;                 // Offset 0x10
++    U64 rbx;                 // Offset 0x18
++    U64 rcx;                 // Offset 0x20
++    U64 rdx;                 // Offset 0x28
++    U64 rsi;                 // Offset 0x30
++    U64 rdi;                 // Offset 0x38
++    U64 rbp;                 // Offset 0x40
++    U64 rsp;                 // Offset 0x48
++    U64 r8;                  // Offset 0x50
++    U64 r9;                  // Offset 0x58
++    U64 r10;                 // Offset 0x60
++    U64 r11;                 // Offset 0x68
++    U64 r12;                 // Offset 0x70
++    U64 r13;                 // Offset 0x78
++    U64 r14;                 // Offset 0x80
++    U64 r15;                 // Offset 0x88
++};
++
++typedef struct PEBS_REC_EXT_NODE_S  PEBS_REC_EXT_NODE;
++typedef        PEBS_REC_EXT_NODE   *PEBS_REC_EXT;
++struct PEBS_REC_EXT_NODE_S {
++    PEBS_REC_NODE pebs_basic;          // Offset 0x00 to 0x88
++    U64           glob_perf_overflow;  // Offset 0x90
++    U64           data_linear_address; // Offset 0x98
++    U64           data_source;         // Offset 0xA0
++    U64           latency;             // Offset 0xA8
++};
++
++#define PEBS_REC_EXT_r_flags(x)               (x)->pebs_basic.r_flags
++#define PEBS_REC_EXT_linear_ip(x)             (x)->pebs_basic.linear_ip
++#define PEBS_REC_EXT_rax(x)                   (x)->pebs_basic.rax
++#define PEBS_REC_EXT_rbx(x)                   (x)->pebs_basic.rbx
++#define PEBS_REC_EXT_rcx(x)                   (x)->pebs_basic.rcx
++#define PEBS_REC_EXT_rdx(x)                   (x)->pebs_basic.rdx
++#define PEBS_REC_EXT_rsi(x)                   (x)->pebs_basic.rsi
++#define PEBS_REC_EXT_rdi(x)                   (x)->pebs_basic.rdi
++#define PEBS_REC_EXT_rbp(x)                   (x)->pebs_basic.rbp
++#define PEBS_REC_EXT_rsp(x)                   (x)->pebs_basic.rsp
++#define PEBS_REC_EXT_r8(x)                    (x)->pebs_basic.r8
++#define PEBS_REC_EXT_r9(x)                    (x)->pebs_basic.r9
++#define PEBS_REC_EXT_r10(x)                   (x)->pebs_basic.r10
++#define PEBS_REC_EXT_r11(x)                   (x)->pebs_basic.r11
++#define PEBS_REC_EXT_r12(x)                   (x)->pebs_basic.r12
++#define PEBS_REC_EXT_r13(x)                   (x)->pebs_basic.r13
++#define PEBS_REC_EXT_r14(x)                   (x)->pebs_basic.r14
++#define PEBS_REC_EXT_r15(x)                   (x)->pebs_basic.r15
++#define PEBS_REC_EXT_glob_perf_overflow(x)    (x)->glob_perf_overflow
++#define PEBS_REC_EXT_data_linear_address(x)   (x)->data_linear_address
++#define PEBS_REC_EXT_data_source(x)           (x)->data_source
++#define PEBS_REC_EXT_latency(x)               (x)->latency
++
++
++typedef struct PEBS_REC_EXT1_NODE_S  PEBS_REC_EXT1_NODE;
++typedef        PEBS_REC_EXT1_NODE   *PEBS_REC_EXT1;
++struct PEBS_REC_EXT1_NODE_S {
++    PEBS_REC_EXT_NODE pebs_ext;
++    U64               eventing_ip; //Offset 0xB0
++    U64               hle_info;    //Offset 0xB8
++};
++
++#define PEBS_REC_EXT1_r_flags(x)               (x)->pebs_ext.pebs_basic.r_flags
++#define PEBS_REC_EXT1_linear_ip(x)             (x)->pebs_ext.pebs_basic.linear_ip
++#define PEBS_REC_EXT1_rax(x)                   (x)->pebs_ext.pebs_basic.rax
++#define PEBS_REC_EXT1_rbx(x)                   (x)->pebs_ext.pebs_basic.rbx
++#define PEBS_REC_EXT1_rcx(x)                   (x)->pebs_ext.pebs_basic.rcx
++#define PEBS_REC_EXT1_rdx(x)                   (x)->pebs_ext.pebs_basic.rdx
++#define PEBS_REC_EXT1_rsi(x)                   (x)->pebs_ext.pebs_basic.rsi
++#define PEBS_REC_EXT1_rdi(x)                   (x)->pebs_ext.pebs_basic.rdi
++#define PEBS_REC_EXT1_rbp(x)                   (x)->pebs_ext.pebs_basic.rbp
++#define PEBS_REC_EXT1_rsp(x)                   (x)->pebs_ext.pebs_basic.rsp
++#define PEBS_REC_EXT1_r8(x)                    (x)->pebs_ext.pebs_basic.r8
++#define PEBS_REC_EXT1_r9(x)                    (x)->pebs_ext.pebs_basic.r9
++#define PEBS_REC_EXT1_r10(x)                   (x)->pebs_ext.pebs_basic.r10
++#define PEBS_REC_EXT1_r11(x)                   (x)->pebs_ext.pebs_basic.r11
++#define PEBS_REC_EXT1_r12(x)                   (x)->pebs_ext.pebs_basic.r12
++#define PEBS_REC_EXT1_r13(x)                   (x)->pebs_ext.pebs_basic.r13
++#define PEBS_REC_EXT1_r14(x)                   (x)->pebs_ext.pebs_basic.r14
++#define PEBS_REC_EXT1_r15(x)                   (x)->pebs_ext.pebs_basic.r15
++#define PEBS_REC_EXT1_glob_perf_overflow(x)    (x)->pebs_ext.glob_perf_overflow
++#define PEBS_REC_EXT1_data_linear_address(x)   (x)->pebs_ext.data_linear_address
++#define PEBS_REC_EXT1_data_source(x)           (x)->pebs_ext.data_source
++#define PEBS_REC_EXT1_latency(x)               (x)->pebs_ext.latency
++#define PEBS_REC_EXT1_eventing_ip(x)           (x)->eventing_ip
++#define PEBS_REC_EXT1_hle_info(x)              (x)->hle_info
++
++
++typedef struct PEBS_REC_EXT2_NODE_S  PEBS_REC_EXT2_NODE;
++typedef        PEBS_REC_EXT2_NODE   *PEBS_REC_EXT2;
++struct PEBS_REC_EXT2_NODE_S {
++    PEBS_REC_EXT1_NODE pebs_ext1;
++    U64                tsc; //Offset 0xC0
++};
++
++#define PEBS_REC_EXT2_r_flags(x)               (x)->pebs_ext1->pebs_ext.pebs_basic.r_flags
++#define PEBS_REC_EXT2_linear_ip(x)             (x)->pebs_ext1->pebs_ext.pebs_basic.linear_ip
++#define PEBS_REC_EXT2_rax(x)                   (x)->pebs_ext1->pebs_ext.pebs_basic.rax
++#define PEBS_REC_EXT2_rbx(x)                   (x)->pebs_ext1->pebs_ext.pebs_basic.rbx
++#define PEBS_REC_EXT2_rcx(x)                   (x)->pebs_ext1->pebs_ext.pebs_basic.rcx
++#define PEBS_REC_EXT2_rdx(x)                   (x)->pebs_ext1->pebs_ext.pebs_basic.rdx
++#define PEBS_REC_EXT2_rsi(x)                   (x)->pebs_ext1->pebs_ext.pebs_basic.rsi
++#define PEBS_REC_EXT2_rdi(x)                   (x)->pebs_ext1->pebs_ext.pebs_basic.rdi
++#define PEBS_REC_EXT2_rbp(x)                   (x)->pebs_ext1->pebs_ext.pebs_basic.rbp
++#define PEBS_REC_EXT2_rsp(x)                   (x)->pebs_ext1->pebs_ext.pebs_basic.rsp
++#define PEBS_REC_EXT2_r8(x)                    (x)->pebs_ext1->pebs_ext.pebs_basic.r8
++#define PEBS_REC_EXT2_r9(x)                    (x)->pebs_ext1->pebs_ext.pebs_basic.r9
++#define PEBS_REC_EXT2_r10(x)                   (x)->pebs_ext1->pebs_ext.pebs_basic.r10
++#define PEBS_REC_EXT2_r11(x)                   (x)->pebs_ext1->pebs_ext.pebs_basic.r11
++#define PEBS_REC_EXT2_r12(x)                   (x)->pebs_ext1->pebs_ext.pebs_basic.r12
++#define PEBS_REC_EXT2_r13(x)                   (x)->pebs_ext1->pebs_ext.pebs_basic.r13
++#define PEBS_REC_EXT2_r14(x)                   (x)->pebs_ext1->pebs_ext.pebs_basic.r14
++#define PEBS_REC_EXT2_r15(x)                   (x)->pebs_ext1->pebs_ext.pebs_basic.r15
++#define PEBS_REC_EXT2_glob_perf_overflow(x)    (x)->pebs_ext1->pebs_ext.glob_perf_overflow
++#define PEBS_REC_EXT2_data_linear_address(x)   (x)->pebs_ext1->pebs_ext.data_linear_address
++#define PEBS_REC_EXT2_data_source(x)           (x)->pebs_ext1->pebs_ext.data_source
++#define PEBS_REC_EXT2_latency(x)               (x)->pebs_ext1->pebs_ext.latency
++#define PEBS_REC_EXT2_eventing_ip(x)           (x)->pebs_ext1->eventing_ip
++#define PEBS_REC_EXT2_hle_info(x)              (x)->pebs_ext1->hle_info
++#define PEBS_REC_EXT2_tsc(x)                   (x)->tsc
++
++typedef struct APEBS_CONFIG_NODE_S  APEBS_CONFIG_NODE;
++typedef        APEBS_CONFIG_NODE   *APEBS_CONFIG;
++
++struct APEBS_CONFIG_NODE_S {
++    U8    apebs_enabled;
++    U8    collect_mem;
++    U8    collect_gpr;
++    U8    collect_xmm;
++    U8    collect_lbrs;
++    U8    precise_ip_lbrs;
++    U8    num_lbr_entries;
++    U16   basic_offset;
++    U16   mem_offset;
++    U16   gpr_offset;
++    U16   xmm_offset;
++    U16   lbr_offset;
++};
++
++#define APEBS_CONFIG_apebs_enabled(x)         (x)->apebs_enabled
++#define APEBS_CONFIG_collect_mem(x)           (x)->collect_mem
++#define APEBS_CONFIG_collect_gpr(x)           (x)->collect_gpr
++#define APEBS_CONFIG_collect_xmm(x)           (x)->collect_xmm
++#define APEBS_CONFIG_collect_lbrs(x)          (x)->collect_lbrs
++#define APEBS_CONFIG_precise_ip_lbrs(x)       (x)->precise_ip_lbrs
++#define APEBS_CONFIG_num_lbr_entries(x)       (x)->num_lbr_entries
++#define APEBS_CONFIG_basic_offset(x)          (x)->basic_offset
++#define APEBS_CONFIG_mem_offset(x)            (x)->mem_offset
++#define APEBS_CONFIG_gpr_offset(x)            (x)->gpr_offset
++#define APEBS_CONFIG_xmm_offset(x)            (x)->xmm_offset
++#define APEBS_CONFIG_lbr_offset(x)            (x)->lbr_offset
++
++typedef struct ADAPTIVE_PEBS_BASIC_INFO_NODE_S  ADAPTIVE_PEBS_BASIC_INFO_NODE;
++typedef        ADAPTIVE_PEBS_BASIC_INFO_NODE   *ADAPTIVE_PEBS_BASIC_INFO;
++
++struct ADAPTIVE_PEBS_BASIC_INFO_NODE_S {
++    U64 record_info;             // Offset 0x0
++                                 // [47:0] - record format, [63:48] - record size
++    U64 eventing_ip;             // Offset 0x8
++    U64 applicable_counters;     // Offset 0x10
++    U64 tsc;                     // Offset 0x18
++};
++
++#define ADAPTIVE_PEBS_BASIC_INFO_record_info(x)         (x)->record_info
++#define ADAPTIVE_PEBS_BASIC_INFO_eventing_ip(x)         (x)->eventing_ip
++#define ADAPTIVE_PEBS_BASIC_INFO_tsc(x)                 (x)->tsc
++#define ADAPTIVE_PEBS_BASIC_INFO_applicable_counters(x) (x)->applicable_counters
++
++typedef struct ADAPTIVE_PEBS_MEM_INFO_NODE_S  ADAPTIVE_PEBS_MEM_INFO_NODE;
++typedef        ADAPTIVE_PEBS_MEM_INFO_NODE   *ADAPTIVE_PEBS_MEM_INFO;
++
++struct ADAPTIVE_PEBS_MEM_INFO_NODE_S {
++    U64 data_linear_address;      // Offset 0x20
++    U64 data_source;              // Offset 0x28
++    U64 latency;                  // Offset 0x30
++    U64 hle_info;                 // Offset 0x38
++};
++
++#define ADAPTIVE_PEBS_MEM_INFO_data_linear_address(x)    (x)->data_linear_address
++#define ADAPTIVE_PEBS_MEM_INFO_data_source(x)            (x)->data_source
++#define ADAPTIVE_PEBS_MEM_INFO_latency(x)                (x)->latency
++#define ADAPTIVE_PEBS_MEM_INFO_hle_info(x)               (x)->hle_info
++
++typedef struct ADAPTIVE_PEBS_GPR_INFO_NODE_S  ADAPTIVE_PEBS_GPR_INFO_NODE;
++typedef        ADAPTIVE_PEBS_GPR_INFO_NODE   *ADAPTIVE_PEBS_GPR_INFO;
++
++struct ADAPTIVE_PEBS_GPR_INFO_NODE_S {
++    U64 rflags;              // Offset 0x40
++    U64 rip;                 // Offset 0x48
++    U64 rax;                 // Offset 0x50
++    U64 rcx;                 // Offset 0x58
++    U64 rdx;                 // Offset 0x60
++    U64 rbx;                 // Offset 0x68
++    U64 rsp;                 // Offset 0x70
++    U64 rbp;                 // Offset 0x78
++    U64 rsi;                 // Offset 0x80
++    U64 rdi;                 // Offset 0x88
++    U64 r8;                  // Offset 0x90
++    U64 r9;                  // Offset 0x98
++    U64 r10;                 // Offset 0xA0
++    U64 r11;                 // Offset 0xA8
++    U64 r12;                 // Offset 0xB0
++    U64 r13;                 // Offset 0xB8
++    U64 r14;                 // Offset 0xC0
++    U64 r15;                 // Offset 0xC8
++};
++
++#define ADAPTIVE_PEBS_GPR_INFO_rflags(x)                (x)->rflags
++#define ADAPTIVE_PEBS_GPR_INFO_rip(x)                   (x)->rip
++#define ADAPTIVE_PEBS_GPR_INFO_rax(x)                   (x)->rax
++#define ADAPTIVE_PEBS_GPR_INFO_rcx(x)                   (x)->rcx
++#define ADAPTIVE_PEBS_GPR_INFO_rdx(x)                   (x)->rdx
++#define ADAPTIVE_PEBS_GPR_INFO_rbx(x)                   (x)->rbx
++#define ADAPTIVE_PEBS_GPR_INFO_rsp(x)                   (x)->rsp
++#define ADAPTIVE_PEBS_GPR_INFO_rbp(x)                   (x)->rbp
++#define ADAPTIVE_PEBS_GPR_INFO_rsi(x)                   (x)->rsi
++#define ADAPTIVE_PEBS_GPR_INFO_rdi(x)                   (x)->rdi
++#define ADAPTIVE_PEBS_GPR_INFO_r8(x)                    (x)->r8
++#define ADAPTIVE_PEBS_GPR_INFO_r9(x)                    (x)->r9
++#define ADAPTIVE_PEBS_GPR_INFO_r10(x)                   (x)->r10
++#define ADAPTIVE_PEBS_GPR_INFO_r11(x)                   (x)->r11
++#define ADAPTIVE_PEBS_GPR_INFO_r12(x)                   (x)->r12
++#define ADAPTIVE_PEBS_GPR_INFO_r13(x)                   (x)->r13
++#define ADAPTIVE_PEBS_GPR_INFO_r14(x)                   (x)->r14
++#define ADAPTIVE_PEBS_GPR_INFO_r15(x)                   (x)->r15
++
++typedef struct ADAPTIVE_PEBS_XMM_INFO_NODE_S  ADAPTIVE_PEBS_XMM_INFO_NODE;
++typedef        ADAPTIVE_PEBS_XMM_INFO_NODE   *ADAPTIVE_PEBS_XMM_INFO;
++
++struct ADAPTIVE_PEBS_XMM_INFO_NODE_S {
++    U64 xmm0_l;               // Offset 0xD0
++    U64 xmm0_h;               // Offset 0xD8
++    U64 xmm1_l;               // Offset 0xE0
++    U64 xmm1_h;               // Offset 0xE8
++    U64 xmm2_l;               // Offset 0xF0
++    U64 xmm2_h;               // Offset 0xF8
++    U64 xmm3_l;               // Offset 0x100
++    U64 xmm3_h;               // Offset 0x108
++    U64 xmm4_l;               // Offset 0x110
++    U64 xmm4_h;               // Offset 0x118
++    U64 xmm5_l;               // Offset 0x120
++    U64 xmm5_h;               // Offset 0x128
++    U64 xmm6_l;               // Offset 0x130
++    U64 xmm6_h;               // Offset 0x138
++    U64 xmm7_l;               // Offset 0x140
++    U64 xmm7_h;               // Offset 0x148
++    U64 xmm8_l;               // Offset 0x150
++    U64 xmm8_h;               // Offset 0x158
++    U64 xmm9_l;               // Offset 0x160
++    U64 xmm9_h;               // Offset 0x168
++    U64 xmm10_l;              // Offset 0x170
++    U64 xmm10_h;              // Offset 0x178
++    U64 xmm11_l;              // Offset 0x180
++    U64 xmm11_h;              // Offset 0x188
++    U64 xmm12_l;              // Offset 0x190
++    U64 xmm12_h;              // Offset 0x198
++    U64 xmm13_l;              // Offset 0x1A0
++    U64 xmm13_h;              // Offset 0x1A8
++    U64 xmm14_l;              // Offset 0x1B0
++    U64 xmm14_h;              // Offset 0x1B8
++    U64 xmm15_l;              // Offset 0x1C0
++    U64 xmm15_h;              // Offset 0x1C8
++};
++
++#define ADAPTIVE_PEBS_XMM_INFO_xmm0_l(x)     (x)->xmm0_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm0_h(x)     (x)->xmm0_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm1_l(x)     (x)->xmm1_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm1_h(x)     (x)->xmm1_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm2_l(x)     (x)->xmm2_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm2_h(x)     (x)->xmm2_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm3_l(x)     (x)->xmm3_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm3_h(x)     (x)->xmm3_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm4_l(x)     (x)->xmm4_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm4_h(x)     (x)->xmm4_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm5_l(x)     (x)->xmm5_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm5_h(x)     (x)->xmm5_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm6_l(x)     (x)->xmm6_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm6_h(x)     (x)->xmm6_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm7_l(x)     (x)->xmm7_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm7_h(x)     (x)->xmm7_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm8_l(x)     (x)->xmm8_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm8_h(x)     (x)->xmm8_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm9_l(x)     (x)->xmm9_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm9_h(x)     (x)->xmm9_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm10_l(x)    (x)->xmm10_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm10_h(x)    (x)->xmm10_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm11_l(x)    (x)->xmm11_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm11_h(x)    (x)->xmm11_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm12_l(x)    (x)->xmm12_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm12_h(x)    (x)->xmm12_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm13_l(x)    (x)->xmm13_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm13_h(x)    (x)->xmm13_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm14_l(x)    (x)->xmm14_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm14_h(x)    (x)->xmm14_h
++#define ADAPTIVE_PEBS_XMM_INFO_xmm15_l(x)    (x)->xmm15_l
++#define ADAPTIVE_PEBS_XMM_INFO_xmm15_h(x)    (x)->xmm15_h
++
++typedef struct ADAPTIVE_PEBS_LBR_INFO_NODE_S  ADAPTIVE_PEBS_LBR_INFO_NODE;
++typedef        ADAPTIVE_PEBS_LBR_INFO_NODE   *ADAPTIVE_PEBS_LBR_INFO;
++
++struct ADAPTIVE_PEBS_LBR_INFO_NODE_S {
++    U64 lbr_from;             // Offset 0x1D0
++    U64 lbr_to;               // Offset 0x1D8
++    U64 lbr_info;             // Offset 0x1E0
++};
++
++#define ADAPTIVE_PEBS_LBR_INFO_lbr_from(x)    (x)->lbr_from
++#define ADAPTIVE_PEBS_LBR_INFO_lbr_to(x)      (x)->lbr_to
++#define ADAPTIVE_PEBS_LBR_INFO_lbr_info(x)    (x)->lbr_info
++
++typedef struct LATENCY_INFO_NODE_S   LATENCY_INFO_NODE;
++typedef        LATENCY_INFO_NODE    *LATENCY_INFO;
++
++struct LATENCY_INFO_NODE_S {
++    U64 linear_address;
++    U64 data_source;
++    U64 latency;
++    U64 stack_pointer;
++    U64 phys_addr;
++};
++
++#define LATENCY_INFO_linear_address(x)           (x)->linear_address
++#define LATENCY_INFO_data_source(x)              (x)->data_source
++#define LATENCY_INFO_latency(x)                  (x)->latency
++#define LATENCY_INFO_stack_pointer(x)            (x)->stack_pointer
++#define LATENCY_INFO_phys_addr(x)                (x)->phys_addr
++
++typedef struct DTS_BUFFER_EXT_NODE_S  DTS_BUFFER_EXT_NODE;
++typedef        DTS_BUFFER_EXT_NODE   *DTS_BUFFER_EXT;
++struct  DTS_BUFFER_EXT_NODE_S {
++    U64 base;                   // Offset 0x00
++    U64 index;                  // Offset 0x08
++    U64 max;                    // Offset 0x10
++    U64 threshold;              // Offset 0x18
++    U64 pebs_base;              // Offset 0x20
++    U64 pebs_index;             // Offset 0x28
++    U64 pebs_max;               // Offset 0x30
++    U64 pebs_threshold;         // Offset 0x38
++    U64 counter_reset0;         // Offset 0x40
++    U64 counter_reset1;         // Offset 0x48
++    U64 counter_reset2;         // Offset 0x50
++    U64 counter_reset3;
++};
++
++#define DTS_BUFFER_EXT_base(x)               (x)->base
++#define DTS_BUFFER_EXT_index(x)              (x)->index
++#define DTS_BUFFER_EXT_max(x)                (x)->max
++#define DTS_BUFFER_EXT_threshold(x)          (x)->threshold
++#define DTS_BUFFER_EXT_pebs_base(x)          (x)->pebs_base
++#define DTS_BUFFER_EXT_pebs_index(x)         (x)->pebs_index
++#define DTS_BUFFER_EXT_pebs_max(x)           (x)->pebs_max
++#define DTS_BUFFER_EXT_pebs_threshold(x)     (x)->pebs_threshold
++#define DTS_BUFFER_EXT_counter_reset0(x)     (x)->counter_reset0
++#define DTS_BUFFER_EXT_counter_reset1(x)     (x)->counter_reset1
++#define DTS_BUFFER_EXT_counter_reset2(x)     (x)->counter_reset2
++#define DTS_BUFFER_EXT_counter_reset3(x)     (x)->counter_reset3
++
++typedef struct DTS_BUFFER_EXT1_NODE_S  DTS_BUFFER_EXT1_NODE;
++typedef        DTS_BUFFER_EXT1_NODE   *DTS_BUFFER_EXT1;
++struct DTS_BUFFER_EXT1_NODE_S {
++    DTS_BUFFER_EXT_NODE dts_buffer;
++    U64                 counter_reset4;            // Offset 0x60
++    U64                 counter_reset5;            // Offset 0x68
++    U64                 counter_reset6;            // Offset 0x70
++    U64                 counter_reset7;            // Offset 0x78
++    U64                 fixed_counter_reset0;      // Offset 0x80
++    U64                 fixed_counter_reset1;      // Offset 0x88
++    U64                 fixed_counter_reset2;      // Offset 0x90
++    U64                 fixed_counter_reset3;      // Offset 0x98
++};
++
++#define DTS_BUFFER_EXT1_base(x)                     (x)->dts_buffer.base
++#define DTS_BUFFER_EXT1_index(x)                    (x)->dts_buffer.index
++#define DTS_BUFFER_EXT1_max(x)                      (x)->dts_buffer.max
++#define DTS_BUFFER_EXT1_threshold(x)                (x)->dts_buffer.threshold
++#define DTS_BUFFER_EXT1_pebs_base(x)                (x)->dts_buffer.pebs_base
++#define DTS_BUFFER_EXT1_pebs_index(x)               (x)->dts_buffer.pebs_index
++#define DTS_BUFFER_EXT1_pebs_max(x)                 (x)->dts_buffer.pebs_max
++#define DTS_BUFFER_EXT1_pebs_threshold(x)           (x)->dts_buffer.pebs_threshold
++#define DTS_BUFFER_EXT1_counter_reset0(x)           (x)->dts_buffer.counter_reset0
++#define DTS_BUFFER_EXT1_counter_reset1(x)           (x)->dts_buffer.counter_reset1
++#define DTS_BUFFER_EXT1_counter_reset2(x)           (x)->dts_buffer.counter_reset2
++#define DTS_BUFFER_EXT1_counter_reset3(x)           (x)->dts_buffer.counter_reset3
++#define DTS_BUFFER_EXT1_counter_reset4(x)           (x)->counter_reset4
++#define DTS_BUFFER_EXT1_counter_reset5(x)           (x)->counter_reset5
++#define DTS_BUFFER_EXT1_counter_reset6(x)           (x)->counter_reset6
++#define DTS_BUFFER_EXT1_counter_reset7(x)           (x)->counter_reset7
++#define DTS_BUFFER_EXT1_fixed_counter_reset0(x)     (x)->fixed_counter_reset0
++#define DTS_BUFFER_EXT1_fixed_counter_reset1(x)     (x)->fixed_counter_reset1
++#define DTS_BUFFER_EXT1_fixed_counter_reset2(x)     (x)->fixed_counter_reset2
++#define DTS_BUFFER_EXT1_fixed_counter_reset3(x)     (x)->fixed_counter_reset3
++
++extern OS_STATUS
++PEBS_Initialize (
++    U32  dev_idx
++);
++
++extern OS_STATUS
++PEBS_Allocate (
++    VOID
++);
++
++extern VOID
++PEBS_Destroy (
++    VOID
++);
++
++extern VOID
++PEBS_Flush_Buffer(
++    VOID *
++);
++
++extern VOID
++PEBS_Reset_Counter (
++    S32    this_cpu,
++    U32    index,
++    U64    value
++);
++
++extern VOID
++PEBS_Reset_Index (
++    S32 this_cpu
++);
++
++extern VOID
++PEBS_Modify_IP (
++    void       *sample,
++    DRV_BOOL    is_64bit_addr,
++    U32         rec_index
++);
++
++extern VOID
++PEBS_Modify_TSC (
++    void       *sample,
++    U32         rec_index
++);
++
++extern U32
++PEBS_Get_Num_Records_Filled (
++    VOID
++);
++
++extern U64
++PEBS_Fill_Buffer (
++    S8            *buffer,
++    EVENT_DESC    evt_desc,
++    U32           rec_index
++);
++
++extern U64
++APEBS_Fill_Buffer (
++    S8            *buffer,
++    EVENT_DESC    evt_desc,
++    U32           rec_index
++);
++
++extern U64
++PEBS_Overflowed (
++    S32  this_cpu,
++    U64  overflow_status,
++    U32  rec_index
++);
++
++/*
++ *  Dispatch table for virtualized functions.
++ *  Used to enable common functionality for different
++ *  processor microarchitectures
++ */
++typedef struct PEBS_DISPATCH_NODE_S  PEBS_DISPATCH_NODE;
++typedef        PEBS_DISPATCH_NODE   *PEBS_DISPATCH;
++struct PEBS_DISPATCH_NODE_S {
++    VOID (*initialize_threshold)(DTS_BUFFER_EXT);
++    U64  (*overflow)(S32, U64, U32);
++    VOID (*modify_ip)(void*, DRV_BOOL, U32);
++    VOID (*modify_tsc)(void*, U32);
++    U32  (*get_num_records_filled)(VOID);
++};
++
++typedef struct PEBS_INFO_NODE_S  PEBS_INFO_NODE;
++typedef        PEBS_INFO_NODE   *PEBS_INFO;
++struct PEBS_INFO_NODE_S {
++    PEBS_DISPATCH  pebs_dispatch;
++    U32            pebs_record_size;
++    U16            apebs_basic_offset;
++    U16            apebs_mem_offset;
++    U16            apebs_gpr_offset;
++    U16            apebs_xmm_offset;
++    U16            apebs_lbr_offset;
++};
++
++#define APEBS_RECORD_SIZE_MASK       0xFFFF000000000000ULL //[63:48]
++#define APEBS_RECORD_FORMAT_MASK     0xFFFFFFFFFFFF        //[47:0]
++#define APEBS_MEM_RECORD_FORMAT_MASK 0x1ULL
++#define APEBS_GPR_RECORD_FORMAT_MASK 0x2ULL
++#define APEBS_XMM_RECORD_FORMAT_MASK 0x4ULL 
++#define APEBS_LBR_RECORD_FORMAT_MASK 0x8ULL
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/perfver4.h b/drivers/misc/intel/sepdk/inc/perfver4.h
+new file mode 100644
+index 000000000000..78450b6fc4d0
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/perfver4.h
+@@ -0,0 +1,54 @@
++/*
++    Copyright(C) 2013-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++#ifndef _PERFVER4_H_
++#define _PERFVER4_H_
++
++#include "msrdefs.h"
++
++extern DISPATCH_NODE  perfver4_dispatch;
++extern DISPATCH_NODE  perfver4_dispatch_htoff_mode;
++extern DISPATCH_NODE  perfver4_dispatch_nonht_mode;
++
++#define PERFVER4_UNC_BLBYPASS_BITMASK      0x00000001
++#define PERFVER4_UNC_DISABLE_BL_BYPASS_MSR 0x39C
++
++#if defined(DRV_IA32)
++#define PERFVER4_LBR_DATA_BITS             32
++#else
++#define PERFVER4_LBR_DATA_BITS             57
++#endif
++
++#define PERFVER4_LBR_BITMASK               ((1ULL << PERFVER4_LBR_DATA_BITS) -1)
++
++#define PERFVER4_FROZEN_BIT_MASK           0xc00000000000000ULL
++#define PERFVER4_OVERFLOW_BIT_MASK_HT_ON   0x600000070000000FULL
++#define PERFVER4_OVERFLOW_BIT_MASK_HT_OFF  0x60000007000000FFULL
++#define PERFVER4_OVERFLOW_BIT_MASK_NON_HT  0x6000000F000000FFULL
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/pmi.h b/drivers/misc/intel/sepdk/inc/pmi.h
+new file mode 100644
+index 000000000000..4540e8158f14
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/pmi.h
+@@ -0,0 +1,63 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++ 
++    This file is part of SEP Development Kit
++ 
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++ 
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++ 
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++ 
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++
++#ifndef _PMI_H_
++#define _PMI_H_
++
++#include "lwpmudrv_defines.h"
++#include <linux/ptrace.h>
++#include <linux/version.h>
++
++#if defined(DRV_IA32)
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,25)
++#define REGS_xcs(regs)       regs->xcs
++#define REGS_eip(regs)       regs->eip
++#define REGS_eflags(regs)    regs->eflags
++#else
++#define REGS_xcs(regs)       regs->cs
++#define REGS_eip(regs)       regs->ip
++#define REGS_eflags(regs)    regs->flags
++#endif
++#endif
++
++#if defined(DRV_EM64T)
++#define REGS_cs(regs)        regs->cs
++
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,25)
++#define REGS_rip(regs)       regs->rip
++#define REGS_eflags(regs)    regs->eflags
++#else
++#define REGS_rip(regs)       regs->ip
++#define REGS_eflags(regs)    regs->flags
++#endif
++#endif
++
++asmlinkage VOID PMI_Interrupt_Handler(struct pt_regs *regs);
++
++#endif  
+diff --git a/drivers/misc/intel/sepdk/inc/sepdrv_p_state.h b/drivers/misc/intel/sepdk/inc/sepdrv_p_state.h
+new file mode 100644
+index 000000000000..df25b50a3fba
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/sepdrv_p_state.h
+@@ -0,0 +1,48 @@
++/****
++    Copyright(C) 2013-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit.
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++****/
++
++
++
++
++
++#ifndef _SEPDRV_P_STATE_H_
++#define _SEPDRV_P_STATE_H_
++
++#define DRV_APERF_MSR 0xE8
++#define DRV_MPERF_MSR 0xE7
++
++
++extern OS_STATUS
++SEPDRV_P_STATE_Read (
++    S8 *buffer,
++    CPU_STATE pcpu
++);
++
++#endif
++
++
+diff --git a/drivers/misc/intel/sepdk/inc/silvermont.h b/drivers/misc/intel/sepdk/inc/silvermont.h
+new file mode 100644
+index 000000000000..e6112b276d29
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/silvermont.h
+@@ -0,0 +1,44 @@
++/*
++    Copyright(C) 2011-2018 Intel Corporation.  All Rights Reserved.
++ 
++    This file is part of SEP Development Kit
++ 
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++ 
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++ 
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++ 
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++#ifndef _SILVERMONT_H_
++#define _SILVERMONT_H_
++
++#include "msrdefs.h"
++extern DISPATCH_NODE  silvermont_dispatch;
++extern DISPATCH_NODE  knights_dispatch;
++
++#if defined(DRV_IA32)
++#define SILVERMONT_LBR_DATA_BITS             32
++#else
++#define SILVERMONT_LBR_DATA_BITS             48
++#endif
++
++#define SILVERMONT_LBR_BITMASK               ((1ULL << SILVERMONT_LBR_DATA_BITS) -1)
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/sys_info.h b/drivers/misc/intel/sepdk/inc/sys_info.h
+new file mode 100644
+index 000000000000..ee02f16ae289
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/sys_info.h
+@@ -0,0 +1,70 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++ 
++    This file is part of SEP Development Kit
++ 
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++ 
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++ 
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++ 
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++
++#ifndef _SYS_INFO_H_
++#define _SYS_INFO_H_
++
++#include "lwpmudrv_defines.h"
++
++#define  KNIGHTS_FAMILY     0x06
++#define  KNL_MODEL          0x57
++#define  KNM_MODEL          0x85
++
++#define is_Knights_family(family, model)      ((family==KNIGHTS_FAMILY)&&((model==KNL_MODEL)||(model==KNM_MODEL)))
++
++typedef struct __generic_ioctl {
++    U32    size;
++    S32    ret;
++    U64    rsv[3];
++} GENERIC_IOCTL;
++
++#define GENERIC_IOCTL_size(gio)     (gio)->size
++#define GENERIC_IOCTL_ret(gio)      (gio)->ret
++
++//
++// This one is unusual in that it's really a variable
++// size. The system_info field is just a easy way
++// to access the base information, but the actual size
++// when used tends to be much larger that what is 
++// shown here.
++//
++typedef struct __system_info {
++    GENERIC_IOCTL gen;
++    VTSA_SYS_INFO sys_info;
++} IOCTL_SYS_INFO;
++
++#define  IOCTL_SYS_INFO_gen(isi)         (isi)->gen
++#define  IOCTL_SYS_INFO_sys_info(isi)    (isi)->sys_info
++
++extern  U32   SYS_INFO_Build (void);
++extern  void  SYS_INFO_Transfer (PVOID buf_usr_to_drv, unsigned long len_usr_to_drv);
++extern  void  SYS_INFO_Destroy (void);
++extern  void  SYS_INFO_Build_Cpu (PVOID param);
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/unc_common.h b/drivers/misc/intel/sepdk/inc/unc_common.h
+new file mode 100644
+index 000000000000..5355bfefa6b5
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/unc_common.h
+@@ -0,0 +1,238 @@
++/****
++    Copyright(C) 2012-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit.
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++****/
++
++
++
++
++
++#ifndef _UNC_COMMON_H_INC_
++#define _UNC_COMMON_H_INC_
++
++#include "pci.h"
++
++#define DRV_IS_PCI_VENDOR_ID_INTEL            0x8086
++#define VENDOR_ID_MASK                        0x0000FFFF
++#define DEVICE_ID_MASK                        0xFFFF0000
++#define DEVICE_ID_BITSHIFT                    16
++
++#define UNCORE_SOCKETID_UBOX_LNID_OFFSET      0x40
++#define UNCORE_SOCKETID_UBOX_GID_OFFSET       0x54
++
++#define INVALID_BUS_NUMBER                    -1
++#define PCI_INVALID_VALUE                     0xFFFFFFFF
++
++typedef struct DEVICE_CALLBACK_NODE_S  DEVICE_CALLBACK_NODE;
++typedef        DEVICE_CALLBACK_NODE   *DEVICE_CALLBACK;
++
++struct DEVICE_CALLBACK_NODE_S {
++    DRV_BOOL (*is_Valid_Device)(U32);
++    DRV_BOOL (*is_Valid_For_Write)(U32, U32);
++    DRV_BOOL (*is_Unit_Ctl)(U32);
++    DRV_BOOL (*is_PMON_Ctl)(U32);
++};
++
++
++#define MAX_PCIDEV_UNITS                    16
++#define GET_MAX_PCIDEV_ENTRIES(num_pkg)     ((num_pkg>MAX_PCIDEV_UNITS)? num_pkg:MAX_PCIDEV_UNITS)
++
++typedef struct UNC_PCIDEV_NODE_S UNC_PCIDEV_NODE;
++
++struct UNC_PCIDEV_NODE_S {
++    U32               num_entries;
++    U32               max_entries;
++    S32              *busno_list;       // array for pcibus mapping
++    SEP_MMIO_NODE    *mmio_map;         // virtual memory mapping entries
++};
++
++#define UNC_PCIDEV_max_entries(x)                  ((x)->max_entries)
++#define UNC_PCIDEV_num_entries(x)                  ((x)->num_entries)
++#define UNC_PCIDEV_busno_list(x)                   ((x)->busno_list)
++#define UNC_PCIDEV_busno_entry(x, entry)           ((x)->busno_list[entry])
++#define UNC_PCIDEV_mmio_map(x)                     ((x)->mmio_map)
++#define UNC_PCIDEV_mmio_map_entry(x, entry)        ((x)->mmio_map[entry])
++#define UNC_PCIDEV_virtual_addr_entry(x, entry)    (SEP_MMIO_NODE_virtual_address(&UNC_PCIDEV_mmio_map_entry(x, entry)))
++
++#define UNC_PCIDEV_is_busno_valid(x, entry)        (((x)->busno_list) && ((x)->num_entries > (entry)) && ((x)->busno_list[(entry)] != INVALID_BUS_NUMBER))
++#define UNC_PCIDEV_is_vaddr_valid(x, entry)        (((x)->mmio_map) && ((x)->num_entries > (entry)) && ((x)->mmio_map[(entry)].virtual_address))
++
++extern UNC_PCIDEV_NODE  unc_pcidev_map[];
++
++#define GET_BUS_MAP(dev_node, entry)                (UNC_PCIDEV_busno_entry((&(unc_pcidev_map[dev_node])), entry))
++#define GET_NUM_MAP_ENTRIES(dev_node)               (UNC_PCIDEV_num_entries(&(unc_pcidev_map[dev_node])))
++#define IS_MMIO_MAP_VALID(dev_node, entry)          (UNC_PCIDEV_is_vaddr_valid((&(unc_pcidev_map[dev_node])), entry))
++#define IS_BUS_MAP_VALID(dev_node, entry)           (UNC_PCIDEV_is_busno_valid((&(unc_pcidev_map[dev_node])), entry))
++#define virtual_address_table(dev_node, entry)      (UNC_PCIDEV_virtual_addr_entry(&(unc_pcidev_map[dev_node]), entry))
++
++
++
++
++extern OS_STATUS
++UNC_COMMON_Do_Bus_to_Socket_Map(
++    U32 uncore_did,
++    U32 dev_node,
++    U32 bus_no,
++    U32 device_no,
++    U32 function_no
++);
++
++
++extern VOID
++UNC_COMMON_Dummy_Func(
++    PVOID param
++);
++
++extern VOID
++UNC_COMMON_Read_Counts (
++    PVOID  param,
++    U32    id
++);
++
++
++/************************************************************/
++/*
++ * UNC common PCI  based API
++ *
++ ************************************************************/
++
++extern VOID
++UNC_COMMON_PCI_Write_PMU (
++    PVOID            param,
++    U32              ubox_did,
++    U32              control_msr,
++    U32              ctl_val,
++    U32              pci_dev_index,
++    DEVICE_CALLBACK  callback
++);
++
++extern VOID
++UNC_COMMON_PCI_Enable_PMU(
++    PVOID            param,
++    U32              control_msr,
++    U32              enable_val,
++    U32              disable_val,
++    DEVICE_CALLBACK  callback
++);
++
++
++extern VOID
++UNC_COMMON_PCI_Disable_PMU(
++    PVOID            param,
++    U32              control_msr,
++    U32              enable_val,
++    U32              disable_val,
++    DEVICE_CALLBACK  callback
++);
++
++extern OS_STATUS
++UNC_COMMON_Add_Bus_Map(
++    U32 uncore_did,
++    U32 dev_node,
++    U32 bus_no
++);
++
++extern OS_STATUS
++UNC_COMMON_Init(VOID);
++
++extern VOID
++UNC_COMMON_Clean_Up(VOID);
++
++extern VOID
++UNC_COMMON_PCI_Trigger_Read (
++    U32    id
++);
++
++extern VOID
++UNC_COMMON_PCI_Read_PMU_Data(
++    PVOID   param
++);
++
++extern VOID
++UNC_COMMON_PCI_Scan_For_Uncore(
++    PVOID           param,
++    U32             dev_info_node,
++    DEVICE_CALLBACK callback
++);
++
++extern VOID
++UNC_COMMON_Get_Platform_Topology(
++	U32				dev_info_node
++);
++
++/************************************************************/
++/*
++ * UNC common MSR  based API
++ *
++ ************************************************************/
++
++extern VOID
++UNC_COMMON_MSR_Write_PMU (
++    PVOID            param,
++    U32              control_msr,
++    U64              control_val,
++    U64              reset_val,
++    DEVICE_CALLBACK  callback
++);
++
++extern VOID
++UNC_COMMON_MSR_Enable_PMU(
++    PVOID            param,
++    U32              control_msr,
++    U64              control_val,
++    U64              unit_ctl_val,
++    U64              pmon_ctl_val,
++    DEVICE_CALLBACK  callback
++);
++
++
++extern VOID
++UNC_COMMON_MSR_Disable_PMU(
++    PVOID            param,
++    U32              control_msr,
++    U64              unit_ctl_val,
++    U64              pmon_ctl_val,
++    DEVICE_CALLBACK  callback
++);
++
++extern VOID
++UNC_COMMON_MSR_Trigger_Read (
++    U32    id
++);
++
++extern VOID
++UNC_COMMON_MSR_Read_PMU_Data(
++    PVOID   param
++);
++
++extern VOID
++UNC_COMMON_MSR_Clean_Up(
++    PVOID   param
++);
++
++
++#endif
++
+diff --git a/drivers/misc/intel/sepdk/inc/unc_gt.h b/drivers/misc/intel/sepdk/inc/unc_gt.h
+new file mode 100644
+index 000000000000..7245cf6266f3
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/unc_gt.h
+@@ -0,0 +1,90 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++#ifndef _UNC_GT_H_INC_
++#define _UNC_GT_H_INC_
++
++/*
++ * Local to this architecture: SNB uncore GT unit
++ *
++ */
++#define GT_MMIO_SIZE                   0x200000
++#define NEXT_ADDR_OFFSET               4
++#define UNC_GT_BAR_MASK                0xFFF00000
++#define PERF_GLOBAL_CTRL               0x391
++#define GT_CLEAR_COUNTERS              0xFFFF0000
++
++#define IA32_DEBUG_CTRL                0x1D9
++#define MAX_FREE_RUNNING_EVENTS        6
++#define GT_DID_1                       0x102
++#define INTEL_VENDOR_ID                0x8086
++#define DRV_GET_PCI_VENDOR_ID(value)   value & 0x0000FFFF
++#define DRV_GET_PCI_DEVICE_ID(value)   (value & 0xFFFF0000) >> 16
++#define DRV_IS_INTEL_VENDOR_ID(value)  value == INTEL_VENDOR_ID
++#define DRV_IS_GT_DEVICE_ID(value)     value == GT_DID_1
++
++//clock gating disable values
++#define UNC_GT_GCPUNIT_REG1            0x9400
++#define UNC_GT_GCPUNIT_REG2            0x9404
++#define UNC_GT_GCPUNIT_REG3            0x9408
++#define UNC_GT_GCPUNIT_REG4            0x940c
++#define UNC_GT_GCPUNIT_REG1_VALUE      0xffffffff
++#define UNC_GT_GCPUNIT_REG2_VALUE      0xffffffff
++#define UNC_GT_GCPUNIT_REG3_VALUE      0xffe3ffff
++#define UNC_GT_GCPUNIT_REG4_VALUE      0x00000003
++//RC6 disable
++#define UNC_GT_RC6_REG1                0xa090
++#define UNC_GT_RC6_REG2                0xa094
++#define UNC_GT_RC6_REG1_OR_VALUE       0x80000000
++#define UNC_GT_RC6_REG2_VALUE          0x00000000
++extern  DISPATCH_NODE                  unc_gt_dispatch;
++
++typedef struct GT_CTR_NODE_S  GT_CTR_NODE;
++typedef        GT_CTR_NODE   *GT_CTR;
++struct GT_CTR_NODE_S
++{
++    union
++    {
++        struct
++        {
++          U32 low: 32;
++          U32 high : 12;
++        } bits;
++       U64 value;
++    } u;
++};
++
++#define GT_CTR_NODE_value(x)        x.u.value
++#define GT_CTR_NODE_low(x)          x.u.bits.low
++#define GT_CTR_NODE_high(x)         x.u.bits.high
++#define GT_CTR_NODE_value_reset(x)  x.u.value = 0
++
++#define DRV_WRITE_PCI_REG_ULONG(va, offset_delta, value)   writel(value, (U32*)((char*)(va + offset_delta)))
++#define DRV_READ_PCI_REG_ULONG(va, offset_delta)           readl((U32*)(char*)(va + offset_delta))
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/utility.h b/drivers/misc/intel/sepdk/inc/utility.h
+new file mode 100644
+index 000000000000..5f1258377bd1
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/utility.h
+@@ -0,0 +1,533 @@
++/*
++    Copyright(C) 2005-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++
++#ifndef _UTILITY_H_
++#define _UTILITY_H_
++
++/**
++// Data Types and Macros
++*/
++#pragma pack(push, 1)
++
++#pragma pack(pop)
++
++/*
++ *  These routines have macros defined in asm/system.h
++ */
++#define SYS_Local_Irq_Enable()       local_irq_enable()
++#define SYS_Local_Irq_Disable()      local_irq_disable()
++#define SYS_Local_Irq_Save(flags)    local_irq_save(flags)
++#define SYS_Local_Irq_Restore(flags) local_irq_restore(flags)
++
++#include <asm/msr.h>
++
++#define SYS_MMIO_Read32(base, offset)             ((base)?readl((U32*)((UIOP)(base) + (offset))):0)
++extern U64
++SYS_MMIO_Read64(U64 baseAddress, U64 offset);
++
++extern U64
++SYS_Read_MSR (U32 msr);
++
++extern void
++SYS_Write_MSR (U32 msr, U64 val);
++
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0) || (LINUX_VERSION_CODE >= KERNEL_VERSION(3,5,0) && defined(CONFIG_UIDGID_STRICT_TYPE_CHECKS))
++#define DRV_GET_UID(p)      p->cred->uid.val
++#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,29)
++#define DRV_GET_UID(p)      p->cred->uid
++#else
++#define DRV_GET_UID(p)      p->uid
++#endif
++
++extern void SYS_Perfvec_Handler (void);
++
++extern void *SYS_get_stack_ptr0 (void);
++extern void *SYS_get_stack_ptr3 (void);
++extern void *SYS_get_user_fp (void);
++extern short SYS_Get_cs (void);
++
++#if defined(DRV_IA32)
++extern void *SYS_Get_IDT_Base_HWR(void);   /// IDT base from hardware IDTR
++extern void *SYS_Get_GDT_Base_HWR(void);   /// GDT base from hardware GDTR
++extern U64   SYS_Get_TSC(void);
++
++#define SYS_Get_IDT_Base SYS_Get_IDT_Base_HWR
++#define SYS_Get_GDT_Base SYS_Get_GDT_Base_HWR
++#endif
++
++#if defined(DRV_EM64T)
++extern unsigned short SYS_Get_Code_Selector0 (void);
++extern void SYS_Get_IDT_Base (void **);
++extern void SYS_Get_GDT_Base (void **);
++#endif
++
++extern void SYS_IO_Delay (void);
++#define SYS_Inb(port)       inb(port)
++#define SYS_Outb(byte,port) outb(byte,port)
++
++/* typedef int                 OSSTATUS; */
++
++/*
++ * Lock implementations
++ */
++#define SYS_Locked_Inc(var)              atomic_inc((var))
++#define SYS_Locked_Dec(var)              atomic_dec((var))
++
++extern void  UTILITY_Read_TSC (U64* pTsc);
++
++
++extern void
++UTILITY_down_read_mm (
++    struct mm_struct *mm
++);
++
++extern void
++UTILITY_up_read_mm(struct mm_struct *mm);
++
++extern void
++UTILITY_Read_Cpuid(
++    U64  cpuid_function,
++    U64 *rax_value,
++    U64 *rbx_value,
++    U64 *rcx_value,
++    U64 *rdx_value
++);
++
++extern  DISPATCH
++UTILITY_Configure_CPU (U32);
++
++#if defined(DRV_IA32)
++asmlinkage void SYS_Get_CSD (U32, U32 *, U32 *);
++#endif
++
++#if defined(BUILD_CHIPSET)
++extern  CS_DISPATCH
++UTILITY_Configure_Chipset (void);
++#endif
++
++/* ------------------------------------------------------------------------- */
++/*!
++ * @fn       extern unsigned long UTILITY_Find_Symbol (const char* name)
++ *
++ * @brief    Finds the address of the specified kernel symbol.
++ *
++ * @param    const char* name - name of the symbol to look for
++ *
++ * @return   Symbol address (0 if could not find)
++ *
++ * <I>Special Notes:</I>
++ *           This wrapper is needed due to kallsyms_lookup_name not being exported
++ *           in kernel version 2.6.32.*.
++ *           Careful! This code is *NOT* multithread-safe or reentrant! Should only
++ *           be called from 1 context at a time!
++ */
++extern unsigned long
++UTILITY_Find_Symbol (const char* name);
++
++
++
++/************************************************************************/
++/*********************** DRIVER LOG DECLARATIONS ************************/
++/************************************************************************/
++
++#define DRV_LOG_COMPILER_MEM_BARRIER()             asm volatile("" : : : "memory")
++
++#define DRV_LOG_DEFAULT_LOAD_VERBOSITY            (LOG_CHANNEL_MOSTWHERE                         | LOG_CONTEXT_ALL)
++#define DRV_LOG_DEFAULT_INIT_VERBOSITY            (LOG_CHANNEL_MEMLOG    | LOG_CHANNEL_AUXMEMLOG | LOG_CONTEXT_ALL)
++#define DRV_LOG_DEFAULT_DETECTION_VERBOSITY       (DRV_LOG_DEFAULT_INIT_VERBOSITY)
++#define DRV_LOG_DEFAULT_ERROR_VERBOSITY           (LOG_CHANNEL_MOSTWHERE                         | LOG_CONTEXT_ALL)
++#define DRV_LOG_DEFAULT_STATE_CHANGE_VERBOSITY    (DRV_LOG_DEFAULT_INIT_VERBOSITY)
++#define DRV_LOG_DEFAULT_MARK_VERBOSITY            (LOG_CHANNEL_MOSTWHERE                         | LOG_CONTEXT_ALL)
++#define DRV_LOG_DEFAULT_DEBUG_VERBOSITY           (LOG_CHANNEL_MEMLOG    | LOG_CHANNEL_PRINTK    | LOG_CONTEXT_ALL)
++#define DRV_LOG_DEFAULT_FLOW_VERBOSITY            (LOG_CHANNEL_MEMLOG    | LOG_CHANNEL_AUXMEMLOG | LOG_CONTEXT_ALL)
++#define DRV_LOG_DEFAULT_ALLOC_VERBOSITY           (LOG_VERBOSITY_NONE)
++#define DRV_LOG_DEFAULT_INTERRUPT_VERBOSITY       (LOG_CHANNEL_MEMLOG                            | LOG_CONTEXT_ALL)
++#define DRV_LOG_DEFAULT_TRACE_VERBOSITY           (LOG_VERBOSITY_NONE)
++#define DRV_LOG_DEFAULT_REGISTER_VERBOSITY        (LOG_VERBOSITY_NONE)
++#define DRV_LOG_DEFAULT_NOTIFICATION_VERBOSITY    (LOG_CHANNEL_MEMLOG                            | LOG_CONTEXT_ALL)
++#define DRV_LOG_DEFAULT_WARNING_VERBOSITY         (LOG_CHANNEL_MOSTWHERE                         | LOG_CONTEXT_ALL)
++
++
++/* ------------------------------------------------------------------------- */
++/*!
++ * @fn       extern void UTILITY_Log (U8 category, U8 in_notification, U8 secondary,
++ *                                    const char* function_name, U32 func_name_len,
++ *                                    U32 line_number, const char* format_string, ...)
++ *
++ * @brief    Checks whether and where the message should be logged, and logs it as appropriate.
++ *
++ * @param    U8          category        - message category
++ *           U8          in_notification - whether or not we are in a notification/OS callback context
++ *                                         (this information cannot be reliably obtained without passing
++ *                                         it through the stack)
++ *           U8          secondary       - secondary information field for the message
++ *           const char* function_name   - name of the calling function
++ *           U32         func_name_len   - length of the name of the calling function (more efficient
++ *                                         to pass it as parameter than finding it back at runtime)
++ *           U32         line_number     - line number of the call site
++ *           const char* format_string   - classical format string for printf-like functions
++ *           ...                         - elements to print
++ *
++ * @return   none
++ *
++ * <I>Special Notes:</I>
++ *           Used to keep track of the IOCTL operation currently being processed.
++ *           This information is saved in the log buffer (globally), as well as
++ *           in every log entry.
++ *           NB: only IOCTLs for which grabbing the ioctl mutex is necessary
++ *           should be kept track of this way.
++ */
++extern VOID
++UTILITY_Log (
++    U8          category,
++    U8          in_notification,
++    U8          secondary,
++    const char* function_name,
++    U32         func_name_len,
++    U32         line_number,
++    const char* format_string,
++    ...
++);
++
++/* ------------------------------------------------------------------------- */
++/*!
++ * @fn       extern DRV_STATUS UTILITY_Driver_Log_Init (void)
++ *
++ * @brief    Allocates and initializes the driver log buffer.
++ *
++ * @param    none
++ *
++ * @return   OS_SUCCESS on success, OS_NO_MEM on error.
++ *
++ * <I>Special Notes:</I>
++ *           Should be (successfully) run before any non-LOAD log calls.
++ *           Allocates memory without going through CONTROL_Allocate (to avoid
++ *           complicating the instrumentation of CONTROL_* functions): calling
++ *           UTILITY_Driver_Log_Free is necessary to free the log structure.
++ *           Falls back to vmalloc when contiguous physical memory cannot be
++ *           allocated. This does not impact runtime behavior, but may impact
++ *           the easiness of retrieving the log from a core dump if the system
++ *           crashes.
++ */
++extern DRV_STATUS
++UTILITY_Driver_Log_Init (void);
++
++/* ------------------------------------------------------------------------- */
++/*!
++ * @fn       extern DRV_STATUS UTILITY_Driver_Log_Free (void)
++ *
++ * @brief    Frees the driver log buffer.
++ *
++ * @param    none
++ *
++ * @return   OS_SUCCESS on success, OS_NO_MEM on error.
++ *
++ * <I>Special Notes:</I>
++ *           Should be done before unloading the driver.
++ *           See UTILITY_Driver_Log_Init for details.
++ */
++extern void
++UTILITY_Driver_Log_Free (VOID);
++
++/* ------------------------------------------------------------------------- */
++/*!
++ * @fn       extern void UTILITY_Driver_Set_Active_Ioctl (U32 ioctl)
++ *
++ * @brief    Sets the 'active_ioctl' global to the specified value.
++ *
++ * @param    U32 ioctl - ioctl/drvop code to use
++ *
++ * @return   none
++ *
++ * <I>Special Notes:</I>
++ *           Used to keep track of the IOCTL operation currently being processed.
++ *           This information is saved in the log buffer (globally), as well as
++ *           in every log entry.
++ *           NB: only IOCTLs for which grabbing the ioctl mutex is necessary
++ *           should be kept track of this way.
++ */
++extern void
++UTILITY_Driver_Set_Active_Ioctl (U32);
++
++/* ------------------------------------------------------------------------- */
++/*!
++ * @fn       extern const char** UTILITY_Log_Category_Strings (void)
++ *
++ * @brief    Accessor function for the log category string array
++ *
++ * @param    none
++ *
++ * @return   none
++ *
++ * <I>Special Notes:</I>
++ *           Only needed for cosmetic purposes when adjusting category verbosities.
++ */
++extern const char**
++UTILITY_Log_Category_Strings (void);
++
++
++extern DRV_LOG_BUFFER driver_log_buffer;
++extern volatile U8    active_ioctl;
++
++#define DRV_LOG()                          driver_log_buffer
++#define DRV_LOG_VERBOSITY(category)      ((DRV_LOG_BUFFER_verbosities(DRV_LOG()))[category])
++#define SEP_IN_NOTIFICATION                1
++
++#define SEP_DRV_RAW_LOG(category, in_notification, second, message, ...) UTILITY_Log(category, in_notification, second, __func__, sizeof(__func__), __LINE__, message, ##__VA_ARGS__)
++#define SEP_DRV_ULK_LOG(category, in_notification, second, message, ...) UTILITY_Log(category, in_notification, second, __func__, sizeof(__func__), __LINE__, message, ##__VA_ARGS__)
++
++#define SEP_DRV_LOG_INCREMENT_NB_ACTIVE_INTERRUPTS()                    \
++    __sync_fetch_and_add(                                               \
++        &DRV_LOG_BUFFER_nb_active_interrupts(DRV_LOG()),                \
++        1);                                                             \
++    __sync_fetch_and_add(                                               \
++        &DRV_LOG_BUFFER_nb_interrupts(DRV_LOG()),                       \
++        1);
++
++#define SEP_DRV_LOG_DECREMENT_NB_ACTIVE_INTERRUPTS()                    \
++    __sync_fetch_and_add(                                               \
++        &DRV_LOG_BUFFER_nb_active_interrupts(DRV_LOG()),                \
++        -1);
++
++#define SEP_DRV_LOG_INCREMENT_NB_ACTIVE_NOTIFICATIONS()                 \
++    __sync_fetch_and_add(                                               \
++        &DRV_LOG_BUFFER_nb_active_notifications(DRV_LOG()),             \
++        1);                                                             \
++    __sync_fetch_and_add(                                               \
++        &DRV_LOG_BUFFER_nb_notifications(DRV_LOG()),                    \
++        1);
++
++#define SEP_DRV_LOG_DECREMENT_NB_ACTIVE_NOTIFICATIONS()                 \
++    __sync_fetch_and_add(                                               \
++        &DRV_LOG_BUFFER_nb_active_notifications(DRV_LOG()),             \
++        -1);
++
++#define SEP_DRV_LOG_INCREMENT_NB_STATE_TRANSITIONS()                    \
++    __sync_fetch_and_add(                                               \
++        &DRV_LOG_BUFFER_nb_driver_state_transitions(DRV_LOG()),         \
++        1);
++
++#define SEP_DRV_LOG_DISAMBIGUATE()                                      \
++    __sync_fetch_and_add(                                               \
++        &DRV_LOG_BUFFER_disambiguator(DRV_LOG()),                       \
++        1);
++
++/************************************************************************/
++/************************** CATEGORY LOG APIs ***************************/
++/************************************************************************/
++
++// ERROR, WARNING and LOAD are always compiled in...
++#define SEP_DRV_LOG_ERROR(message, ...)                          SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_ERROR,          0, DRV_LOG_NOTHING,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_WARNING(message, ...)                        SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_WARNING,        0, DRV_LOG_NOTHING,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_NOTIFICATION_ERROR(in_notif, message, ...)   SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_ERROR,   in_notif, DRV_LOG_NOTHING,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_NOTIFICATION_WARNING(in_notif, message, ...) SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_WARNING, in_notif, DRV_LOG_NOTHING,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_LOAD(message, ...)                                                            \
++    do {                                                                                          \
++        if (DRV_LOG()) {                                                                           \
++            SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_LOAD, 0, DRV_LOG_NOTHING, message, ##__VA_ARGS__);   \
++        }                                                                                         \
++        else if (DRV_LOG_DEFAULT_LOAD_VERBOSITY & LOG_CHANNEL_PRINTK) {                           \
++            printk(KERN_ERR SEP_MSG_PREFIX " " message "\n", ##__VA_ARGS__);                      \
++        }                                                                                         \
++    } while(0);
++
++#if defined(DRV_MINIMAL_LOGGING)    // MINIMAL LOGGING MODE
++#define SEP_DRV_LOG_INIT(message, ...)              {}
++#define SEP_DRV_LOG_INIT_IN(message, ...)           {}
++#define SEP_DRV_LOG_INIT_OUT(message, ...)          {}
++#define SEP_DRV_LOG_DETECTION(message, ...)         {}
++#define SEP_DRV_LOG_MARK(message, ...)              {}
++#define SEP_DRV_LOG_DEBUG(message, ...)             {}
++#define SEP_DRV_LOG_DEBUG_IN(message, ...)          {}
++#define SEP_DRV_LOG_DEBUG_OUT(message, ...)         {}
++#define SEP_DRV_LOG_FLOW_IN(message, ...)           {}
++#define SEP_DRV_LOG_FLOW_OUT(message, ...)          {}
++#define SEP_DRV_LOG_ALLOC(message, ...)             {}
++#define SEP_DRV_LOG_ALLOC_IN(message, ...)          {}
++#define SEP_DRV_LOG_ALLOC_OUT(message, ...)         {}
++#define SEP_DRV_LOG_INTERRUPT_IN(message, ...)      SEP_DRV_LOG_INCREMENT_NB_ACTIVE_INTERRUPTS();
++#define SEP_DRV_LOG_INTERRUPT_OUT(message, ...)     SEP_DRV_LOG_DECREMENT_NB_ACTIVE_INTERRUPTS();
++#define SEP_DRV_LOG_NOTIFICATION_IN(message, ...)   SEP_DRV_LOG_INCREMENT_NB_ACTIVE_NOTIFICATIONS();
++#define SEP_DRV_LOG_NOTIFICATION_OUT(message, ...)  SEP_DRV_LOG_DECREMENT_NB_ACTIVE_NOTIFICATIONS();
++#define SEP_DRV_LOG_STATE_TRANSITION(former_state, new_state, message, ...) \
++            (void) former_state;                                            \
++            SEP_DRV_LOG_INCREMENT_NB_STATE_TRANSITIONS();                   \
++            DRV_LOG_BUFFER_driver_state(DRV_LOG()) = new_state;
++#else                               // REGULAR LOGGING MODE (PART 1 / 2)
++#define SEP_DRV_LOG_INIT(message, ...)          SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_INIT,      0, DRV_LOG_NOTHING,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_INIT_IN(message, ...)       SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_INIT,      0, DRV_LOG_FLOW_IN,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_INIT_OUT(message, ...)      SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_INIT,      0, DRV_LOG_FLOW_OUT, message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_DETECTION(message, ...)     SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_DETECTION, 0, DRV_LOG_NOTHING,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_MARK(message, ...)          SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_MARK,      0, DRV_LOG_NOTHING,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_DEBUG(message, ...)         SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_DEBUG,     0, DRV_LOG_NOTHING,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_DEBUG_IN(message, ...)      SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_DEBUG,     0, DRV_LOG_FLOW_IN,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_DEBUG_OUT(message, ...)     SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_DEBUG,     0, DRV_LOG_FLOW_OUT, message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_FLOW_IN(message, ...)       SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_FLOW,      0, DRV_LOG_FLOW_IN,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_FLOW_OUT(message, ...)      SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_FLOW,      0, DRV_LOG_FLOW_OUT, message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_ALLOC(message, ...)         SEP_DRV_ULK_LOG(DRV_LOG_CATEGORY_ALLOC,     0, DRV_LOG_NOTHING,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_ALLOC_IN(message, ...)      SEP_DRV_ULK_LOG(DRV_LOG_CATEGORY_ALLOC,     0, DRV_LOG_FLOW_IN,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_ALLOC_OUT(message, ...)     SEP_DRV_ULK_LOG(DRV_LOG_CATEGORY_ALLOC,     0, DRV_LOG_FLOW_OUT, message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_INTERRUPT_IN(message, ...)                              \
++    SEP_DRV_LOG_INCREMENT_NB_ACTIVE_INTERRUPTS();                           \
++    SEP_DRV_RAW_LOG(                                                        \
++        DRV_LOG_CATEGORY_INTERRUPT,                                         \
++        0,                                                                  \
++        DRV_LOG_FLOW_IN,                                                    \
++        message,                                                            \
++        ##__VA_ARGS__);
++#define SEP_DRV_LOG_INTERRUPT_OUT(message, ...)                             \
++    SEP_DRV_RAW_LOG(                                                        \
++        DRV_LOG_CATEGORY_INTERRUPT,                                         \
++        0,                                                                  \
++        DRV_LOG_FLOW_OUT,                                                   \
++        message,                                                            \
++        ##__VA_ARGS__);                                                     \
++    SEP_DRV_LOG_DECREMENT_NB_ACTIVE_INTERRUPTS();
++#define SEP_DRV_LOG_NOTIFICATION_IN(message, ...)                           \
++    SEP_DRV_LOG_INCREMENT_NB_ACTIVE_NOTIFICATIONS();                        \
++    SEP_DRV_RAW_LOG(                                                        \
++        DRV_LOG_CATEGORY_NOTIFICATION,                                      \
++        1,                                                                  \
++        DRV_LOG_FLOW_IN,                                                    \
++        message,                                                            \
++        ##__VA_ARGS__);
++#define SEP_DRV_LOG_NOTIFICATION_OUT(message, ...)                          \
++    SEP_DRV_RAW_LOG(                                                        \
++        DRV_LOG_CATEGORY_NOTIFICATION,                                      \
++        1,                                                                  \
++        DRV_LOG_FLOW_OUT,                                                   \
++        message,                                                            \
++        ##__VA_ARGS__);                                                     \
++    SEP_DRV_LOG_DECREMENT_NB_ACTIVE_NOTIFICATIONS();
++#define SEP_DRV_LOG_STATE_TRANSITION(former_state, new_state, message, ...) \
++            SEP_DRV_LOG_INCREMENT_NB_STATE_TRANSITIONS();                   \
++            DRV_LOG_BUFFER_driver_state(DRV_LOG()) = new_state;             \
++            SEP_DRV_RAW_LOG(DRV_LOG_CATEGORY_STATE_CHANGE,                  \
++            0,                                                              \
++            ((U8)former_state << 4) | ((U8)new_state & 0xF),                \
++            message,                                                        \
++            ##__VA_ARGS__);
++#endif
++
++#if defined(DRV_MAXIMAL_LOGGING)    // MAXIMAL LOGGING MODE
++#define SEP_DRV_LOG_TRACE(message, ...)                                 SEP_DRV_ULK_LOG(DRV_LOG_CATEGORY_TRACE,          0, DRV_LOG_NOTHING,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_TRACE_IN(message, ...)                              SEP_DRV_ULK_LOG(DRV_LOG_CATEGORY_TRACE,          0, DRV_LOG_FLOW_IN,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_TRACE_OUT(message, ...)                             SEP_DRV_ULK_LOG(DRV_LOG_CATEGORY_TRACE,          0, DRV_LOG_FLOW_OUT, message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_REGISTER_IN(message, ...)                           SEP_DRV_ULK_LOG(DRV_LOG_CATEGORY_REGISTER,       0, DRV_LOG_FLOW_IN,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_REGISTER_OUT(message, ...)                          SEP_DRV_ULK_LOG(DRV_LOG_CATEGORY_REGISTER,       0, DRV_LOG_FLOW_OUT, message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_NOTIFICATION_TRACE(in_notif, message, ...)          SEP_DRV_ULK_LOG(DRV_LOG_CATEGORY_TRACE,   in_notif, DRV_LOG_NOTHING,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_NOTIFICATION_TRACE_IN(in_notif, message, ...)       SEP_DRV_ULK_LOG(DRV_LOG_CATEGORY_TRACE,   in_notif, DRV_LOG_FLOW_IN,  message, ##__VA_ARGS__)
++#define SEP_DRV_LOG_NOTIFICATION_TRACE_OUT(in_notif, message, ...)      SEP_DRV_ULK_LOG(DRV_LOG_CATEGORY_TRACE,   in_notif, DRV_LOG_FLOW_OUT, message, ##__VA_ARGS__)
++#else                               // REGULAR LOGGING MODE (PART 2 / 2)
++#define SEP_DRV_LOG_TRACE(message, ...)                                 {}
++#define SEP_DRV_LOG_TRACE_IN(message, ...)                              {}
++#define SEP_DRV_LOG_TRACE_OUT(message, ...)                             {}
++#define SEP_DRV_LOG_REGISTER_IN(message, ...)                           {}
++#define SEP_DRV_LOG_REGISTER_OUT(message, ...)                          {}
++#define SEP_DRV_LOG_NOTIFICATION_TRACE(in_notif, message, ...)          {}
++#define SEP_DRV_LOG_NOTIFICATION_TRACE_IN(in_notif, message, ...)       {}
++#define SEP_DRV_LOG_NOTIFICATION_TRACE_OUT(in_notif, message, ...)      {}
++#endif
++
++
++/************************************************************************/
++/************************* FACILITATOR MACROS ***************************/
++/************************************************************************/
++
++#define SEP_DRV_LOG_ERROR_INIT_OUT(message, ...)      \
++    SEP_DRV_LOG_ERROR       (message, ##__VA_ARGS__); \
++    SEP_DRV_LOG_INIT_OUT    (message, ##__VA_ARGS__);
++
++#define SEP_DRV_LOG_ERROR_FLOW_OUT(message, ...)      \
++    SEP_DRV_LOG_ERROR       (message, ##__VA_ARGS__); \
++    SEP_DRV_LOG_FLOW_OUT    (message, ##__VA_ARGS__);
++
++#define SEP_DRV_LOG_ERROR_TRACE_OUT(message, ...)     \
++    SEP_DRV_LOG_ERROR       (message, ##__VA_ARGS__); \
++    SEP_DRV_LOG_TRACE_OUT   (message, ##__VA_ARGS__);
++
++#define SEP_DRV_LOG_ERROR_ALLOC_OUT(message, ...)     \
++    SEP_DRV_LOG_ERROR       (message, ##__VA_ARGS__); \
++    SEP_DRV_LOG_ALLOC_OUT   (message, ##__VA_ARGS__);
++
++#define SEP_DRV_LOG_WARNING_FLOW_OUT(message, ...)    \
++    SEP_DRV_LOG_WARNING     (message, ##__VA_ARGS__); \
++    SEP_DRV_LOG_FLOW_OUT    (message, ##__VA_ARGS__);
++
++#define SEP_DRV_LOG_WARNING_TRACE_OUT(message, ...)   \
++    SEP_DRV_LOG_WARNING     (message, ##__VA_ARGS__); \
++    SEP_DRV_LOG_TRACE_OUT   (message, ##__VA_ARGS__);
++
++#define SEP_DRV_LOG_WARNING_ALLOC_OUT(message, ...)   \
++    SEP_DRV_LOG_WARNING     (message, ##__VA_ARGS__); \
++    SEP_DRV_LOG_ALLOC_OUT   (message, ##__VA_ARGS__);
++
++#define SEP_DRV_LOG_INIT_TRACE_OUT(message, ...)      \
++    SEP_DRV_LOG_INIT        (message, ##__VA_ARGS__); \
++    SEP_DRV_LOG_TRACE_OUT   (message, ##__VA_ARGS__);
++
++#define SEP_DRV_LOG_WARNING_NOTIFICATION_OUT(message, ...) \
++    SEP_DRV_LOG_WARNING          (message, ##__VA_ARGS__); \
++    SEP_DRV_LOG_NOTIFICATION_OUT (message, ##__VA_ARGS__);
++
++
++/************************************************************************/
++/************************* DRIVER STATE MACROS **************************/
++/************************************************************************/
++
++
++/* ------------------------------------------------------------------------- */
++/*!
++ * @fn       extern U32 UTILITY_Change_Driver_State (U32 allowed_prior_states, U32 state, const char* func, U32 line_number)
++ *
++ * @brief    Updates the driver state (if the transition is legal).
++ *
++ * @param    U32 allowed_prior_states   - the bitmask representing the states from which the transition is allowed to occur
++ *           U32 state                  - the destination state
++ *           const char* func           - the callsite's function's name
++ *           U32 line_number            - the callsite's line number
++ *
++ * @return   1 in case of success, 0 otherwise
++ *
++ * <I>Special Notes:</I>
++ *
++ */
++extern U32
++UTILITY_Change_Driver_State (
++    U32         allowed_prior_states,
++    U32         state,
++    const char* func,
++    U32         line_number
++);
++
++#define GET_DRIVER_STATE()                               GLOBAL_STATE_current_phase(driver_state)
++#define CHANGE_DRIVER_STATE(allowed_prior_states, state) UTILITY_Change_Driver_State(allowed_prior_states, state, __func__, __LINE__)
++#define DRIVER_STATE_IN(state, states)                   (!!(MATCHING_STATE_BIT(state) & (states)))
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/inc/valleyview_sochap.h b/drivers/misc/intel/sepdk/inc/valleyview_sochap.h
+new file mode 100644
+index 000000000000..de982becb676
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/inc/valleyview_sochap.h
+@@ -0,0 +1,69 @@
++/****
++    Copyright(C) 2012-2018 Intel Corporation.  All Rights Reserved.
++
++    This file is part of SEP Development Kit.
++
++    SEP Development Kit is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    SEP Development Kit is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with SEP Development Kit; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++****/
++
++
++
++
++
++#ifndef _VALLEYVIEW_SOCHAP_H_INC_
++#define _VALLEYVIEW_SOCHAP_H_INC_
++
++/*
++ * Local to this architecture: Valleyview uncore SA unit
++ *
++ */
++#define VLV_VISA_DESKTOP_DID                 0x000C04
++#define VLV_VISA_NEXT_ADDR_OFFSET            4
++#define VLV_VISA_BAR_ADDR_SHIFT              32
++#define VLV_VISA_BAR_ADDR_MASK               0x000FFFC00000LL
++#define VLV_VISA_MAX_PCI_DEVICES             16
++#define VLV_VISA_MCR_REG_OFFSET              0xD0
++#define VLV_VISA_MDR_REG_OFFSET              0xD4
++#define VLV_VISA_MCRX_REG_OFFSET             0xD8
++#define VLV_VISA_BYTE_ENABLES                0xF
++#define VLV_VISA_OP_CODE_SHIFT               24
++#define VLV_VISA_PORT_ID_SHIFT               16
++#define VLV_VISA_OFFSET_HI_MASK              0xFF
++#define VLV_VISA_OFFSET_LO_MASK              0xFF
++#define VLV_CHAP_SIDEBAND_PORT_ID            23
++#define VLV_CHAP_SIDEBAND_WRITE_OP_CODE      1
++#define VLV_CHAP_SIDEBAND_READ_OP_CODE       0
++#define VLV_CHAP_MAX_COUNTERS                8
++#define VLV_CHAP_MAX_COUNT                   0x00000000FFFFFFFFLL
++
++#define VLV_VISA_OTHER_BAR_MMIO_PAGE_SIZE      4096
++#define VLV_VISA_CHAP_SAMPLE_DATA              0x00020000
++#define VLV_VISA_CHAP_STOP                     0x00040000
++#define VLV_VISA_CHAP_START                    0x00110000
++#define VLV_VISA_CHAP_CTRL_REG_OFFSET          0x0
++
++
++extern DISPATCH_NODE  valleyview_visa_dispatch;
++
++#endif
++
+-- 
+2.18.0
+

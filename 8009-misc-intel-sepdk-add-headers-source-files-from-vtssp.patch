@@ -1,0 +1,4740 @@
+From 001d01d762b15795ce962667a3ca1a985db8317e Mon Sep 17 00:00:00 2001
+From: Miguel Bernal Marin <miguel.bernal.marin@linux.intel.com>
+Date: Mon, 20 Aug 2018 11:59:40 -0500
+Subject: [PATCH 8009/8021] misc: intel: sepdk: add headers source files from
+ vtsspp
+
+---
+ drivers/misc/intel/sepdk/vtsspp/apic.h        |  69 +++
+ drivers/misc/intel/sepdk/vtsspp/bts.h         |  64 +++
+ drivers/misc/intel/sepdk/vtsspp/collector.h   |  94 +++
+ drivers/misc/intel/sepdk/vtsspp/cpuevents.h   | 235 ++++++++
+ drivers/misc/intel/sepdk/vtsspp/dsa.h         | 100 ++++
+ drivers/misc/intel/sepdk/vtsspp/globals.h     | 281 +++++++++
+ drivers/misc/intel/sepdk/vtsspp/ipt.h         | 114 ++++
+ drivers/misc/intel/sepdk/vtsspp/iptdec.h      | 535 ++++++++++++++++++
+ drivers/misc/intel/sepdk/vtsspp/lbr.h         |  52 ++
+ drivers/misc/intel/sepdk/vtsspp/memory_pool.h |  51 ++
+ drivers/misc/intel/sepdk/vtsspp/module.h      |  36 ++
+ drivers/misc/intel/sepdk/vtsspp/nmiwd.h       |  52 ++
+ drivers/misc/intel/sepdk/vtsspp/pebs.h        | 130 +++++
+ drivers/misc/intel/sepdk/vtsspp/procfs.h      |  46 ++
+ drivers/misc/intel/sepdk/vtsspp/record.h      |  53 ++
+ drivers/misc/intel/sepdk/vtsspp/regs.h        |  52 ++
+ drivers/misc/intel/sepdk/vtsspp/stack.h       |  40 ++
+ drivers/misc/intel/sepdk/vtsspp/task_map.h    |  69 +++
+ drivers/misc/intel/sepdk/vtsspp/time.h        |  84 +++
+ drivers/misc/intel/sepdk/vtsspp/transport.h   |  69 +++
+ drivers/misc/intel/sepdk/vtsspp/uec.h         | 114 ++++
+ drivers/misc/intel/sepdk/vtsspp/unwind.h      | 167 ++++++
+ drivers/misc/intel/sepdk/vtsspp/user_vm.h     |  79 +++
+ .../misc/intel/sepdk/vtsspp/vtss_asm_helper.h | 145 +++++
+ drivers/misc/intel/sepdk/vtsspp/vtss_config.h | 261 +++++++++
+ .../misc/intel/sepdk/vtsspp/vtss_version.h    |   4 +
+ drivers/misc/intel/sepdk/vtsspp/vtsscfg.h     |  78 +++
+ drivers/misc/intel/sepdk/vtsspp/vtsserr.h     |  56 ++
+ drivers/misc/intel/sepdk/vtsspp/vtssevids.h   | 122 ++++
+ drivers/misc/intel/sepdk/vtsspp/vtssrtcfg.h   | 418 ++++++++++++++
+ drivers/misc/intel/sepdk/vtsspp/vtsstrace.h   | 286 ++++++++++
+ drivers/misc/intel/sepdk/vtsspp/vtsstypes.h   | 516 +++++++++++++++++
+ 32 files changed, 4472 insertions(+)
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/apic.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/bts.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/collector.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/cpuevents.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/dsa.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/globals.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/ipt.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/iptdec.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/lbr.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/memory_pool.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/module.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/nmiwd.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/pebs.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/procfs.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/record.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/regs.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/stack.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/task_map.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/time.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/transport.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/uec.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/unwind.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/user_vm.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/vtss_asm_helper.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/vtss_config.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/vtss_version.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/vtsscfg.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/vtsserr.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/vtssevids.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/vtssrtcfg.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/vtsstrace.h
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/vtsstypes.h
+
+diff --git a/drivers/misc/intel/sepdk/vtsspp/apic.h b/drivers/misc/intel/sepdk/vtsspp/apic.h
+new file mode 100644
+index 000000000000..c9849e8bc0a4
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/apic.h
+@@ -0,0 +1,69 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_APIC_H_
++#define _VTSS_APIC_H_
++
++#include <linux/irq.h>
++
++/**
++ * Interrupt vector for PMU overflow event
++ *
++ *     Choose the highest unused IDT vector possible so that our
++ *     callback routine runs at the highest priority allowed;
++ *     must avoid using pre-defined vectors in,
++ *              include/asm/irq.h
++ *              include/asm/hw_irq.h
++ *              include/asm/irq_vectors.h
++ */
++/* FIRST_DEVICE_VECTOR should be valid for kernels 2.6.33 and earlier */
++#if defined(FIRST_DEVICE_VECTOR)
++#define CPU_PERF_VECTOR     (FIRST_DEVICE_VECTOR - 1)
++/* FIRST_EXTERNAL_VECTOR should be valid for kernels 2.6.34 and later */
++#else
++#define CPU_PERF_VECTOR     (FIRST_EXTERNAL_VECTOR + 1)
++#endif
++
++/* Has the APIC Been enabled */
++#define VTSS_APIC_BASE_GLOBAL_ENABLED(a)  ((a) & 1 << 11)
++#define VTSS_APIC_VIRTUAL_WIRE_ENABLED(a) ((a) & 0x100)
++
++/* APIC control functions */
++void vtss_pmi_enable(void);
++void vtss_pmi_disable(void);
++void vtss_apic_ack_eoi(void);
++int  vtss_apic_read_priority(void);
++void vtss_apic_init(void);
++void vtss_apic_fini(void);
++void vtss_apic_map(void);
++void vtss_apic_unmap(void);
++void vtss_apic_pmi_init(void);
++void vtss_apic_pmi_fini(void);
++unsigned long long  vtss_apic_read_eoi(void);
++unsigned long long  vtss_apic_read_lvt_pmi(void);
++
++#endif /* _VTSS_APIC_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/bts.h b/drivers/misc/intel/sepdk/vtsspp/bts.h
+new file mode 100644
+index 000000000000..3e67cd575b17
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/bts.h
+@@ -0,0 +1,64 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_BTS_H_
++#define _VTSS_BTS_H_
++
++#include "vtss_autoconf.h"
++
++#include <linux/sched.h>        /* for struct task_struct */
++
++#define VTSS_BTS_MIN  16
++#define VTSS_BTS_MAX  320
++
++typedef union
++{
++    struct {
++        void *branch_from;
++        void *branch_to;
++        void *prediction;
++    } v64;
++
++    struct {
++        void *branch_from;
++        void *branch_pad0;
++        void *branch_to;
++        void *branch_pad1;
++        void *prediction;
++        void *branch_pad2;
++    } v32;
++} vtss_bts_t;
++
++int  vtss_bts_init(int brcount);
++void vtss_bts_fini(void);
++void vtss_bts_init_dsa(void);
++void vtss_bts_enable(void);
++void vtss_bts_disable(void);
++int  vtss_bts_overflowed(int cpu);
++unsigned short vtss_bts_dump(unsigned char *bts_buff);
++
++#endif /* _VTSS_BTS_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/collector.h b/drivers/misc/intel/sepdk/vtsspp/collector.h
+new file mode 100644
+index 000000000000..4197173688ca
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/collector.h
+@@ -0,0 +1,94 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_COLLECTOR_H_
++#define _VTSS_COLLECTOR_H_
++
++#include "vtss_autoconf.h"
++#include "task_map.h"
++#include "regs.h"
++
++#include <linux/fs.h>           /* for struct file        */
++#include <linux/mm.h>           /* for struct mm_struct   */
++#include <linux/sched.h>        /* for struct task_struct */
++#include <linux/seq_file.h>     /* for struct seq_file    */
++
++#define TASK_PID(task)    (task->tgid)
++#define TASK_TID(task)    (task->pid)
++#ifdef  VTSS_AUTOCONF_TASK_REAL_PARENT
++#define TASK_PARENT(task) (task->real_parent)
++#else
++#define TASK_PARENT(task) (task->parent)
++#endif
++
++#define VTSS_FILENAME_SIZE 128
++#define VTSS_TASKNAME_SIZE TASK_COMM_LEN
++
++#define VTSS_COLLECTOR_UNINITING -1
++#define VTSS_COLLECTOR_STOPPED 0
++#define VTSS_COLLECTOR_INITING 1
++#define VTSS_COLLECTOR_RUNNING 2
++#define VTSS_COLLECTOR_PAUSED  3
++#define VTSS_COLLECTOR_IS_READY (atomic_read(&vtss_collector_state) >= VTSS_COLLECTOR_RUNNING)
++#define VTSS_COLLECTOR_IS_READY_OR_INITING (atomic_read(&vtss_collector_state) >= VTSS_COLLECTOR_INITING)
++#define VTSS_COLLECTOR_STATE() (atomic_read(&vtss_collector_state))
++
++extern atomic_t vtss_collector_state;
++
++struct pt_regs;
++
++void vtss_collection_cfg_init(void);
++
++void vtss_target_fork(struct task_struct* task, struct task_struct* child);
++void vtss_target_exec_enter(struct task_struct* task, const char *filename, const char *config);
++void vtss_target_exec_leave(struct task_struct* task, const char *filename, const char *config, int rc, int fired_tid);
++void vtss_target_exit(struct task_struct* task);
++void vtss_syscall_enter(struct pt_regs *regs);
++void vtss_syscall_leave(struct pt_regs *regs);
++void vtss_kmap(struct task_struct* task, const char* name, unsigned long addr, unsigned long pgoff, unsigned long size);
++void vtss_mmap(struct file *file, unsigned long addr, unsigned long pgoff, unsigned long size);
++void vtss_mmap_reload(struct file *file, unsigned long addr);
++void vtss_sched_switch(struct task_struct *prev, struct task_struct *next, void* prev_bp, void* next_ip);
++
++int vtss_cmd_open(void);
++int vtss_cmd_close(void);
++int vtss_cmd_set_target(pid_t pid);
++int vtss_cmd_start(void);
++int vtss_cmd_stop(void);
++int vtss_cmd_stop_async(void);
++int vtss_cmd_stop_ring_buffer(void);
++int vtss_cmd_pause(void);
++int vtss_cmd_resume(void);
++
++int vtss_debug_info(struct seq_file *s);
++int vtss_target_pids(struct seq_file *s);
++
++int  vtss_init(void);
++void vtss_fini(void);
++
++
++#endif /* _VTSS_COLLECTOR_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/cpuevents.h b/drivers/misc/intel/sepdk/vtsspp/cpuevents.h
+new file mode 100644
+index 000000000000..ab3501f0f6b5
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/cpuevents.h
+@@ -0,0 +1,235 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_CPUEVENTS_H_
++#define _VTSS_CPUEVENTS_H_
++
++#include "vtss_autoconf.h"
++#include "vtsscfg.h"          /* for cpuevent_cfg_v1_t */
++
++#include <linux/types.h>        /* for size_t */
++
++/*
++ * Event descriptors
++ */
++struct _cpuevent_t;
++
++typedef struct
++{
++    void (*start)           (struct _cpuevent_t*);
++    void (*stop)            (struct _cpuevent_t*);
++    void (*read)            (struct _cpuevent_t*);
++    void (*freeze)          (struct _cpuevent_t*);
++    void (*restart)         (struct _cpuevent_t*);
++    void (*freeze_read)     (struct _cpuevent_t*);
++    int  (*overflowed)      (struct _cpuevent_t*);
++    long long (*convert)    (struct _cpuevent_t*);
++    void (*overflow_update) (struct _cpuevent_t*);
++    void (*update_restart)  (struct _cpuevent_t*);
++    int  (*select_muxgroup) (struct _cpuevent_t*);
++} cpuevent_i;
++
++typedef struct _cpuevent_t
++{
++    /// counting support
++    long long tmp;
++    long long count;
++    long long frozen_count;
++    long long sampled_count;
++    long long slave_interval;
++
++    /// virtual function table
++    cpuevent_i *vft;
++
++    /// monitoring parameters
++    int valid;
++    int interval;
++    int modifier;
++#if 0
++    int chain_idx;  /// position within the current event chain 
++                    /// (to share counters automatically)
++
++    /// program state determination data
++    int trend;
++    int trigger_mode;
++    int state_idx;
++    long long time[2][2];
++    long long flux[2];
++
++    /// debug exception control
++    int dbg_samples;
++    int dbg_samples_orig;
++#endif
++
++    /// multiplexion algorithm data
++    long long muxchange_time;
++    int muxchange_alt;
++    int mux_idx;
++    int mux_cnt;
++    int mux_grp;
++    int mux_alg;
++    int mux_arg;
++
++    /// processor specific registers/masks
++    union
++    {
++        struct
++        {
++            int escr0;
++            int escr0_mask;
++            int escr1;
++            int escr1_mask;
++            int cccr0;
++            int cccr0_mask;
++            int cccr1;
++            int cccr1_mask;
++            int counter0;
++            int counter1;
++            int escr0e;
++            int escr0e_mask;
++            int escr1e;
++            int escr1e_mask;
++        };
++        struct
++        {
++            int selmsr;
++            int cntmsr;
++            int selmsk;
++            int extmsr;
++            long long extmsk;
++        };
++        int opaque[0x20];
++    };
++} cpuevent_t;
++
++typedef struct
++{
++    union
++    {
++        struct
++        {
++            unsigned short type;
++            unsigned short subtype;
++        };
++        unsigned int event_id;
++    };
++
++    cpuevent_i *vft;
++
++    char *name;
++    char *desc;
++
++    int modifier;
++
++    /// processor specific registers/masks
++    union
++    {
++        struct
++        {
++            int escr0;
++            int escr0_mask;
++            int escr1;
++            int escr1_mask;
++            int cccr0;
++            int cccr0_mask;
++            int cccr1;
++            int cccr1_mask;
++            int counter0;
++            int counter1;
++            int escr0e;
++            int escr0e_mask;
++            int escr1e;
++            int escr1e_mask;
++        };
++        struct
++        {
++            int selmsr;
++            int cntmsr;
++            int selmsk;
++            int extmsr;
++            long long extmsk;
++        };
++        int opaque[0x20];
++    };
++} cpuevent_desc_t;
++
++extern cpuevent_desc_t cpuevent_desc[];
++
++/// system events types (fake)
++typedef enum
++{
++    vtss_sysevent_sync_cs = 0,
++    vtss_sysevent_preempt_cs,
++    vtss_sysevent_wait_time,
++    vtss_sysevent_inactive_time,
++    vtss_sysevent_idle_time,
++    vtss_sysevent_idle_wakeup,
++    vtss_sysevent_idle_c3,
++    vtss_sysevent_idle_c6,
++    vtss_sysevent_idle_c7,
++    vtss_sysevent_energy_core,
++    vtss_sysevent_energy_gfx,
++    vtss_sysevent_energy_pack,
++    vtss_sysevent_energy_dram,
++    vtss_sysevent_energy_soc,
++#ifdef VTSS_SYSCALL_TRACE
++    vtss_sysevent_syscall,
++    vtss_sysevent_syscall_time,
++#endif
++    vtss_sysevent_end
++} sysevent_e;
++
++extern sysevent_e sysevent_type[];
++
++typedef struct
++{
++    char* name;
++    char* desc;
++} sysevent_desc_t;
++
++extern sysevent_desc_t sysevent_desc[];
++
++int  vtss_cpuevents_init_pmu(int defsav);
++void vtss_cpuevents_fini_pmu(void);
++int  vtss_cpuevents_init(void);
++void vtss_cpuevents_fini(void);
++
++/// PMU and system events configuration
++void vtss_cpuevents_reqcfg_default(int need_clear, int defsav);
++void vtss_sysevents_reqcfg_append(void);
++
++/// PMU event handling
++void vtss_cpuevents_enable(void);
++void vtss_cpuevents_stop(void);
++void vtss_cpuevents_freeze(void);
++void vtss_cpuevents_upload(cpuevent_t* cpuevent_chain, cpuevent_cfg_v1_t* cpuevent_cfg, int count);
++void vtss_cpuevents_sample(cpuevent_t* cpuevent_chain);
++void vtss_cpuevents_restart(cpuevent_t* cpuevent_chain, int flag);
++void vtss_cpuevents_quantum_border(cpuevent_t* cpuevent_chain, int flag);
++int vtss_cpuevents_get_sampling_interval(void);
++
++#endif /* _VTSS_CPUEVENTS_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/dsa.h b/drivers/misc/intel/sepdk/vtsspp/dsa.h
+new file mode 100644
+index 000000000000..6eb0ca9a2c1f
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/dsa.h
+@@ -0,0 +1,100 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_DSA_H_
++#define _VTSS_DSA_H_
++
++#include "vtss_autoconf.h"
++#include "globals.h"
++
++#define IS_DSA_64ON32 (hardcfg.family == 0x06 && hardcfg.model >= 0x0f && hardcfg.mode == 32)
++
++#pragma pack(push, 1)
++
++typedef union
++{
++    struct {
++        void *bts_base;
++        void *bts_index;
++        void *bts_absmax;
++        void *bts_threshold;
++
++        void *pebs_base;
++        void *pebs_index;
++        void *pebs_absmax;
++        void *pebs_threshold;
++
++        void *pebs_reset[2];
++        void *reserved[2];
++    } v64;
++
++    struct {
++        void *bts_base;
++        void *bts_pad0;
++        void *bts_index;
++        void *bts_pad1;
++        void *bts_absmax;
++        void *bts_pad2;
++        void *bts_threshold;
++        void *bts_pad3;
++
++        void *pebs_base;
++        void *pebs_pad0;
++        void *pebs_index;
++        void *pebs_pad1;
++        void *pebs_absmax;
++        void *pebs_pad2;
++        void *pebs_threshold;
++        void *pebs_pad3;
++
++        void *pebs_reset[4];
++        void *reserved[4];
++    } v32;
++} vtss_dsa_t;
++
++#pragma pack(pop)
++
++int  vtss_dsa_init(void);
++void vtss_dsa_fini(void);
++void vtss_dsa_init_cpu(void);
++vtss_dsa_t* vtss_dsa_get(int cpu);
++
++#ifdef VTSS_CONFIG_KPTI
++int vtss_cea_init(void);
++void vtss_cea_update(void *cea, void *addr, size_t size, pgprot_t prot);
++void vtss_cea_clear(void *cea, size_t size);
++void *vtss_cea_alloc_pages(size_t size, gfp_t flags, int cpu);
++void vtss_cea_free_pages(const void *buffer, size_t size);
++#endif
++
++#ifdef VTSS_CONFIG_KAISER
++int vtss_kaiser_init(void);
++void *vtss_kaiser_alloc_pages(size_t size, gfp_t flags, int cpu);
++void vtss_kaiser_free_pages(const void *buffer, size_t size);
++#endif
++
++#endif /* _VTSS_DSA_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/globals.h b/drivers/misc/intel/sepdk/vtsspp/globals.h
+new file mode 100644
+index 000000000000..d3252e885c99
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/globals.h
+@@ -0,0 +1,281 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_GLOBALS_H_
++#define _VTSS_GLOBALS_H_
++
++#include "vtss_autoconf.h"
++#include "vtss_config.h"
++
++/**
++ * The size of global structures
++ */
++//#define VTSS_PROCESSORS_SUPPORTED   0x100
++//#define VTSS_PROCESSES_SUPPORTED    0x40000
++//#define VTSS_THREADS_SUPPORTED      0x40000
++
++#define VTSS_DYNSIZE_SCRATCH    0x10000
++#define VTSS_DYNSIZE_STACKS     0x1000
++//#define VTSS_DYNSIZE_UECBUF     0x100000
++//#define VTSS_DYNSIZE_BRANCH     0x3000
++
++#define VTSS_MAX_NAME_LEN 130
++
++#include "vtsserr.h"
++#include "vtsscfg.h"
++#include "vtsstypes.h"
++#include "vtsstrace.h"
++#include "vtssevids.h"
++#include "cpuevents.h"
++
++#include <linux/types.h>        /* for size_t    */
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,11,0)
++#include <linux/workqueue.h>
++#endif
++#include <asm/desc.h>           /* for gate_desc */
++
++#pragma pack(push, 1)
++
++#define VTSS_DEBUGCTL_MSR             0x1d9
++#define IPT_BUF_NO       16
++
++typedef struct
++{
++    int version;
++
++    short type;
++    short major;
++    short minor;
++    short extra;
++    short spack;
++
++    short len;
++    union
++    {
++        char host_name[1];
++        char brand_name[1];
++        char sysid_string[1];
++        char system_root_dir[1];
++        char placeholder[VTSS_CFG_SPACE_SIZE];
++    };
++    int record_size;
++
++} vtss_syscfg_t;
++
++typedef struct
++{
++    int version;
++
++    short int cpu_chain_len;
++    cpuevent_cfg_v1_t cpu_chain[1];
++
++    short int exectx_chain_len;
++    exectx_cfg_t exectx_chain[1];
++
++    short int chip_chain_len;
++    chipevent_cfg_t chip_chain[1];
++
++    short int os_chain_len;
++    osevent_cfg_t os_chain[1];
++
++} vtss_softcfg_t;
++
++#define VTSS_CPU_NHM     0x1e
++#define VTSS_CPU_NHM_G   0x1f
++#define VTSS_CPU_NHM_EP  0x1a
++#define VTSS_CPU_NHM_EX  0x2e
++
++#define VTSS_CPU_WMR     0x25
++#define VTSS_CPU_WMR_EP  0x2c
++#define VTSS_CPU_WMR_EX  0x2f
++
++#define VTSS_CPU_SNB     0x2a
++#define VTSS_CPU_SNB_X   0x2d
++#define VTSS_CPU_IVB     0x3a
++#define VTSS_CPU_IVB_X   0x3e
++
++#define VTSS_CPU_HSW     0x3c
++#define VTSS_CPU_HSW_X   0x3f
++#define VTSS_CPU_HSW_ULT 0x45
++#define VTSS_CPU_HSW_GT3 0x46
++
++#define VTSS_CPU_BDW     0x3d
++#define VTSS_CPU_BDW_GT3 0x47
++#define VTSS_CPU_BDW_X   0x4f
++#define VTSS_CPU_BDW_XD  0x56
++
++#define VTSS_CPU_SKL    0x5e
++#define VTSS_CPU_SKL_M  0x4e
++#define VTSS_CPU_SKL_X  0x55
++
++#define VTSS_CPU_KBL    0x9e
++#define VTSS_CPU_KBL_M  0x8e
++
++#define VTSS_CPU_CNL    0x42
++#define VTSS_CPU_CNL_M  0x66
++
++#define VTSS_CPU_KNL    0x57
++#define VTSS_CPU_KNM    0x85
++
++#define VTSS_CPU_ATOM_GLM   0x5C
++#define VTSS_CPU_ATOM_DNV   0x5F
++#define VTSS_CPU_ATOM_GLP   0x7a
++
++typedef struct
++{
++    int version;
++
++    long long cpu_freq;                     /// Hz
++    long long timer_freq;                   /// realtsc, Hz
++    long long maxusr_address;
++    unsigned char os_sp;
++    unsigned char os_minor;
++    unsigned char os_major;
++    unsigned char os_type;
++
++    unsigned char mode;                     /// 32- or 64-bit
++    unsigned char family;
++    unsigned char model;
++    unsigned char stepping;
++
++    int cpu_no;
++
++    struct
++    {
++        unsigned char node;
++        unsigned char pack;
++        unsigned char core;
++        unsigned char thread;
++
++    } cpu_map[NR_CPUS];   /// stored truncated to cpu_no elements
++
++} vtss_hardcfg_t;
++
++typedef struct
++{
++    int version;
++    
++    unsigned int fratio;    /// MSR_PLATFORM_INFO[15:8]; max non-turbo ratio
++    unsigned int ctcnom;    /// RATIO_P = CPUID[21].EBX / CPUID[21].EAX; ratio of ART/CTC to TSC
++    unsigned int tscdenom;
++    unsigned int mtcfreq;   /// IA32_RTIT_CTL.MTCFreq
++} vtss_iptcfg_t;
++/**
++ * per-task control structures and declarations
++ */
++typedef struct task_control_block
++{
++    /// syscall metrics
++    long long syscall_count;
++    long long syscall_duration;
++
++} vtss_tcb_t;
++
++/**
++ * per-processor control structures and declarations
++ */
++typedef struct processor_control_block
++{
++    /// current task data
++    vtss_tcb_t *tcb_ptr;
++
++    /// idle metrics
++    long long idle_duration;
++    long long idle_c1_residency;
++    long long idle_c3_residency;
++    long long idle_c6_residency;
++    long long idle_c7_residency;
++
++    /// save area
++    int   apic_id;              /// local APIC ID (processor ID)
++    void *apic_linear_addr;     /// linear address of local APIC
++    void *apic_physical_addr;   /// physical address of local APIC
++    gate_desc *idt_base;        /// IDT base address
++    gate_desc saved_perfvector; /// saved PMI vector contents
++    long long saved_msr_ovf;    /// saved value of MSR_PERF_GLOBAL_OVF_CTRL
++    long long saved_msr_perf;   /// saved value of MSR_PERF_GLOBAL_CTRL
++    long long saved_msr_debug;  /// saved value of DEBUGCTL_MSR
++
++    /// operating state
++    void *bts_ptr;              /// Branch Trace Store pointer
++    void *scratch_ptr;          /// Scratch-pad memory pointer
++
++    /// IPT memory
++    void* topa_virt;                /// virtual address of IPT ToPA
++    void* iptbuf_virt;              /// virtual address of IPT output buffer
++    unsigned long long topa_phys;   /// physical address of IPT ToPA
++    unsigned long long iptbuf_phys[IPT_BUF_NO]; /// physical address of IPT output buffer
++#ifdef VTSS_USE_NMI
++    unsigned long saved_apic_lvtpc;
++#endif
++} vtss_pcb_t;
++struct vtss_work
++{
++    struct work_struct work; /* !!! SHOULD BE THE FIRST !!! */
++    char data[0];            /*     placeholder for data    */
++};
++#pragma pack(pop)
++
++#ifdef VTSS_AUTOCONF_INIT_WORK_TWO_ARGS
++typedef void (vtss_work_func_t) (struct work_struct *work);
++#else
++typedef void (vtss_work_func_t) (void *work);
++#endif
++
++
++
++#ifdef DECLARE_PER_CPU_SHARED_ALIGNED
++DECLARE_PER_CPU_SHARED_ALIGNED(vtss_pcb_t, vtss_pcb);
++#else
++DECLARE_PER_CPU(vtss_pcb_t, vtss_pcb);
++#endif
++#define pcb(cpu) per_cpu(vtss_pcb, cpu)
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,19,0)
++#define pcb_cpu __get_cpu_var(vtss_pcb)
++#else
++#define pcb_cpu  (*this_cpu_ptr(&(vtss_pcb)))
++#endif
++
++extern vtss_syscfg_t  syscfg;
++extern vtss_hardcfg_t hardcfg;
++extern vtss_iptcfg_t iptcfg;
++extern fmtcfg_t       fmtcfg[2];
++extern process_cfg_t  reqcfg;
++extern unsigned long vtss_syscall_rsp_ptr;
++
++//#define VTSS_PT_FLUSH_MODE (reqcfg.ipt_cfg.mode == vtss_iptmode_full && reqcfg.ipt_cfg.size)
++//TODO: rename it to VTSS_FLUSH_MODE everywhere
++#define VTSS_PT_FLUSH_MODE (reqcfg.ipt_cfg.size)
++
++void vtss_globals_fini(void);
++int  vtss_globals_init(void);
++
++int vtss_queue_work(int cpu, vtss_work_func_t* func, void* data, size_t size);
++
++unsigned long vtss_kallsyms_lookup_name(char *name);
++
++#endif /* _VTSS_GLOBALS_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/ipt.h b/drivers/misc/intel/sepdk/vtsspp/ipt.h
+new file mode 100644
+index 000000000000..1e2e297e25cf
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/ipt.h
+@@ -0,0 +1,114 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_IPT_H_
++#define _VTSS_IPT_H_
++
++#include "vtss_autoconf.h"
++#include "globals.h"
++#include "transport.h"
++
++/**
++// Data Types and Macros
++*/
++
++/*
++// IPT macro definitions
++*/
++#define IPT_CONTROL_MSR  0x570
++#define IPT_STATUS_MSR   0x571
++#define IPT_OUT_BASE_MSR 0x560
++#define IPT_OUT_MASK_MSR 0x561
++
++#define IPT_BUF_SIZE     0x1000
++/*
++// IPT structures
++*/
++
++#pragma pack(push, 1)
++
++typedef struct
++{
++    /// |63:12 PhysAddr|11:10 rsvd|9:6 size|5|4: stop|3|2: int|1|0: end
++    unsigned long long entry[1];
++
++} topa_t;
++
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int residx;
++    unsigned int cpuidx;
++    long long cputsc;
++    unsigned short size;
++    unsigned short type;
++
++} ipt_trace_record_t;
++
++#pragma pack(pop)
++
++/**
++// Function Declarations
++*/
++
++// returns > 0 if ipt is supported
++// 2 - ipt supports multiple output entries, iptmode_time, etc
++static inline int vtss_ipt_available(void)
++{
++    if (hardcfg.family == 0x06 && (
++        hardcfg.model == VTSS_CPU_BDW     ||
++        hardcfg.model == VTSS_CPU_BDW_GT3 ||
++        hardcfg.model == VTSS_CPU_BDW_X   ||
++        hardcfg.model == VTSS_CPU_BDW_XD))
++        return 1;
++
++    if (hardcfg.family == 0x06 && (
++        hardcfg.model == VTSS_CPU_SKL   ||
++        hardcfg.model == VTSS_CPU_SKL_M ||
++        hardcfg.model == VTSS_CPU_SKL_X ||
++        hardcfg.model == VTSS_CPU_KBL   ||
++        hardcfg.model == VTSS_CPU_KBL_M ||
++        hardcfg.model == VTSS_CPU_CNL))
++        return 2;
++        
++    if (hardcfg.family == 0x06 && (
++        hardcfg.model == VTSS_CPU_ATOM_GLM ||
++        hardcfg.model == VTSS_CPU_ATOM_DNV ||
++        hardcfg.model == VTSS_CPU_ATOM_GLP))
++        return 2;
++
++    return 0;
++}
++
++int vtss_ipt_init(void);
++void vtss_ipt_fini(void);
++int vtss_has_ipt_overflowed(void);
++void vtss_enable_ipt(unsigned int mode, int is_kernel);
++void vtss_disable_ipt(void);
++void vtss_dump_ipt(struct vtss_transport_data* trnd, int tidx, int cpu, int is_safe);
++
++#endif /* _VTSS_IPT_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/iptdec.h b/drivers/misc/intel/sepdk/vtsspp/iptdec.h
+new file mode 100644
+index 000000000000..d9b5d3072e9a
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/iptdec.h
+@@ -0,0 +1,535 @@
++/*COPYRIGHT**
++// -------------------------------------------------------------------------
++//               INTEL CORPORATION PROPRIETARY INFORMATION
++//  This software is supplied under the terms of the accompanying license
++//  agreement or nondisclosure agreement with Intel Corporation and may not
++//  be copied or disclosed except in accordance with the terms of that
++//  agreement.
++//        Copyright (c) 2013 Intel Corporation. All Rights Reserved.
++// -------------------------------------------------------------------------
++**COPYRIGHT*/
++
++/*
++//  File  : iptdec.h
++//  Author: derived from libipt
++*/
++#ifndef _IPTDEC_H_
++#define _IPTDEC_H_
++
++/* Configuration. */
++
++/** A cpu vendor. */
++enum pt_cpu_vendor {
++	pcv_unknown,
++	pcv_intel
++};
++
++/** A cpu identifier. */
++struct pt_cpu {
++	/** The cpu vendor. */
++	enum pt_cpu_vendor vendor;
++
++	/** The cpu family. */
++	uint16_t family;
++
++	/** The cpu model. */
++	uint8_t model;
++
++	/** The stepping. */
++	uint8_t stepping;
++};
++
++/** A collection of Intel PT errata. */
++struct pt_errata {
++	/** BDM70: Intel(R) Processor Trace PSB+ Packets May Contain
++	*         Unexpected Packets.
++	*
++	* Same as: SKD024.
++	*
++	* Some Intel Processor Trace packets should be issued only between
++	* TIP.PGE and TIP.PGD packets.  Due to this erratum, when a TIP.PGE
++	* packet is generated it may be preceded by a PSB+ that incorrectly
++	* includes FUP and MODE.Exec packets.
++	*/
++	uint32_t bdm70 : 1;
++
++	/** BDM64: An Incorrect LBR or Intel(R) Processor Trace Packet May Be
++	*         Recorded Following a Transactional Abort.
++	*
++	* Use of Intel(R) Transactional Synchronization Extensions (Intel(R)
++	* TSX) may result in a transactional abort.  If an abort occurs
++	* immediately following a branch instruction, an incorrect branch
++	* target may be logged in an LBR (Last Branch Record) or in an Intel(R)
++	* Processor Trace (Intel(R) PT) packet before the LBR or Intel PT
++	* packet produced by the abort.
++	*/
++	uint32_t bdm64 : 1;
++
++	/** SKD007: Intel(R) PT Buffer Overflow May Result in Incorrect Packets.
++	*
++	* Under complex micro-architectural conditions, an Intel PT (Processor
++	* Trace) OVF (Overflow) packet may be issued after the first byte of a
++	* multi-byte CYC (Cycle Count) packet, instead of any remaining bytes
++	* of the CYC.
++	*/
++	uint32_t skd007 : 1;
++
++	/** SKD022: VM Entry That Clears TraceEn May Generate a FUP.
++	*
++	* If VM entry clears Intel(R) PT (Intel Processor Trace)
++	* IA32_RTIT_CTL.TraceEn (MSR 570H, bit 0) while PacketEn is 1 then a
++	* FUP (Flow Update Packet) will precede the TIP.PGD (Target IP Packet,
++	* Packet Generation Disable).  VM entry can clear TraceEn if the
++	* VM-entry MSR-load area includes an entry for the IA32_RTIT_CTL MSR.
++	*/
++	uint32_t skd022 : 1;
++
++	/** SKD010: Intel(R) PT FUP May be Dropped After OVF.
++	*
++	* Same as: SKD014.
++	*
++	* Some Intel PT (Intel Processor Trace) OVF (Overflow) packets may not
++	* be followed by a FUP (Flow Update Packet) or TIP.PGE (Target IP
++	* Packet, Packet Generation Enable).
++	*/
++	uint32_t skd010 : 1;
++
++	/* Reserve a few bytes for the future. */
++	uint32_t reserved[15];
++};
++
++/* Errors. */
++
++/** Error codes. */
++enum pt_error_code {
++	/* No error. Everything is OK. */
++	pte_ok,
++
++	/* Internal decoder error. */
++	pte_internal,
++
++	/* Invalid argument. */
++	pte_invalid,
++
++	/* Decoder out of sync. */
++	pte_nosync,
++
++	/* Unknown opcode. */
++	pte_bad_opc,
++
++	/* Unknown payload. */
++	pte_bad_packet,
++
++	/* Unexpected packet context. */
++	pte_bad_context,
++
++	/* Decoder reached end of trace stream. */
++	pte_eos,
++
++	/* No packet matching the query to be found. */
++	pte_bad_query,
++
++	/* Decoder out of memory. */
++	pte_nomem,
++
++	/* Bad configuration. */
++	pte_bad_config,
++
++	/* There is no IP. */
++	pte_noip,
++
++	/* The IP has been suppressed. */
++	pte_ip_suppressed,
++
++	/* There is no memory mapped at the requested address. */
++	pte_nomap,
++
++	/* An instruction could not be decoded. */
++	pte_bad_insn,
++
++	/* No wall-clock time is available. */
++	pte_no_time,
++
++	/* No core:bus ratio available. */
++	pte_no_cbr,
++
++	/* Bad traced image. */
++	pte_bad_image,
++
++	/* A locking error. */
++	pte_bad_lock,
++
++	/* The requested feature is not supported. */
++	pte_not_supported,
++
++	/* The return address stack is empty. */
++	pte_retstack_empty,
++
++	/* A compressed return is not indicated correctly by a taken branch. */
++	pte_bad_retcomp,
++
++	/* The current decoder state does not match the state in the trace. */
++	pte_bad_status_update,
++
++	/* The trace did not contain an expected enabled event. */
++	pte_no_enable,
++
++	/* An event was ignored. */
++	pte_event_ignored
++};
++
++/* Opcodes. */
++
++/** A one byte opcode. */
++enum pt_opcode {
++	pt_opc_pad = 0x00,
++	pt_opc_ext = 0x02,
++	pt_opc_psb = pt_opc_ext,
++	pt_opc_tip = 0x0d,
++	pt_opc_tnt_8 = 0x00,
++	pt_opc_tip_pge = 0x11,
++	pt_opc_tip_pgd = 0x01,
++	pt_opc_fup = 0x1d,
++	pt_opc_mode = 0x99,
++	pt_opc_tsc = 0x19,
++	pt_opc_mtc = 0x59,
++	pt_opc_cyc = 0x03,
++
++	/* A free opcode to trigger a decode fault. */
++	pt_opc_bad = 0xd9
++};
++
++/** A one byte extension code for ext opcodes. */
++enum pt_ext_code {
++	pt_ext_psb = 0x82,
++	pt_ext_tnt_64 = 0xa3,
++	pt_ext_pip = 0x43,
++	pt_ext_ovf = 0xf3,
++	pt_ext_psbend = 0x23,
++	pt_ext_cbr = 0x03,
++	pt_ext_tma = 0x73,
++	pt_ext_stop = 0x83,
++	pt_ext_vmcs = 0xc8,
++	pt_ext_ext2 = 0xc3,
++
++	pt_ext_bad = 0x04
++};
++
++/** A one byte extension 2 code for ext2 extension opcodes. */
++enum pt_ext2_code {
++	pt_ext2_mnt = 0x88,
++
++	pt_ext2_bad = 0x00
++};
++
++/** A one byte opcode mask. */
++enum pt_opcode_mask {
++	pt_opm_tip = 0x1f,
++	pt_opm_tnt_8 = 0x01,
++	pt_opm_tnt_8_shr = 1,
++	pt_opm_fup = pt_opm_tip,
++
++	/* The bit mask for the compression bits in the opcode. */
++	pt_opm_ipc = 0xe0,
++
++	/* The shift right value for ipc bits. */
++	pt_opm_ipc_shr = 5,
++
++	/* The bit mask for the compression bits after shifting. */
++	pt_opm_ipc_shr_mask = 0x7,
++
++	/* Shift counts and masks for decoding the cyc packet. */
++	pt_opm_cyc = 0x03,
++	pt_opm_cyc_ext = 0x04,
++	pt_opm_cyc_bits = 0xf8,
++	pt_opm_cyc_shr = 3,
++	pt_opm_cycx_ext = 0x01,
++	pt_opm_cycx_shr = 1
++};
++
++/** The size of the various opcodes in bytes. */
++enum pt_opcode_size {
++	pt_opcs_pad = 1,
++	pt_opcs_tip = 1,
++	pt_opcs_tip_pge = 1,
++	pt_opcs_tip_pgd = 1,
++	pt_opcs_fup = 1,
++	pt_opcs_tnt_8 = 1,
++	pt_opcs_mode = 1,
++	pt_opcs_tsc = 1,
++	pt_opcs_mtc = 1,
++	pt_opcs_cyc = 1,
++	pt_opcs_psb = 2,
++	pt_opcs_psbend = 2,
++	pt_opcs_ovf = 2,
++	pt_opcs_pip = 2,
++	pt_opcs_tnt_64 = 2,
++	pt_opcs_cbr = 2,
++	pt_opcs_tma = 2,
++	pt_opcs_stop = 2,
++	pt_opcs_vmcs = 2,
++	pt_opcs_mnt = 3
++};
++
++/** The psb magic payload.
++*
++* The payload is a repeating 2-byte pattern.
++*/
++enum pt_psb_pattern {
++	/* The high and low bytes in the pattern. */
++	pt_psb_hi = pt_opc_psb,
++	pt_psb_lo = pt_ext_psb,
++
++	/* Various combinations of the above parts. */
++	pt_psb_lohi = pt_psb_lo | pt_psb_hi << 8,
++	pt_psb_hilo = pt_psb_hi | pt_psb_lo << 8,
++
++	/* The repeat count of the payload, not including opc and ext. */
++	pt_psb_repeat_count = 7,
++
++	/* The size of the repeated pattern in bytes. */
++	pt_psb_repeat_size = 2
++};
++
++/** An execution mode. */
++enum pt_exec_mode {
++	ptem_unknown,
++	ptem_16bit,
++	ptem_32bit,
++	ptem_64bit
++};
++
++/** The payload details. */
++enum pt_payload {
++	/* The shift counts for post-processing the PIP payload. */
++	pt_pl_pip_shr = 1,
++	pt_pl_pip_shl = 5,
++
++	/* The size of a PIP payload in bytes. */
++	pt_pl_pip_size = 6,
++
++	/* The non-root bit in the first byte of the PIP payload. */
++	pt_pl_pip_nr = 0x01,
++
++	/* The size of a 8bit TNT packet's payload in bits. */
++	pt_pl_tnt_8_bits = 8 - pt_opm_tnt_8_shr,
++
++	/* The size of a 64bit TNT packet's payload in bytes. */
++	pt_pl_tnt_64_size = 6,
++
++	/* The size of a 64bit TNT packet's payload in bits. */
++	pt_pl_tnt_64_bits = 48,
++
++	/* The size of a TSC packet's payload in bytes and in bits. */
++	pt_pl_tsc_size = 7,
++	pt_pl_tsc_bit_size = pt_pl_tsc_size * 8,
++
++	/* The size of a CBR packet's payload in bytes. */
++	pt_pl_cbr_size = 2,
++
++	/* The size of a PSB packet's payload in bytes. */
++	pt_pl_psb_size = pt_psb_repeat_count * pt_psb_repeat_size,
++
++	/* The size of a MODE packet's payload in bytes. */
++	pt_pl_mode_size = 1,
++
++	/* The size of an IP packet's payload with update-16 compression. */
++	pt_pl_ip_upd16_size = 2,
++
++	/* The size of an IP packet's payload with update-32 compression. */
++	pt_pl_ip_upd32_size = 4,
++
++	/* The size of an IP packet's payload with update-48 compression. */
++	pt_pl_ip_upd48_size = 6,
++
++	/* The size of an IP packet's payload with sext-48 compression. */
++	pt_pl_ip_sext48_size = 6,
++
++	/* The size of an IP packet's payload with full-ip compression. */
++	pt_pl_ip_full_size = 8,
++
++	/* Byte locations, sizes, and masks for processing TMA packets. */
++	pt_pl_tma_size = 5,
++	pt_pl_tma_ctc_size = 2,
++	pt_pl_tma_ctc_bit_size = pt_pl_tma_ctc_size * 8,
++	pt_pl_tma_ctc_0 = 2,
++	pt_pl_tma_ctc_1 = 3,
++	pt_pl_tma_ctc_mask = (1 << pt_pl_tma_ctc_bit_size) - 1,
++	pt_pl_tma_fc_size = 2,
++	pt_pl_tma_fc_bit_size = 9,
++	pt_pl_tma_fc_0 = 5,
++	pt_pl_tma_fc_1 = 6,
++	pt_pl_tma_fc_mask = (1 << pt_pl_tma_fc_bit_size) - 1,
++
++	/* The size of a MTC packet's payload in bytes and in bits. */
++	pt_pl_mtc_size = 1,
++	pt_pl_mtc_bit_size = pt_pl_mtc_size * 8,
++
++	/* A mask for the MTC payload bits. */
++	pt_pl_mtc_mask = (1 << pt_pl_mtc_bit_size) - 1,
++
++	/* The maximal payload size in bytes of a CYC packet. */
++	pt_pl_cyc_max_size = 15,
++
++	/* The size of a VMCS packet's payload in bytes. */
++	pt_pl_vmcs_size = 5,
++
++	/* The shift counts for post-processing the VMCS payload. */
++	pt_pl_vmcs_shl = 12,
++
++	/* The size of a MNT packet's payload in bytes. */
++	pt_pl_mnt_size = 8
++};
++
++/** Mode packet masks. */
++enum pt_mode_mask {
++	pt_mom_leaf = 0xe0,
++	pt_mom_leaf_shr = 5,
++	pt_mom_bits = 0x1f
++};
++
++/** Mode packet leaves. */
++enum pt_mode_leaf {
++	pt_mol_exec = 0x00,
++	pt_mol_tsx = 0x20
++};
++
++/** Mode packet bits. */
++enum pt_mode_bit {
++	/* mode.exec */
++	pt_mob_exec_csl = 0x01,
++	pt_mob_exec_csd = 0x02,
++
++	/* mode.tsx */
++	pt_mob_tsx_intx = 0x01,
++	pt_mob_tsx_abrt = 0x02
++};
++
++/** The IP compression. */
++enum pt_ip_compression {
++	/* The bits encode the payload size and the encoding scheme.
++	*
++	* No payload.  The IP has been suppressed.
++	*/
++	pt_ipc_suppressed = 0x0,
++
++	/* Payload: 16 bits.  Update last IP. */
++	pt_ipc_update_16 = 0x01,
++
++	/* Payload: 32 bits.  Update last IP. */
++	pt_ipc_update_32 = 0x02,
++
++	/* Payload: 48 bits.  Sign extend to full address. */
++	pt_ipc_sext_48 = 0x03,
++
++	/* Payload: 48 bits.  Update last IP. */
++	pt_ipc_update_48 = 0x04,
++
++	/* Payload: 64 bits.  Full address. */
++	pt_ipc_full = 0x06
++};
++
++/** The size of the various packets in bytes. */
++enum pt_packet_size {
++	ptps_pad = pt_opcs_pad,
++	ptps_tnt_8 = pt_opcs_tnt_8,
++	ptps_mode = pt_opcs_mode + pt_pl_mode_size,
++	ptps_tsc = pt_opcs_tsc + pt_pl_tsc_size,
++	ptps_mtc = pt_opcs_mtc + pt_pl_mtc_size,
++	ptps_psb = pt_opcs_psb + pt_pl_psb_size,
++	ptps_psbend = pt_opcs_psbend,
++	ptps_ovf = pt_opcs_ovf,
++	ptps_pip = pt_opcs_pip + pt_pl_pip_size,
++	ptps_tnt_64 = pt_opcs_tnt_64 + pt_pl_tnt_64_size,
++	ptps_cbr = pt_opcs_cbr + pt_pl_cbr_size,
++	ptps_tip_supp = pt_opcs_tip,
++	ptps_tip_upd16 = pt_opcs_tip + pt_pl_ip_upd16_size,
++	ptps_tip_upd32 = pt_opcs_tip + pt_pl_ip_upd32_size,
++	ptps_tip_upd48 = pt_opcs_tip + pt_pl_ip_upd48_size,
++	ptps_tip_sext48 = pt_opcs_tip + pt_pl_ip_sext48_size,
++	ptps_tip_full = pt_opcs_tip + pt_pl_ip_full_size,
++	ptps_tip_pge_supp = pt_opcs_tip_pge,
++	ptps_tip_pge_upd16 = pt_opcs_tip_pge + pt_pl_ip_upd16_size,
++	ptps_tip_pge_upd32 = pt_opcs_tip_pge + pt_pl_ip_upd32_size,
++	ptps_tip_pge_upd48 = pt_opcs_tip_pge + pt_pl_ip_upd48_size,
++	ptps_tip_pge_sext48 = pt_opcs_tip_pge + pt_pl_ip_sext48_size,
++	ptps_tip_pge_full = pt_opcs_tip_pge + pt_pl_ip_full_size,
++	ptps_tip_pgd_supp = pt_opcs_tip_pgd,
++	ptps_tip_pgd_upd16 = pt_opcs_tip_pgd + pt_pl_ip_upd16_size,
++	ptps_tip_pgd_upd32 = pt_opcs_tip_pgd + pt_pl_ip_upd32_size,
++	ptps_tip_pgd_upd48 = pt_opcs_tip_pgd + pt_pl_ip_upd48_size,
++	ptps_tip_pgd_sext48 = pt_opcs_tip_pgd + pt_pl_ip_sext48_size,
++	ptps_tip_pgd_full = pt_opcs_tip_pgd + pt_pl_ip_full_size,
++	ptps_fup_supp = pt_opcs_fup,
++	ptps_fup_upd16 = pt_opcs_fup + pt_pl_ip_upd16_size,
++	ptps_fup_upd32 = pt_opcs_fup + pt_pl_ip_upd32_size,
++	ptps_fup_upd48 = pt_opcs_fup + pt_pl_ip_upd48_size,
++	ptps_fup_sext48 = pt_opcs_fup + pt_pl_ip_sext48_size,
++	ptps_fup_full = pt_opcs_fup + pt_pl_ip_full_size,
++	ptps_tma = pt_opcs_tma + pt_pl_tma_size,
++	ptps_stop = pt_opcs_stop,
++	ptps_vmcs = pt_opcs_vmcs + pt_pl_vmcs_size,
++	ptps_mnt = pt_opcs_mnt + pt_pl_mnt_size
++};
++
++/* We define a few abbreviations outside of the below enum as we don't
++* want to handle those in switches.
++*/
++enum {
++	ppt_ext = pt_opc_ext << 8,
++	ppt_ext2 = ppt_ext << 8 | pt_ext_ext2 << 8
++};
++
++/** Intel PT packet types. */
++enum
++{
++	/* 1-byte header packets. */
++	ppt_pad = pt_opc_pad,
++	ppt_tip = pt_opc_tip,
++	ppt_tnt_8 = pt_opc_tnt_8 | 0xFE,
++	ppt_tip_pge = pt_opc_tip_pge,
++	ppt_tip_pgd = pt_opc_tip_pgd,
++	ppt_fup = pt_opc_fup,
++	ppt_mode = pt_opc_mode,
++	ppt_tsc = pt_opc_tsc,
++	ppt_mtc = pt_opc_mtc,
++	ppt_cyc = pt_opc_cyc,
++
++	/* 2-byte header packets. */
++	ppt_psb = ppt_ext | pt_ext_psb,
++	ppt_tnt_64 = ppt_ext | pt_ext_tnt_64,
++	ppt_pip = ppt_ext | pt_ext_pip,
++	ppt_stop = ppt_ext | pt_ext_stop,
++	ppt_ovf = ppt_ext | pt_ext_ovf,
++	ppt_psbend = ppt_ext | pt_ext_psbend,
++	ppt_cbr = ppt_ext | pt_ext_cbr,
++	ppt_tma = ppt_ext | pt_ext_tma,
++	ppt_vmcs = ppt_ext | pt_ext_vmcs,
++
++	/* 3-byte header packets. */
++	ppt_mnt = ppt_ext2 | pt_ext2_mnt,
++
++	/* A packet decodable by the optional decoder callback. */
++	ppt_unknown = 0x7ffffffe,
++
++	/* An invalid packet. */
++	ppt_invalid = 0x7fffffff
++};
++
++/* Keeping track of the last-ip in Intel PT packets. */
++struct pt_last_ip {
++	/* The last IP. */
++	uint64_t ip;
++
++	/* Flags governing the handling of IP updates and queries:
++	*
++	* - we have seen an IP update.
++	*/
++	uint32_t have_ip : 1;
++	/* - the IP has been suppressed in the last update. */
++	uint32_t suppressed : 1;
++};
++
++int decode_pt(uint8_t* buffer, size_t size, uint8_t*dst, size_t dst_size, uint32_t mode);
++
++#endif  /* _IPTDEC_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/lbr.h b/drivers/misc/intel/sepdk/vtsspp/lbr.h
+new file mode 100644
+index 000000000000..10d37b8392fd
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/lbr.h
+@@ -0,0 +1,52 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_LBR_H_
++#define _VTSS_LBR_H_
++
++#include "vtss_autoconf.h"
++
++#define VTSS_MAX_LBRS 32
++
++typedef struct _lbr_control_t
++{
++    long long lbrstk[VTSS_MAX_LBRS * 2];
++    long long lbrtos;
++
++} lbr_control_t;
++
++
++int   vtss_lbr_init(void);
++void  vtss_lbr_fini(void);
++void  vtss_lbr_enable(lbr_control_t* lbrctl);
++void  vtss_lbr_disable(void);
++void  vtss_lbr_disable_save(lbr_control_t* lbrctl);
++void* vtss_lbr_correct_ip(void* ip);
++
++int   vtss_stack_record_lbr(struct vtss_transport_data* trnd, stack_control_t* stk, pid_t tid, int cpu, int is_safe);
++
++#endif /* _VTSS_LBR_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/memory_pool.h b/drivers/misc/intel/sepdk/vtsspp/memory_pool.h
+new file mode 100644
+index 000000000000..d3c711ed0694
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/memory_pool.h
+@@ -0,0 +1,51 @@
++/*
++  Copyright (C) 2018-2018 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++
++#ifndef _VTSS_MEMORY_POOL_H_
++#define _VTSS_MEMORY_POOL_H_
++
++
++#include "vtss_autoconf.h"
++#include <linux/types.h>        // for size_t
++#include <linux/gfp.h>
++
++int vtss_memory_pool_init(void);
++void vtss_memory_pool_fini(void);
++void vtss_memory_pool_clear(void);
++
++unsigned long vtss_get_free_pages_internal(gfp_t gfp_mask, unsigned int order);
++void vtss_free_pages_internal(unsigned long addr, unsigned int order);
++unsigned long vtss_get_free_page_internal(gfp_t gfp_mask);
++void vtss_free_page_internal(unsigned long addr);
++unsigned long vtss_get_free_block(gfp_t gfp_mask, size_t size);
++void vtss_free_block(unsigned long addr, size_t size);
++
++void* vtss_kmalloc_internal(size_t size, gfp_t flags);
++void vtss_kfree_internal(const void *);
++        
++#endif /* _VTSS_MEMORY_POOL_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/module.h b/drivers/misc/intel/sepdk/vtsspp/module.h
+new file mode 100644
+index 000000000000..d87cce97c1f6
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/module.h
+@@ -0,0 +1,36 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_MODULE_H_
++#define _VTSS_MODULE_H_
++
++#include "vtss_autoconf.h"
++
++int  vtss_probe_init(void);
++void vtss_probe_fini(void);
++
++#endif /* _VTSS_MODULE_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/nmiwd.h b/drivers/misc/intel/sepdk/vtsspp/nmiwd.h
+new file mode 100644
+index 000000000000..108d010f5506
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/nmiwd.h
+@@ -0,0 +1,52 @@
++/*
++  Copyright (C) 2014 - 2015  Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_NMIWD_H_
++#define _VTSS_NMIWD_H_
++
++#include "vtss_autoconf.h"
++
++//Disable watchdog
++//mode: 0 - disable watchdog
++//      1 - disable watchdog and programme it enabling by calling vtss_nmi_watchdog_enable(1). 
++//          If watchdog is disabled successfully memorise the state to be able enable watchdog  back after collection stops.
++//returned values: 0 - watchdog was disabled successfully
++//                 1 - watchdog is already disabled
++//                <0 - error. cannot disable watchdog
++int vtss_nmi_watchdog_disable (int mode);
++
++
++//Enable watchdog
++//mode: 0 - enable watchdog
++//      1 - enable watchdog only if vtss_nmi_watchdog_disable(1) was called previously.
++//          If watchdog is disabled successfully memorise the state to be able enable watchdog  back after collection stops.
++//returned values: 0 - watchdog was enabled successfully
++//                 1 - watchdog is already enabled
++//                <0 - error. cannot enable watchdog
++int vtss_nmi_watchdog_enable (int mode);
++
++#endif /* _VTSS_NMIWD_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/pebs.h b/drivers/misc/intel/sepdk/vtsspp/pebs.h
+new file mode 100644
+index 000000000000..0940291b9b3e
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/pebs.h
+@@ -0,0 +1,130 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_PEBS_H_
++#define _VTSS_PEBS_H_
++
++#include "vtss_autoconf.h"
++
++#define PEBS_ENABLE_MASK_MRM    0x01
++#define PEBS_ENABLE_MASK_NHM    0x0f
++
++#pragma pack(push, 1)
++
++typedef union
++{
++    struct {
++        unsigned long long flags;
++        unsigned long long ip;
++        unsigned long long ax;
++        unsigned long long bx;
++        unsigned long long cx;
++        unsigned long long dx;
++        unsigned long long si;
++        unsigned long long di;
++        unsigned long long bp;
++        unsigned long long sp;
++        unsigned long long r8;
++        unsigned long long r9;
++        unsigned long long r10;
++        unsigned long long r11;
++        unsigned long long r12;
++        unsigned long long r13;
++        unsigned long long r14;
++        unsigned long long r15;
++    } v1;
++
++    struct {
++        unsigned long long flags;
++        unsigned long long ip;
++        unsigned long long ax;
++        unsigned long long bx;
++        unsigned long long cx;
++        unsigned long long dx;
++        unsigned long long si;
++        unsigned long long di;
++        unsigned long long bp;
++        unsigned long long sp;
++        unsigned long long r8;
++        unsigned long long r9;
++        unsigned long long r10;
++        unsigned long long r11;
++        unsigned long long r12;
++        unsigned long long r13;
++        unsigned long long r14;
++        unsigned long long r15;
++
++        /* Nehalem fields */
++        unsigned long long glob_perf_overflow;
++        unsigned long long data_linear_address;
++        unsigned long long data_source;
++        unsigned long long latency;
++    } v2;
++
++    struct {
++        unsigned long long flags;
++        unsigned long long ip;
++        unsigned long long ax;
++        unsigned long long bx;
++        unsigned long long cx;
++        unsigned long long dx;
++        unsigned long long si;
++        unsigned long long di;
++        unsigned long long bp;
++        unsigned long long sp;
++        unsigned long long r8;
++        unsigned long long r9;
++        unsigned long long r10;
++        unsigned long long r11;
++        unsigned long long r12;
++        unsigned long long r13;
++        unsigned long long r14;
++        unsigned long long r15;
++
++        /* Nehalem fields */
++        unsigned long long glob_perf_overflow;
++        unsigned long long data_linear_address;
++        unsigned long long data_source;
++        unsigned long long latency;
++
++        /* Haswell fields */
++        unsigned long long eventing_ip;
++        unsigned long long hle_info;
++    } v3;
++} vtss_pebs_t;
++
++#pragma pack(pop)
++
++int  vtss_pebs_init(void);
++void vtss_pebs_fini(void);
++void vtss_pebs_enable(void);
++void vtss_pebs_disable(void);
++void vtss_pebs_init_dsa(void);
++vtss_pebs_t* vtss_pebs_get(int cpu);
++int  vtss_pebs_is_trap(void);
++
++#endif /* _VTSS_PEBS_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/procfs.h b/drivers/misc/intel/sepdk/vtsspp/procfs.h
+new file mode 100644
+index 000000000000..8b2d92643bdc
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/procfs.h
+@@ -0,0 +1,46 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_PROCFS_H_
++#define _VTSS_PROCFS_H_
++
++#include "vtss_autoconf.h"
++
++#include <linux/types.h>        /* for size_t */
++#include <linux/proc_fs.h>      /* for struct proc_dir_entry */
++
++void vtss_procfs_fini(void);
++int  vtss_procfs_init(void);
++const char *vtss_procfs_path(void);
++struct proc_dir_entry *vtss_procfs_get_root(void);
++int  vtss_procfs_ctrl_wake_up(void *msg, size_t size);
++int vtss_procfs_ctrl_wake_up_2(void *msg1, size_t size1, void *msg2, size_t size2);
++void vtss_procfs_ctrl_flush(void);
++const struct cpumask* vtss_procfs_cpumask(void);
++int vtss_procfs_defsav(void);
++
++#endif /* _VTSS_PROCFS_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/record.h b/drivers/misc/intel/sepdk/vtsspp/record.h
+new file mode 100644
+index 000000000000..aae550eea1e0
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/record.h
+@@ -0,0 +1,53 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_RECORD_H_
++#define _VTSS_RECORD_H_
++
++#include "vtss_autoconf.h"
++#include "transport.h"
++#include "cpuevents.h"
++
++int vtss_record_magic(struct vtss_transport_data* trnd, int is_safe);
++int vtss_record_debug_info(struct vtss_transport_data* trnd, const char* message, int is_safe);
++int vtss_record_process_exec(struct vtss_transport_data* trnd, pid_t tid, pid_t pid, int cpu, const char *filename, int is_safe);
++int vtss_record_process_exit(struct vtss_transport_data* trnd, pid_t tid, pid_t pid, int cpu, const char *filename, int is_safe);
++int vtss_record_thread_create(struct vtss_transport_data* trnd, pid_t tid, pid_t pid, int cpu, int is_safe);
++int vtss_record_thread_stop(struct vtss_transport_data* trnd, pid_t tid, pid_t pid, int cpu, int is_safe);
++int vtss_record_thread_name(struct vtss_transport_data* trnd, pid_t tid, const char *taskname, int is_safe);
++int vtss_record_switch_from(struct vtss_transport_data* trnd, int cpu, int is_preempt, int is_safe, unsigned long* rec_id);
++int vtss_record_switch_to(struct vtss_transport_data* trnd, pid_t tid, int cpu, void* ip, int is_safe, unsigned long* rec_id);
++int vtss_record_sample(struct vtss_transport_data* trnd, pid_t tid, int cpu, cpuevent_t* cpuevent_chain, void* ip, int is_safe, unsigned long* rec_id);
++int vtss_record_bts(struct vtss_transport_data* trnd, pid_t tid, int cpu, void* bts_buff, size_t bts_size, int is_safe);
++int vtss_record_module(struct vtss_transport_data* trnd, int m32, unsigned long addr, unsigned long len, const char *pname, unsigned long pgoff, long long cputsc, long long realtsc, int is_safe);
++int vtss_record_configs(struct vtss_transport_data* trnd, int m32, int is_safe);
++int vtss_record_softcfg(struct vtss_transport_data* trnd, pid_t tid, int is_safe);
++int vtss_record_probe(struct vtss_transport_data* trnd, int cpu, int fid, int is_safe);
++
++int vtss_record_probe_all(int cpu, int fid, int is_safe);
++
++#endif /* _VTSS_RECORD_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/regs.h b/drivers/misc/intel/sepdk/vtsspp/regs.h
+new file mode 100644
+index 000000000000..99f7b9372194
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/regs.h
+@@ -0,0 +1,52 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_REGS_H_
++#define _VTSS_REGS_H_
++
++#include "vtss_autoconf.h"
++
++#include <linux/compiler.h>     /* for __user */
++#include <asm/ptrace.h>
++
++#ifdef CONFIG_X86_32
++#define vtss_get_current_bp(bp) asm("movl %%ebp, %0":"=r"(bp):)
++#else
++#define vtss_get_current_bp(bp) asm("movq %%rbp, %0":"=r"(bp):)
++#endif
++
++#ifdef VTSS_AUTOCONF_X86_UNIREGS
++#define REG(name, regs) ((regs)->name)
++#else /* VTSS_AUTOCONF_X86_UNIREGS */
++#if defined(CONFIG_X86_32)
++#define REG(name, regs) ((regs)->e##name)
++#elif defined(CONFIG_X86_64)
++#define REG(name, regs) ((regs)->r##name)
++#endif
++#endif /* VTSS_AUTOCONF_X86_UNIREGS */
++
++#endif /* _VTSS_REGS_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/stack.h b/drivers/misc/intel/sepdk/vtsspp/stack.h
+new file mode 100644
+index 000000000000..3327fe7e3494
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/stack.h
+@@ -0,0 +1,40 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_STACK_H_
++#define _VTSS_STACK_H_
++
++#include "vtss_autoconf.h"
++#include "transport.h"
++#include "unwind.h"
++
++#include <linux/sched.h>        /* for struct task_struct */
++
++int vtss_stack_dump(struct vtss_transport_data* trnd, stack_control_t* stk, struct task_struct* task, struct pt_regs* regs, void* reg_fp, void* user_sp, int in_irq);
++int vtss_stack_record(struct vtss_transport_data* trnd, stack_control_t* stk, pid_t tid, int cpu, int is_safe, unsigned long *recid);
++
++#endif /* _VTSS_STACK_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/task_map.h b/drivers/misc/intel/sepdk/vtsspp/task_map.h
+new file mode 100644
+index 000000000000..cad187b3c3eb
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/task_map.h
+@@ -0,0 +1,69 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_TASK_MAP_H_
++#define _VTSS_TASK_MAP_H_
++
++#include "vtss_autoconf.h"
++
++#include <linux/list.h>         /* for struct hlist_node */
++#include <linux/rculist.h>
++#include <asm/atomic.h>         /* for atomic_t */
++
++struct _vtss_task_map_item_t;
++typedef void (vtss_task_map_func_t) (struct _vtss_task_map_item_t* item, void* args);
++
++typedef struct _vtss_task_map_item_t
++{
++    struct hlist_node     hlist;
++    pid_t                 key;
++    atomic_t              usage;
++    atomic_t              in_list;
++    vtss_task_map_func_t* dtor;
++    struct rcu_head       rcu;
++    char                  data[0]; /* placeholder for data */
++} vtss_task_map_item_t;
++
++/** find item in list and return with incremented usage */
++vtss_task_map_item_t* vtss_task_map_get_item(pid_t key);
++/** just decrement usage and destroy if usage become zero */
++int  vtss_task_map_put_item(vtss_task_map_item_t* item);
++/** allocate item + data but not insert it into list, usage is 1 */
++vtss_task_map_item_t* vtss_task_map_alloc(pid_t key, size_t size, vtss_task_map_func_t* dtor, gfp_t flags);
++/** add item into list with incremented usage */
++int  vtss_task_map_add_item(vtss_task_map_item_t* item);
++/** del item from list, decrement usage and destroy if usage become zero */
++int  vtss_task_map_del_item(vtss_task_map_item_t* item);
++
++/** call func for each item in list */
++int  vtss_task_map_foreach(vtss_task_map_func_t* func, void* args);
++
++/** init/fini */
++int  vtss_task_map_init(void);
++void vtss_task_map_fini(void);
++
++#endif /* _VTSS_TASK_MAP_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/time.h b/drivers/misc/intel/sepdk/vtsspp/time.h
+new file mode 100644
+index 000000000000..4554e3465ad6
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/time.h
+@@ -0,0 +1,84 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_TIME_H_
++#define _VTSS_TIME_H_
++
++#include "vtss_autoconf.h"
++
++#include <linux/time.h>
++#include <linux/ktime.h>
++#include <linux/hrtimer.h>
++
++static inline unsigned long long vtss_freq_cpu(void) __attribute__ ((always_inline));
++static inline unsigned long long vtss_freq_cpu(void)
++{
++    return (tsc_khz * 1000ULL);
++}
++
++static inline unsigned long long vtss_freq_real(void) __attribute__ ((always_inline));
++static inline unsigned long long vtss_freq_real(void)
++{
++    return vtss_time_source ? (tsc_khz * 1000ULL) : 1000000000ULL; /* 1ns */
++}
++
++static inline unsigned long long vtss_time_cpu(void) __attribute__ ((always_inline));
++static inline unsigned long long vtss_time_cpu(void)
++{
++    return (unsigned long long)get_cycles();
++}
++
++static inline unsigned long long vtss_time_real(void) __attribute__ ((always_inline));
++static inline unsigned long long vtss_time_real(void)
++{
++    if (!vtss_time_source) {
++        struct timespec now;
++        getrawmonotonic(&now); /* getnstimeofday(&now); */
++        return (unsigned long long)timespec_to_ns(&now);
++    } else
++        return (unsigned long long)get_cycles();
++}
++
++static inline void vtss_time_get_sync(unsigned long long* ptsc, unsigned long long* preal) __attribute__ ((always_inline));
++static inline void vtss_time_get_sync(unsigned long long* ptsc, unsigned long long* preal)
++{
++    unsigned long long tsc = vtss_time_cpu();
++
++    if (!vtss_time_source) {
++        struct timespec now1, now2;
++        getrawmonotonic(&now1);
++        // rdtsc barrier
++        asm volatile("mfence");
++        asm volatile("lfence");
++        getrawmonotonic(&now2);
++        *ptsc  = (tsc + vtss_time_cpu()) / 2;
++        *preal = (timespec_to_ns(&now1) + timespec_to_ns(&now2)) / 2;
++    } else
++        *ptsc = *preal = tsc;
++}
++
++#endif /* _VTSS_TIME_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/transport.h b/drivers/misc/intel/sepdk/vtsspp/transport.h
+new file mode 100644
+index 000000000000..733048417e4b
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/transport.h
+@@ -0,0 +1,69 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_TRANSPORT_H_
++#define _VTSS_TRANSPORT_H_
++
++#include "vtss_autoconf.h"
++#include <linux/types.h>
++#include <linux/seq_file.h>     /* for struct seq_file    */
++
++struct vtss_transport_data;
++
++#define VTSS_TR_MODE_REG    0x0
++#define VTSS_TR_MODE_RB     0x1
++
++void vtss_transport_addref(struct vtss_transport_data* trnd);
++int  vtss_transport_delref(struct vtss_transport_data* trnd);
++
++#ifndef VTSS_USE_UEC
++void* vtss_transport_record_reserve(struct vtss_transport_data* trnd, void** entry, size_t size);
++void* vtss_transport_activity_record_reserve(struct vtss_transport_data* trnd, void** entry, size_t size, unsigned long* chunk_id);
++
++//void* vtss_transport_record_reserve_try_hard(struct vtss_transport_data* trnd, void** entry, size_t size);
++int   vtss_transport_record_commit(struct vtss_transport_data* trnd, void* entry, int is_safe);
++#endif
++int   vtss_transport_record_write(struct vtss_transport_data* trnd, void* part0, size_t size0, void* part1, size_t size1, int is_safe);
++int   vtss_transport_record_write_all(void* part0, size_t size0, void* part1, size_t size1, int is_safe);
++int   vtss_transport_complete(struct vtss_transport_data* trnd);
++struct vtss_transport_data* vtss_transport_create(pid_t ppid, pid_t pid, uid_t cuid, gid_t cgid);
++struct vtss_transport_data* vtss_transport_create_aux(struct vtss_transport_data* main_trnd, uid_t cuid, gid_t cgid, int is_rb);
++
++char* vtss_transport_get_filename(struct vtss_transport_data* trnd);
++int   vtss_transport_is_overflowing(struct vtss_transport_data* trnd);
++int   vtss_transport_is_ready(struct vtss_transport_data* trnd);
++int   vtss_transport_debug_info(struct seq_file *s);
++void vtss_transport_wake_up_all(void);
++int   vtss_transport_init(int rb);
++void  vtss_transport_fini(void);
++
++void  vtss_transport_start_ring_bufer(void);
++void  vtss_transport_stop_ring_bufer(void);
++void  vtss_transport_resume_ring_bufer(void);
++void  vtss_transport_pause_ring_bufer(void);
++
++#endif /* _VTSS_TRANSPORT_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/uec.h b/drivers/misc/intel/sepdk/vtsspp/uec.h
+new file mode 100644
+index 000000000000..2bc3b3014f6c
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/uec.h
+@@ -0,0 +1,114 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _UEC_H_
++#define _UEC_H_
++
++#include <linux/spinlock.h>
++
++/**
++//
++// Universal Event Collector types and declarations
++//
++*/
++typedef struct _uec_t
++{
++    /// methods
++    int  (*put_record) (struct _uec_t* uec, void *part0, size_t size0, void *part1, size_t size1, int mode);
++    int  (*init)       (struct _uec_t* uec, size_t size, char *name, int instance);
++    void (*destroy)    (struct _uec_t* uec);
++    int  (*pull)       (struct _uec_t* uec, char __user* buffer, size_t len);    /// returns the number of bytes copied
++    void (*callback)   (struct _uec_t* uec, int reason, void *context);
++
++    /// elements
++    char *buffer;               /// collector buffer
++    volatile char *head;        /// head-pointer to write to
++    volatile char *tail;        /// tail-pointer to read from
++    volatile char *head_;       /// head-pointer for asynchronous writes
++    volatile char *tail_;       /// tail-pointer for asynchronous reads
++    size_t tsize;               /// size of buffer for read operations
++    size_t hsize;               /// size of buffer for write operations
++    volatile int ovfl;          /// indicates buffer overflow
++    volatile char *last_rec_ptr;/// points to the last successfully written record
++    volatile int spill_active;  /// set when spill-method is invoked by put_record-method
++    volatile int chain_busy;    /// set when multiple put_record and spill methods are trying to spill and switch an UEC in the chain
++    volatile int writer_count;  /// the number of active writers
++    volatile int reader_count;  /// the number of active readers
++    void *context;              /// callback context
++#ifdef VTSS_CONFIG_REALTIME
++    raw_spinlock_t lock;        /// spin lock protection
++#else
++    spinlock_t lock;            /// spin lock protection
++#endif
++    struct _uec_t* curr;        /// a pointer to form an UEC chain, current operative UEC in the chain points back to itself
++    struct _uec_t* next;        /// a pointer to form an UEC chain, last UEC points back to the first one
++    struct _uec_t* full_next;   /// a pointer to form an UEC chain, last UEC points back to the first one
++    long long cputsc;           /// timestamp of the last switch on UEC
++
++} uec_t;
++
++int  init_uec(uec_t* uec, size_t size, char *name, int instance);
++void destroy_uec(uec_t* uec);
++int  put_record_async(uec_t* uec, void *part0, size_t size0, void *part1, size_t size1, int mode);
++int  pull_uec(uec_t* uec, char __user* buffer, size_t len);
++
++int init_uec_chain(uec_t* uec, size_t size, char* name, int chain_size);
++void destroy_uec_chain(uec_t* uec);
++void spill_uec_chain(uec_t* uec);
++int put_record_chain(uec_t* uec, void* part0, size_t size0, void* part1, size_t size1, int mode);
++void test_spill_uec_chain(uec_t* uec);
++int pull_uec_chain(uec_t* uec, char __user* buffer, size_t len);
++
++/// internal buffer size
++#define VTSS_UEC_BUFSIZE     (PAGE_SIZE<<10) /* ^10 = 4194304 (0x400000) */
++
++/// maximum record size
++#define MAX_RECORD_SIZE 0x10000
++
++/// put_record modes
++#define UECMODE_NORMAL 0
++#define UECMODE_SAFE   1
++
++/// UEC asynchronous thread commands
++#define UECCOM_SPILL       0x00
++#define UECCOM_REOPEN      0x01
++#define UECCOM_TERMINATE   0x02
++
++/// UEC asynchronous thread stati
++#define UECSTS_OK    0x10
++#define UECSTS_BUSY  0x20
++#define UECSTS_FAIL  0x30
++
++/// UEC callback reasons
++#define UECCB_NEWTRACE  0
++#define UECCB_OVERFLOW  1
++
++/// UEC fill/spill border (numerator/denominator)
++#define UECNUMER 3
++#define UECDENOM 4
++
++#endif /* _UEC_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/unwind.h b/drivers/misc/intel/sepdk/vtsspp/unwind.h
+new file mode 100644
+index 000000000000..195016e1d573
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/unwind.h
+@@ -0,0 +1,167 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _UNWIND_H_
++#define _UNWIND_H_
++
++#include <linux/compiler.h>     /* for inline */
++#include <linux/types.h>        /* for size_t */
++#include <linux/stddef.h>       /* for NULL   */
++#include <linux/spinlock.h>
++
++#include "user_vm.h"
++#include "globals.h"
++
++/**
++// Constants and Macros
++*/
++#define MAX_USER_ADDRESS32  0x7ffeffff
++#define MAX_USER_ADDRESS3G  0xc0000000
++#define MIN_MODULE_ADDRESS  0x001a0000
++#define CRITICAL_ADDRESS    0x10000000
++#define MAX_INSTR_SIZE 7
++
++#define IP_SEARCH_RANGE     0x08
++#define FUN_SEARCH_RANGE    0x1000
++
++#define MIN_SYSTEM_MODULE   0x77800000
++#define MAX_SYSTEM_MODULE   0x7ffeffff
++
++#define CALLND_OPCODE 0xe8
++#define CALLNI_OPCODE 0xff
++#define CALLNI_OPEXT  0x10      /// xx010xxx
++#define CALLNI_OPMASK 0x38      /// 00111xxx
++
++#define VTSS_STACK_CACHE_SIZE PAGE_SIZE
++#define VTSS_STACK_READ_SIZE PAGE_SIZE
++#define VTSS_STACK_READ_MASK (0-VTSS_STACK_READ_SIZE)
++/**
++// Data Types
++*/
++
++/// stack pointer (to walk by different strides)
++typedef union
++{
++    char *chp;
++    void *vdp;
++    void **vpp;
++    size_t *szp;
++    unsigned *uip;
++    size_t szt;
++
++} stkptr_t;
++
++/// stack map element to map SP to either FP or IP
++typedef struct
++{
++    stkptr_t sp;
++
++    union
++    {
++        size_t fp;
++        size_t ip;
++        stkptr_t value;
++    };
++
++} stkmap_t;
++
++/// general stack unwinding control structure
++typedef struct _stack_control_t
++{
++/* public: */
++    /// stack manipulation methods
++    int  (*init)     (struct _stack_control_t * stk);
++    int  (*realloc)  (struct _stack_control_t * stk);
++    void (*destroy)  (struct _stack_control_t * stk);
++    void (*clear)    (struct _stack_control_t * stk);
++    int  (*unwind)   (struct _stack_control_t * stk);
++    int  (*validate) (struct _stack_control_t * stk); /// callback for validating IPs
++    void (*augment)  (struct _stack_control_t * stk);
++    int  (*is_full)  (struct _stack_control_t * stk);
++    int  (*compress) (struct _stack_control_t * stk);
++    void (*setup)    (struct _stack_control_t * stk, user_vm_accessor_t* acc, void *ip, void *sp, void *bp, void *fp, int wow64);
++    char *(*data)    (struct _stack_control_t * stk);
++    void (*lock)     (struct _stack_control_t * stk);
++    int  (*trylock)  (struct _stack_control_t * stk);
++    void (*unlock)   (struct _stack_control_t * stk);
++
++/* private: */
++    /// buffer properties
++    char *buffer;               /// buffer allocated for all stack unwinding operations
++    int size;                   /// the buffer's size
++
++    /// stack map properties
++    stkmap_t *stkmap_end;       /// end of stack map (the unwinding starts from here)
++    stkmap_t *stkmap_common;    /// common element on the stack map
++    stkmap_t *stkmap_start;     /// the beginning of the map (compression starts here)
++
++    /// dynamic return address detection properties
++    stkptr_t value;
++    stkptr_t cm_low;            /// low address of the current module
++    stkptr_t cm_high;           /// high address of the current module
++
++    /// output compression properties
++    unsigned char *compressed;  /// compressed data buffer
++
++    /// sample properties
++    stkptr_t user_ip;           /// IP for the current sample
++    stkptr_t user_sp;           /// SP for the current sample
++    stkptr_t bp;                /// stack base for the current sample
++    stkptr_t user_fp;           /// frame pointer for the current sample
++    int wow64;                  /// WoW64 process flag
++    int hugetlb;                /// stack in hugetlb area
++#ifdef VTSS_CONFIG_REALTIME
++    raw_spinlock_t spin_lock;   /// spin lock protection
++#else
++    spinlock_t spin_lock;       /// spin lock protection
++#endif
++    user_vm_accessor_t* acc;    /// user vm accessor
++    char dbgmsg[192];
++
++    /// kernel clean stack
++    char *kernel_callchain;
++    int kernel_callchain_size;
++    int kernel_callchain_pos;
++    stkptr_t fp;                /// frame pointer for the current sample
++    stkptr_t ip;                /// IP for the current sample
++    stkptr_t sp;                /// SP for the current sample
++    /// user clean stack
++    char *user_callchain;
++    int user_callchain_size;
++    int user_callchain_pos;
++
++    char value_cache[VTSS_STACK_CACHE_SIZE];
++
++} stack_control_t;
++
++
++/**
++// Function Declarations
++*/
++int vtss_init_stack(stack_control_t* stk);
++
++#endif /* _UNWIND_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/user_vm.h b/drivers/misc/intel/sepdk/vtsspp/user_vm.h
+new file mode 100644
+index 000000000000..286648c166ce
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/user_vm.h
+@@ -0,0 +1,79 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_USER_VM_H_
++#define _VTSS_USER_VM_H_
++
++#include "vtss_autoconf.h"
++
++#include <linux/sched.h>        /* for struct task_struct */
++#include <linux/mm.h>           /* for struct vm_area_struct */
++
++typedef struct user_vm_accessor
++{
++/* public: */
++    int    (*trylock) (struct user_vm_accessor* this, struct task_struct* task);
++    int    (*unlock)  (struct user_vm_accessor* this);
++    size_t (*read)    (struct user_vm_accessor* this, void* from, void* to, size_t size);
++    int    (*validate)(struct user_vm_accessor* this, unsigned long ip);
++
++/* private: */
++    struct task_struct*    m_task;
++    struct mm_struct*      m_mm;
++    struct page*           m_page;
++    struct vm_area_struct* m_vma;
++    void*                  m_maddr;
++    unsigned long          m_page_id;
++    int                    m_irq;
++    cycles_t               m_limit;
++#ifdef VTSS_VMA_TIME_LIMIT
++    cycles_t               m_time;
++#endif
++#ifdef VTSS_VMA_CACHE
++    char                   m_buffer[PAGE_SIZE];
++#endif
++
++    int mmap_reg_callcnt;
++
++    struct vm_area_struct* m_vma_cache;
++
++    unsigned long mmap_vdso_start;
++    unsigned long mmap_vdso_end;
++    unsigned long mmap_mms_start;
++    unsigned long mmap_mms_end;
++    unsigned long mmap_stack_start;
++    unsigned long mmap_stack_end;
++
++} user_vm_accessor_t;
++
++user_vm_accessor_t* vtss_user_vm_accessor_init(int in_irq, cycles_t limit);
++void vtss_user_vm_accessor_fini(user_vm_accessor_t* acc);
++
++int  vtss_user_vm_init(void);
++void vtss_user_vm_fini(void);
++
++#endif /* _VTSS_USER_VM_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/vtss_asm_helper.h b/drivers/misc/intel/sepdk/vtsspp/vtss_asm_helper.h
+new file mode 100644
+index 000000000000..53b063b4ebb4
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/vtss_asm_helper.h
+@@ -0,0 +1,145 @@
++#     Copyright (C) 2002-2014 Intel Corporation.  All Rights Reserved.
++# 
++#     This file is part of SEP Development Kit
++# 
++#     SEP Development Kit is free software; you can redistribute it
++#     and/or modify it under the terms of the GNU General Public License
++#     version 2 as published by the Free Software Foundation.
++# 
++#     SEP Development Kit is distributed in the hope that it will be useful,
++#     but WITHOUT ANY WARRANTY; without even the implied warranty of
++#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++#     GNU General Public License for more details.
++# 
++#     You should have received a copy of the GNU General Public License
++#     along with SEP Development Kit; if not, write to the Free Software
++#     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++# 
++#     As a special exception, you may use this file as part of a free software
++#     library without restriction.  Specifically, if other files instantiate
++#     templates or use macros or inline functions from this file, or you compile
++#     this file and link it with other files to produce an executable, this
++#     file does not by itself cause the resulting executable to be covered by
++#     the GNU General Public License.  This exception does not however
++#     invalidate any other reasons why the executable file might be covered by
++#     the GNU General Public License.
++
++
++#include <linux/version.h>
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4,2,0)
++    #include <asm/dwarf2.h>
++    #include <asm/calling.h>
++#else
++#ifdef CONFIG_AS_CFI
++    #define CFI_STARTPROC .cfi_startproc
++    #define CFI_ENDPROC .cfi_endproc
++    #define CFI_ADJUST_CFA_OFFSET .cfi_adjust_cfa_offset
++#else
++    .macro cfi_ignore a=0, b=0, c=0, d=0
++    .endm
++    #define CFI_STARTPROC           cfi_ignore
++    #define CFI_ENDPROC             cfi_ignore
++    #define CFI_ADJUST_CFA_OFFSET   cfi_ignore
++#endif
++    #ifdef CONFIG_X86_64
++    .macro ALLOC_PT_GPREGS_ON_STACK addskip=0
++    subq    $15*8+\addskip, %rsp
++    CFI_ADJUST_CFA_OFFSET 15*8+\addskip
++    .endm
++
++    .macro SAVE_C_REGS_HELPER offset=0 rax=1 rcx=1 r8910=1 r11=1
++    .if \r11
++    movq %r11, 6*8+\offset(%rsp)
++    .endif
++    .if \r8910
++    movq %r10, 7*8+\offset(%rsp)
++    movq %r9,  8*8+\offset(%rsp)
++    movq %r8,  9*8+\offset(%rsp)
++    .endif
++    .if \rax
++    movq %rax, 10*8+\offset(%rsp)
++    .endif
++    .if \rcx
++    movq %rcx, 11*8+\offset(%rsp)
++    .endif
++    movq %rdx, 12*8+\offset(%rsp)
++    movq %rsi, 13*8+\offset(%rsp)
++    movq %rdi, 14*8+\offset(%rsp)
++    .endm
++    .macro SAVE_C_REGS offset=0
++    SAVE_C_REGS_HELPER \offset, 1, 1, 1, 1
++    .endm
++    .macro SAVE_EXTRA_REGS offset=0
++    movq %r15, 0*8+\offset(%rsp)
++    movq %r14, 1*8+\offset(%rsp)
++    movq %r13, 2*8+\offset(%rsp)
++    movq %r12, 3*8+\offset(%rsp)
++    movq %rbp, 4*8+\offset(%rsp)
++    movq %rbx, 5*8+\offset(%rsp)
++    .endm
++
++    .macro SAVE_EXTRA_REGS_RBP offset=0
++    movq %rbp, 4*8+\offset(%rsp)
++    .endm
++
++    .macro RESTORE_EXTRA_REGS offset=0
++    movq 0*8+\offset(%rsp), %r15
++    movq 1*8+\offset(%rsp), %r14
++    movq 2*8+\offset(%rsp), %r13
++    movq 3*8+\offset(%rsp), %r12
++    movq 4*8+\offset(%rsp), %rbp
++    movq 5*8+\offset(%rsp), %rbx
++    .endm
++    .macro RESTORE_C_REGS_HELPER rstor_rax=1, rstor_rcx=1, rstor_r11=1, rstor_r8910=1, rstor_rdx=1
++    .if \rstor_r11
++    movq 6*8(%rsp), %r11
++    .endif
++    .if \rstor_r8910
++    movq 7*8(%rsp), %r10
++    movq 8*8(%rsp), %r9
++    movq 9*8(%rsp), %r8
++    .endif
++    .if \rstor_rax
++    movq 10*8(%rsp), %rax
++    .endif
++    .if \rstor_rcx
++    movq 11*8(%rsp), %rcx
++    .endif
++    .if \rstor_rdx
++    movq 12*8(%rsp), %rdx
++    .endif
++    movq 13*8(%rsp), %rsi
++    movq 14*8(%rsp), %rdi
++    .endm
++    .macro RESTORE_C_REGS
++    RESTORE_C_REGS_HELPER 1,1,1,1,1
++    .endm
++
++    .macro REMOVE_PT_GPREGS_FROM_STACK addskip=0
++    addq $15*8+\addskip, %rsp
++    CFI_ADJUST_CFA_OFFSET -(15*8+\addskip)
++    .endm
++#else //CONFIG_X86_64
++
++    .macro SAVE_ALL
++    pushl %eax
++    pushl %ebp
++    pushl %edi
++    pushl %esi
++    pushl %edx
++    pushl %ecx
++    pushl %ebx
++    .endm
++
++    .macro RESTORE_ALL
++    popl %ebx
++    popl %ecx
++    popl %edx
++    popl %esi
++    popl %edi
++    popl %ebp
++    popl %eax
++    .endm
++#endif //CONFIG_X86_64
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/vtsspp/vtss_config.h b/drivers/misc/intel/sepdk/vtsspp/vtss_config.h
+new file mode 100644
+index 000000000000..04e4c410c65d
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/vtss_config.h
+@@ -0,0 +1,261 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSS_CONFIG_H_
++#define _VTSS_CONFIG_H_
++
++#include "vtss_autoconf.h"
++
++#include <linux/kernel.h>
++#include <linux/version.h>      /* for KERNEL_VERSION() */
++#include <linux/compiler.h>     /* for inline */
++#include <linux/types.h>        /* for size_t, pid_t */
++#include <linux/stddef.h>       /* for NULL   */
++#include <linux/smp.h>          /* for smp_processor_id() */
++#include <linux/cpumask.h>
++#include <linux/percpu.h>
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,11,0)
++#include <linux/timex.h>
++#endif
++#include <asm/cpufeature.h>
++
++#if defined(X86_FEATURE_KAISER) || defined(CONFIG_KAISER) || defined(VTSS_AUTOCONF_KAISER)
++#define VTSS_CONFIG_KAISER 1
++#elif defined(X86_FEATURE_PTI)
++#define VTSS_CONFIG_KPTI 1
++#endif
++
++#if defined(VTSS_CONFIG_KPTI) || defined(VTSS_CONFIG_KAISER)
++#define VTSS_USE_NMI 1
++#define VTSS_USE_UEC 1
++#endif
++
++#ifdef CONFIG_X86_64
++#define VTSS_KOFFSET ((unsigned long)__START_KERNEL_map)
++#define VTSS_MAX_USER_SPACE 0x7fffffffffff
++#else
++#define VTSS_KOFFSET ((unsigned long)PAGE_OFFSET)
++#define VTSS_MAX_USER_SPACE 0x7fffffff
++#endif
++
++#define VTSS_KSTART (VTSS_KOFFSET + ((CONFIG_PHYSICAL_START + (CONFIG_PHYSICAL_ALIGN - 1)) & ~(CONFIG_PHYSICAL_ALIGN - 1)))
++#define VTSS_KSIZE  ((unsigned long)KERNEL_IMAGE_SIZE - ((CONFIG_PHYSICAL_START + (CONFIG_PHYSICAL_ALIGN - 1)) & ~(CONFIG_PHYSICAL_ALIGN - 1)) - 1)
++
++#define VTSS_TO_STR_AUX(x) #x
++#define VTSS_TO_STR(x)     VTSS_TO_STR_AUX(x)
++
++#ifdef VTSS_AUTOCONF_SMP_CALL_FUNCTION_RETRY
++#define SMP_CALL_FUNCTION_ARGS 0,1
++#else /* VTSS_AUTOCONF_SMP_CALL_FUNCTION_RETRY */
++#define SMP_CALL_FUNCTION_ARGS 1
++#endif /* VTSS_AUTOCONF_SMP_CALL_FUNCTION_RETRY */
++
++#ifdef VTSS_AUTOCONF_TRACE_SCHED_RQ
++#define VTSS_TP_RQ struct rq* rq,
++#else  /* VTSS_AUTOCONF_TRACE_SCHED_RQ */
++#define VTSS_TP_RQ
++#endif /* VTSS_AUTOCONF_TRACE_SCHED_RQ */
++
++#if defined(VTSS_AUTOCONF_TRACE_SCHED_RQ) || defined(VTSS_AUTOCONF_TRACE_SCHED_NO_RQ) || defined(VTSS_AUTOCONF_TRACE_SCHED_PREEMPT)
++
++#define VTSS_TRACE_EVENTS_SCHED 1
++
++#endif
++
++/* Macro for printk */
++#ifdef VTSS_DEBUG_TRACE
++extern int vtss_check_trace(const char* func_name, int* flag);
++#define TRACE(FMT, ...) do {   \
++    static int trace_flag = 0; \
++    if (unlikely(!trace_flag))  trace_flag = vtss_check_trace(__FUNCTION__, &trace_flag); \
++    if (unlikely(trace_flag>0)) printk(KERN_DEBUG "%s[cpu%d]: "FMT"\n", __FUNCTION__, raw_smp_processor_id(), ##__VA_ARGS__); \
++  } while(0)
++#else  /* VTSS_DEBUG_TRACE */
++#define TRACE(FMT, ...) /* empty */
++#endif /* VTSS_DEBUG_TRACE */
++#define ERROR(FMT, ...) do { printk(KERN_ERR  "%s[cpu%d]: "FMT"\n", __FUNCTION__, raw_smp_processor_id(), ##__VA_ARGS__); } while(0)
++#define INFO(FMT, ...)  do { printk(KERN_INFO "%s[cpu%d]: "FMT"\n", __FUNCTION__, raw_smp_processor_id(), ##__VA_ARGS__); } while(0)
++
++extern int vtss_time_source; /* 0 - raw clock monotinic (default), 1 - TSC */
++extern cycles_t vtss_time_limit;
++
++#ifdef VTSS_DEBUG_PROFILE
++extern cycles_t vtss_profile_cnt_stk;
++extern cycles_t vtss_profile_clk_stk;
++extern cycles_t vtss_profile_cnt_ctx;
++extern cycles_t vtss_profile_clk_ctx;
++extern cycles_t vtss_profile_cnt_pmi;
++extern cycles_t vtss_profile_clk_pmi;
++extern cycles_t vtss_profile_cnt_pmu;
++extern cycles_t vtss_profile_clk_pmu;
++extern cycles_t vtss_profile_cnt_sys;
++extern cycles_t vtss_profile_clk_sys;
++extern cycles_t vtss_profile_cnt_bts;
++extern cycles_t vtss_profile_clk_bts;
++extern cycles_t vtss_profile_cnt_vma;
++extern cycles_t vtss_profile_clk_vma;
++extern cycles_t vtss_profile_cnt_pgp;
++extern cycles_t vtss_profile_clk_pgp;
++extern cycles_t vtss_profile_cnt_cpy;
++extern cycles_t vtss_profile_clk_cpy;
++extern cycles_t vtss_profile_cnt_vld;
++extern cycles_t vtss_profile_clk_vld;
++extern cycles_t vtss_profile_cnt_unw;
++extern cycles_t vtss_profile_clk_unw;
++
++#define VTSS_PROFILE(name, expr) do {   \
++    cycles_t start_time = get_cycles(); \
++    (expr);                             \
++    vtss_profile_cnt_##name++;          \
++    vtss_profile_clk_##name += get_cycles() - start_time; \
++  } while (0)
++
++#define VTSS_PROFILE_PRINT(func, ...) do { \
++    func(__VA_ARGS__ "#ctx=%15lld n=%9lld\n", \
++        vtss_profile_clk_ctx, vtss_profile_cnt_ctx); \
++    func(__VA_ARGS__ "#pmi=%15lld n=%9lld\n", \
++        vtss_profile_clk_pmi, vtss_profile_cnt_pmi/2); \
++    func(__VA_ARGS__ "*pmu=%15lld n=%9lld (%.2lld.%02lld%%)\n", \
++        vtss_profile_clk_pmu, vtss_profile_cnt_pmu, \
++        (vtss_profile_clk_pmu*10000/(vtss_profile_clk_ctx+vtss_profile_clk_pmi+1))/100, \
++        (vtss_profile_clk_pmu*10000/(vtss_profile_clk_ctx+vtss_profile_clk_pmi+1))%100); \
++    func(__VA_ARGS__ "*sys=%15lld n=%9lld (%.2lld.%02lld%%)\n", \
++        vtss_profile_clk_sys, vtss_profile_cnt_sys, \
++        (vtss_profile_clk_sys*10000/(vtss_profile_clk_ctx+vtss_profile_clk_pmi+1))/100, \
++        (vtss_profile_clk_sys*10000/(vtss_profile_clk_ctx+vtss_profile_clk_pmi+1))%100); \
++    func(__VA_ARGS__ "*bts=%15lld n=%9lld (%.2lld.%02lld%%)\n", \
++        vtss_profile_clk_bts, vtss_profile_cnt_bts, \
++        (vtss_profile_clk_bts*10000/(vtss_profile_clk_ctx+vtss_profile_clk_pmi+1))/100, \
++        (vtss_profile_clk_bts*10000/(vtss_profile_clk_ctx+vtss_profile_clk_pmi+1))%100); \
++    func(__VA_ARGS__ "*stk=%15lld n=%9lld (%.2lld.%02lld%%)\n", \
++        vtss_profile_clk_stk, vtss_profile_cnt_stk, \
++        (vtss_profile_clk_stk*10000/(vtss_profile_clk_ctx+vtss_profile_clk_pmi+1))/100, \
++        (vtss_profile_clk_stk*10000/(vtss_profile_clk_ctx+vtss_profile_clk_pmi+1))%100); \
++    func(__VA_ARGS__ ".unw=%15lld n=%9lld (%.2lld.%02lld%%)\n", \
++        vtss_profile_clk_unw, vtss_profile_cnt_unw, \
++        (vtss_profile_clk_unw*10000/(vtss_profile_clk_stk+1))/100, \
++        (vtss_profile_clk_unw*10000/(vtss_profile_clk_stk+1))%100); \
++    func(__VA_ARGS__ "..vl=%15lld n=%9lld (%.2lld.%02lld%%)\n", \
++        vtss_profile_clk_vld, vtss_profile_cnt_vld, \
++        (vtss_profile_clk_vld*10000/(vtss_profile_clk_unw+1))/100, \
++        (vtss_profile_clk_vld*10000/(vtss_profile_clk_unw+1))%100); \
++    func(__VA_ARGS__ "..vm=%15lld n=%9lld (%.2lld.%02lld%%)\n", \
++        vtss_profile_clk_vma, vtss_profile_cnt_vma, \
++        (vtss_profile_clk_vma*10000/(vtss_profile_clk_unw+1))/100, \
++        (vtss_profile_clk_vma*10000/(vtss_profile_clk_unw+1))%100); \
++    func(__VA_ARGS__ "...c=%15lld n=%9lld (%.2lld.%02lld%%)\n", \
++        vtss_profile_clk_cpy, vtss_profile_cnt_cpy, \
++        (vtss_profile_clk_cpy*10000/(vtss_profile_clk_vma+1))/100, \
++        (vtss_profile_clk_cpy*10000/(vtss_profile_clk_vma+1))%100); \
++    func(__VA_ARGS__ "...p=%15lld n=%9lld (%.2lld.%02lld%%)\n", \
++        vtss_profile_clk_pgp, vtss_profile_cnt_pgp, \
++        (vtss_profile_clk_pgp*10000/(vtss_profile_clk_vma+1))/100, \
++        (vtss_profile_clk_pgp*10000/(vtss_profile_clk_vma+1))%100); \
++  } while(0)
++
++#else  /* VTSS_DEBUG_PROFILE */
++#define VTSS_PROFILE(name, expr) (expr)
++#define VTSS_PROFILE_PRINT(func, ...)
++#endif /* VTSS_DEBUG_PROFILE */
++
++#if defined(CONFIG_PREEMPT_NOTIFIERS) && (!defined(CONFIG_TRACEPOINTS))
++#define VTSS_USE_PREEMPT_NOTIFIERS 1 /* Use backup scheme */
++#endif
++#define VTSS_GET_TASK_STRUCT 1 /* Prevent task struct early destruction */
++
++#ifdef VTSS_AUTOCONF_USER_COPY_WITHOUT_CHECK
++#define vtss_copy_from_user _copy_from_user
++#else
++#define vtss_copy_from_user copy_from_user
++#endif
++
++#ifndef preempt_enable_no_resched
++#define preempt_enable_no_resched() preempt_enable()
++#endif
++
++#if defined(CONFIG_PREEMPT_RT) || defined(CONFIG_PREEMPT_RT_FULL)
++#define VTSS_CONFIG_REALTIME
++#ifndef VTSS_CONFIG_INTERNAL_MEMORY_POOL
++#define VTSS_CONFIG_INTERNAL_MEMORY_POOL 1
++#endif
++#endif
++
++#ifdef VTSS_CONFIG_REALTIME
++#define vtss_spin_lock_init(lock)                raw_spin_lock_init(lock)
++#define vtss_spin_trylock(lock)                  raw_spin_trylock(lock)
++#define vtss_spin_lock(lock)                     raw_spin_lock(lock)
++#define vtss_spin_unlock(lock)                   raw_spin_unlock(lock)
++#define vtss_spin_lock_irqsave(lock, flags)      raw_spin_lock_irqsave(lock, flags)
++#define vtss_spin_trylock_irqsave(lock, flags)   raw_spin_trylock_irqsave(lock, flags)
++#define vtss_spin_unlock_irqrestore(lock, flags) raw_spin_unlock_irqrestore(lock, flags)
++#else
++#define vtss_spin_lock_init(lock)                spin_lock_init(lock)
++#define vtss_spin_trylock(lock)                  spin_trylock(lock)
++#define vtss_spin_lock(lock)                     spin_lock(lock)
++#define vtss_spin_unlock(lock)                   spin_unlock(lock)
++#define vtss_spin_lock_irqsave(lock, flags)      spin_lock_irqsave(lock, flags)
++#define vtss_spin_trylock_irqsave(lock, flags)   spin_trylock_irqsave(lock, flags)
++#define vtss_spin_unlock_irqrestore(lock, flags) spin_unlock_irqrestore(lock, flags)
++#endif
++
++#ifdef VTSS_CONFIG_INTERNAL_MEMORY_POOL
++#define vtss_get_free_pages(gfp_mask, order) vtss_get_free_pages_internal(gfp_mask, order)
++#define vtss_free_pages(addr, order)         vtss_free_pages_internal(addr, order)
++#define vtss_get_free_page(gfp_mask)         vtss_get_free_page_internal(gfp_mask)
++#define vtss_free_page(addr)                 vtss_free_page_internal(addr)
++#define vtss_kmalloc(size, gfp_mask)         vtss_kmalloc_internal(size, gfp_mask)
++#define vtss_kfree(item)                     vtss_kfree_internal(item)
++#else
++#define vtss_get_free_pages(gfp_mask, order) __get_free_pages((gfp_mask) | ((gfp_mask) == GFP_NOWAIT ? __GFP_NORETRY : 0) | __GFP_NOWARN, order)
++#define vtss_free_pages(addr, order)         free_pages(addr, order)
++#define vtss_get_free_page(gfp_mask)         __get_free_page((gfp_mask) | ((gfp_mask) == GFP_NOWAIT ? __GFP_NORETRY : 0) | __GFP_NOWARN)
++#define vtss_free_page(addr)                 free_page(addr)
++#define vtss_kmalloc(size, gfp_mask)         kmalloc(size, gfp_mask)
++#define vtss_kfree(item)                     kfree(item)
++#endif
++
++#define vtss_spin_lock_irqsave_timeout(lock, flags, times)\
++({\
++    int rc = 0;\
++    int cnt = 0;\
++    while(!(rc = vtss_spin_trylock_irqsave(lock, flags)))\
++    {\
++        if(++cnt >= (times)) {\
++            TRACE("Cannot acquire lock");\
++            break;\
++        }\
++    }\
++    rc;\
++})\
++
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,1,0)
++#define vtss_user_mode(regs) user_mode(regs)
++#else
++#define vtss_user_mode(regs) user_mode_vm(regs)
++#endif
++
++#endif /* _VTSS_CONFIG_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/vtss_version.h b/drivers/misc/intel/sepdk/vtsspp/vtss_version.h
+new file mode 100644
+index 000000000000..cdd3ff8c452d
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/vtss_version.h
+@@ -0,0 +1,4 @@
++#define VTSS_VERSION_MAJOR    1
++#define VTSS_VERSION_MINOR    8
++#define VTSS_VERSION_REVISION 149
++#define VTSS_VERSION_STRING   "v1.8.149-564228 Intel(R) VTune(TM) Amplifier"
+diff --git a/drivers/misc/intel/sepdk/vtsspp/vtsscfg.h b/drivers/misc/intel/sepdk/vtsspp/vtsscfg.h
+new file mode 100644
+index 000000000000..7fa866cf379b
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/vtsscfg.h
+@@ -0,0 +1,78 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSSCFG_H_
++#define _VTSSCFG_H_
++
++#include "vtssrtcfg.h"
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++#define VTSS_CFG_SPACE_SIZE 0x2000
++#define VTSS_CFG_CHAIN_SIZE 0x0200
++
++#pragma pack(push)
++// main per process configuration
++typedef struct
++{
++    // CPU event version 1
++    int cpuevent_count_v1;
++    cpuevent_cfg_v1_t cpuevent_cfg_v1[VTSS_CFG_CHAIN_SIZE];
++    unsigned char cpuevent_namespace_v1[VTSS_CFG_SPACE_SIZE * 16];
++
++    // OS event configuration
++    int osevent_count;
++    osevent_cfg_t osevent_cfg[VTSS_CFG_CHAIN_SIZE];
++
++    // branch tracing configuration
++    bts_cfg_t bts_cfg;
++
++    // last branch tracing configuration
++    lbr_cfg_t lbr_cfg;
++
++    // processor tracing configuration
++    ipt_cfg_t ipt_cfg;
++    
++    // tracing configuration
++    trace_cfg_t trace_cfg;
++    unsigned char trace_space[VTSS_CFG_SPACE_SIZE];
++
++    //stack configuration
++    unsigned long stk_sz[vtss_stk_last]; //stk_page_cnt*stk_page_size
++    unsigned long stk_pg_sz[vtss_stk_last];
++
++} process_cfg_t;
++
++#pragma pack(pop)
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif /* _VTSSRTCFG_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/vtsserr.h b/drivers/misc/intel/sepdk/vtsspp/vtsserr.h
+new file mode 100644
+index 000000000000..560f9f3c06ca
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/vtsserr.h
+@@ -0,0 +1,56 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSSERR_H_
++#define _VTSSERR_H_
++
++/**
++//
++// VTSS Error Codes
++//
++*/
++
++#define VTSS_SUCCESS         0
++#define VTSS_ERR_INTERNAL   -1
++#define VTSS_ERR_BADARG     -2
++#define VTSS_ERR_NOMEMORY   -3
++#define VTSS_ERR_NORESOURCE -4
++#define VTSS_ERR_BUFFERFULL -5
++#define VTSS_ERR_NOTFOUND   -6
++#define VTSS_ERR_NOSUPPORT  -7
++#define VTSS_ERR_BUSY       -8
++#define VTSS_ERR_DENIED     -9
++
++/// VTSS procfs errors
++/// Change this value leads the fixes in client collector function "getStatus"
++#define VTSS_ERR_INIT_FAILED -1001
++#define VTSS_ERR_START_IN_RUN -1002
++#define VTSS_ERR_RING_BUFFER_DENIED -1003
++
++#define VTSS_ERR_OVERTIME -1003
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/vtsspp/vtssevids.h b/drivers/misc/intel/sepdk/vtsspp/vtssevids.h
+new file mode 100644
+index 000000000000..5ebad0903e39
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/vtssevids.h
+@@ -0,0 +1,122 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSSEVIDS_H_
++#define _VTSSEVIDS_H_
++
++#ifdef __cplusplus
++extern "C"
++{
++#endif
++
++/**
++// Event ID specified through an external configuration file
++*/
++#define VTSS_EVID_EXTFLAG 0x80000000
++#define VTSS_EVID_FIXED   0x40000000
++#define VTSS_EVID_UNCORE  0x20000000
++
++/**
++// Event ID format: 32-bit integer:
++//   16 most significant bits encode event type,
++//   16 least significant bits encode event subtype
++// Event type indicates a functional unit within a processor, 
++//   chipset, or operating system whose parameters are to be measured.
++// Event subtype enables differentiation between different events pertaining
++//   to the same functional unit
++*/
++#define VTSS_EVTYPE_CPUCORE     1
++#define VTSS_EVTYPE_CPUFE       2
++#define VTSS_EVTYPE_CPUEXEC     3
++#define VTSS_EVTYPE_CPURETR     4
++#define VTSS_EVTYPE_CPUCACHE    5
++#define VTSS_EVTYPE_CPUBUS      6
++#define VTSS_EVTYPE_CPUPWR      7
++#define VTSS_EVTYPE_CPUIOQ      8
++#define VTSS_EVTYPE_FIXED       9
++
++#define VTSS_EVID_FIXED_INSTRUCTIONS_RETIRED (((VTSS_EVTYPE_FIXED << 16) + 0) | VTSS_EVID_FIXED)
++#define VTSS_EVID_FIXED_NONHALTED_CLOCKTICKS (((VTSS_EVTYPE_FIXED << 16) + 1) | VTSS_EVID_FIXED)
++#define VTSS_EVID_FIXED_NONHALTED_REFTICKS   (((VTSS_EVTYPE_FIXED << 16) + 2) | VTSS_EVID_FIXED)
++
++#define VTSS_EVID_NONHALTED_CLOCKTICKS ((VTSS_EVTYPE_CPUCORE << 16) + 0)
++#define VTSS_EVID_INSTRUCTIONS_RETIRED ((VTSS_EVTYPE_CPURETR << 16) + 0)
++
++#define VTSS_EVID_LLCACHE_REFS   ((VTSS_EVTYPE_CPUCACHE << 16) + 0)
++#define VTSS_EVID_LLCACHE_MISSES ((VTSS_EVTYPE_CPUCACHE << 16) + 1)
++#define VTSS_EVID_L1CACHE_MISSES ((VTSS_EVTYPE_CPUCACHE << 16) + 2)
++#define VTSS_EVID_MEMLOAD_L2MISS ((VTSS_EVTYPE_CPUCACHE << 16) + 3)
++
++#define VTSS_EVID_BRANCHES_RETIRED ((VTSS_EVTYPE_CPURETR << 16) + 1)
++#define VTSS_EVID_BRANCHES_MISPRED ((VTSS_EVTYPE_CPURETR << 16) + 2)
++
++#define VTSS_EVID_BDR   ((VTSS_EVTYPE_CPUBUS << 16) + 0)
++#define VTSS_EVID_BHITM ((VTSS_EVTYPE_CPUBUS << 16) + 1)
++
++#define VTSS_EVID_RESSTALL_ANY ((VTSS_EVTYPE_CPUFE << 16) + 0)
++#define VTSS_EVID_RSDISP_NONE  ((VTSS_EVTYPE_CPUFE << 16) + 1)
++
++/**
++// Event Modifier format: 32-bit integer, wherein two least significant bits encode 
++//   the privilege level to collect events for, as follows:
++//   00 - Use default event settings, no privilege level specified
++//   01 - User events
++//   10 - Supervisor events
++//   11 - Any privilege level
++*/
++#define VTSS_EVMOD_DEFAULT  0x00000
++#define VTSS_EVMOD_USER     0x10000
++#define VTSS_EVMOD_SYSTEM   0x20000
++#define VTSS_EVMOD_ALL      0x30000
++#define VTSS_EVMOD_PEBS     0x80000 // event should be counted via PEBS mechanism
++#define VTSS_EVMOD_CNT1    0x100000 // counter 1 used (P6 and Core families)
++#define VTSS_EVMOD_CNT3    0x300000 // counter 0-3 used (Core i7 family)
++
++#pragma pack(push, 1)
++
++    typedef struct
++    {
++        unsigned int evsel:8;   /// Event selection
++        unsigned int umask:8;   /// Unit mask (event modifier)
++
++        unsigned int mode:2;    /// OS/USER mode events
++        unsigned int edge:1;    /// Edge detection
++        unsigned int pebs:1;    /// PEBS enable
++        unsigned int cnto:3;    /// Counter offset (added to the default counter MSR index)
++        unsigned int invt:1;    /// Invert comparison results
++
++        unsigned int cmask:8;   /// Counter mask (threshold)
++
++    } event_modifier_t;
++
++#pragma pack(pop)
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/vtsspp/vtssrtcfg.h b/drivers/misc/intel/sepdk/vtsspp/vtssrtcfg.h
+new file mode 100644
+index 000000000000..d2102fd52140
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/vtssrtcfg.h
+@@ -0,0 +1,418 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSSRTCFG_H_
++#define _VTSSRTCFG_H_
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++/**
++//
++// VTSS Run-Time Configuration Support
++//
++*/
++
++/**
++// Formats of request structures
++*/
++#define VTSS_CFGREQ_CANCEL      0x80000000  // ORed with reqtype to indicate the cancelation of 
++                                            // the related profiling activity
++
++#define VTSS_CFGREQ_VOID        0x00    // indicates the end of configuration space
++#define VTSS_CFGREQ_CPUEVENT    0x01
++#define VTSS_CFGREQ_CHIPEVENT   0x02
++#define VTSS_CFGREQ_OSEVENT     0x03
++#define VTSS_CFGREQ_TRIGGER     0x04
++#define VTSS_CFGREQ_APPSTATE    0x05
++#define VTSS_CFGREQ_APISTATE    0x06
++#define VTSS_CFGREQ_TRACE       0x07
++#define VTSS_CFGREQ_INJECT      0x08
++#define VTSS_CFGREQ_ROOT        0x09
++#define VTSS_CFGREQ_BTS         0x0a
++#define VTSS_CFGREQ_EXECTX      0x0b
++#define VTSS_CFGREQ_TBS         0x0c
++#define VTSS_CFGREQ_LBR         0x0d
++#define VTSS_CFGREQ_STKSTATE    0x0e
++#define VTSS_CFGREQ_CPUEVENT_V1 0x0f
++#define VTSS_CFGREQ_IPT         0x10
++#define VTSS_CFGREQ_STK         0x11
++
++#define VTSS_CFGREASON_UNCOND   0x00    // start profiling immediately
++#define VTSS_CFGREASON_APPSTATE 0x01    // start when the specified application state is encountered
++#define VTSS_CFGREASON_APISTATE 0x02    // start when the specified API state is encountered
++#define VTSS_CFGREASON_EVTSTATE 0x04    // start when the specified event state is encountered
++#define VTSS_CFGREASON_TRIGGER  0x08    // start when triggered by a trigger point
++#define VTSS_CFGREASON_STKSTATE 0x10    // start when the specified call stack sate is encountered
++#define VTSS_CFGREASON_EXCPLUS  0x20    // start when encountered a specified state and generate an exception
++#define VTSS_CFGREASON_EXCONLY  0x60    // generate an exception and continue monitoring the specified states 
++#define VTSS_CFGREASON_SUSPEND  0x80    // start when explicitly resumed by controlling software
++
++/*
++   Some of these values are duplicated in COLCFG_LIST that is used during reading the trace.
++   Currently the following values are used
++    COLCFG(stack, 10)         #define VTSS_CFGTRACE_STACKS    0x0400
++    COLCFG(cpu, 13)           #define VTSS_CFGTRACE_TBS       0x2000
++    COLCFG(power_active, 27)  #define VTSS_CFGTRACE_PWRACT    0x400000
++    COLCFG(power_idle, 28)    #define VTSS_CFGTRACE_PWRIDLE   0x800000       
++
++   The data should be consistent. Please, do not use more then 32 bits here to avoid inconsistent with COLCFG flags.
++   Match the data with COLCFG list defined in collectunits1/traceformat/include/traceformat.h
++*/
++#define VTSS_CFGTRACE_CTX       0x0001    // trace context switches
++#define VTSS_CFGTRACE_CPUEV     0x0002    // trace processor event counts
++#define VTSS_CFGTRACE_SWCFG     0x0004    // trace profiling configuration (event chain parameters)
++#define VTSS_CFGTRACE_HWCFG     0x0008    // trace system configuration (pack:core:thread number/map/id; chipset id)
++#define VTSS_CFGTRACE_CHIPEV    0x0010    // trace chipset event counts
++#define VTSS_CFGTRACE_SAMPLE    0x0020    // trace samples
++#define VTSS_CFGTRACE_TP        0x0040    // trace trigger point information
++#define VTSS_CFGTRACE_OSEV      0x0080    // trace operating system event counts
++#define VTSS_CFGTRACE_MODULE    0x0100    // trace module load information
++#define VTSS_CFGTRACE_PROCTHR   0x0200    // trace thread and process creation/destruction information
++#define VTSS_CFGTRACE_STACKS    0x0400    // trace stack samples
++#define VTSS_CFGTRACE_BRANCH    0x0800    // trace all taken branches
++#define VTSS_CFGTRACE_EXECTX    0x1000    // trace execution context
++#define VTSS_CFGTRACE_TBS       0x2000    // trace time-based samples
++#define VTSS_CFGTRACE_LASTBR    0x4000    // trace last taken branches
++#define VTSS_CFGTRACE_TREE      0x8000    // trace spawned processes
++#define VTSS_CFGTRACE_SYNCARG   0x10000   // trace synchronization function parameters
++#define VTSS_CFGTRACE_TAGGRA    0x20000   // aggravate the behavior of threads
++#define VTSS_CFGTRACE_DBGSAMP   0x40000   // generate debug exception upon event samples
++#define VTSS_CFGTRACE_THRNORM   0x80000   // normalize thread-to-processor subscription
++#define VTSS_CFGTRACE_LBRCSTK   0x100000  // collect LBR call stacks
++#define VTSS_CFGTRACE_IPT       0x200000  // collect IPT sample trace
++#define VTSS_CFGTRACE_PWRACT    0x400000  // power active
++#define VTSS_CFGTRACE_PWRIDLE   0x800000  // power idle
++#define VTSS_CFGTRACE_CLRSTK    0x1000000 // unwind stacks using framepointers
++
++#define VTSS_CFGSTATE_SYS       0x80000000  // system function ID space
++
++#define VTSS_CFGMUX_NONE        0       // multiplexion is disabled
++#define VTSS_CFGMUX_TIME        1       // time-based event multiplexion algorithm
++#define VTSS_CFGMUX_SEQ         2       // event alternation algorithm
++#define VTSS_CFGMUX_MST         3       // master event in event alternation algorithm
++#define VTSS_CFGMUX_SLV         4       // slave event in event alternation algorithm
++#define VTSS_CFGMUX_PEBS       -1       // event should be counted via PEBS mechanism
++
++#define VTSS_CFGEVST_IGNORED    0       // the event is not used for state determination
++#define VTSS_CFGEVST_EXCLUSIVE  1       // immediate triggering mode when event state is determined
++#define VTSS_CFGEVST_COMBINED   2       // event state comprises trends of multiple events
++
++#pragma pack(push, 1)
++
++// event configuration
++typedef struct
++{
++    int reqtype;    // serves both to pass the request to the driver and 
++                    // to indicate a present cfg parameter within the driver
++    int event_id;
++    int interval;
++    int modifier;       // user-supplied event bit-mask
++    int mux_grp;        // multiplexion group
++    int mux_alg;        // multiplexion algorithm
++    int mux_arg;        // multiplexion algorithm's argument
++    int trend;          // the trend of event distribution function (degrees, +/-90)
++    int trigger_mode;   // indicates how the state of this event triggers the monitoring:
++                        //   Exclusive mode triggers monitoring immediately
++                        //   Combined mode enables monitoring if all other events have an appropriate trend
++
++    int extra_msr;          // an extra MSR to be programmed in conjunction with the event
++    long long extra_msk;    // a mask the extra MSR is to be programmed with
++
++    int dbg_samples;    // sample count to generate a debug exception
++
++} cpuevent_cfg_t;
++
++typedef struct
++{
++    unsigned idx;               // MSR index
++    unsigned long long val;     // MSR value
++    unsigned long long msk;     // MSR AND-mask
++
++} msrcfg_t;
++
++typedef struct
++{
++    int reqtype;
++    int reqsize;        // size of record including event name and description
++    int event_id;       // unique event ID for the current tracing session
++    int interval;       // sampling interval (non-negative number)
++
++    int mux_grp;        // multiplexion group
++    int mux_alg;        // multiplexion algorithm
++    int mux_arg;        // multiplexion algorithm's argument
++
++    int name_off;       // offset of the event name within the buffer
++    int name_len;       // event name length including '\0'
++    int desc_off;       // offset of the event description within the buffer
++    int desc_len;       /// event description length including '\0'
++
++    msrcfg_t selmsr;    // event selection MSR
++    msrcfg_t cntmsr;    // counter MSR
++    msrcfg_t extmsr;    // extra event configuration MSR
++
++} cpuevent_cfg_v1_t;
++
++typedef struct
++{
++    int reqtype;
++    int event_id;
++    int interval;
++    int modifier;   // user-supplied event bit-mask
++    int mux_grp;    // multiplexion group
++    int mux_alg;    // multiplexion algorithm
++    int mux_arg;    // multiplexion algorithm's argument
++    int trend;          // the trend of event distribution function (degrees, +/-90)
++    int trigger_mode;   // indicates how the state of this event triggers the monitoring:
++                        //   Exclusive mode triggers monitoring immediately
++                        //   Combined mode enables monitoring if all other events have an appropriate trend
++
++    int extra_msr;          // an extra MSR to be programmed in conjunction with the event
++    long long extra_msk;    // a mask the extra MSR is to be programmed with
++
++} chipevent_cfg_t;
++
++typedef struct
++{
++    int reqtype;
++    int event_id;
++    /// all fields below are currently unused
++    int interval;
++    int modifier;   // user-supplied event bit-mask
++    int mux_grp;    // multiplexion group
++    int mux_alg;    // multiplexion algorithm
++    int mux_arg;    // multiplexion algorithm's argument
++
++} osevent_cfg_t;
++
++// branch tracing configuration
++typedef struct
++{
++    int reqtype;
++    int brcount;    // number of branches to record
++    int modifier;   // user-supplied bit-mask (shares some bits with those of event modifier)
++
++} bts_cfg_t;
++
++// last branch tracing configuration
++typedef struct
++{
++    int reqtype;
++    int brcount;    // number of branches to record
++    int modifier;   // user-supplied bit-mask (shares some bits with those of event modifier)
++
++} lbr_cfg_t;
++
++// processor trace configuration
++typedef enum 
++{
++    vtss_iptmode_full = 1,
++    vtss_iptmode_tips = 2,
++    vtss_iptmode_time = 4,
++    vtss_iptmode_ring0 = 8,
++    vtss_iptmode_ucode = 16,
++    vtss_iptmode_mark  = 32
++
++} ipt_mode_e;
++
++typedef struct
++{
++    int reqtype;
++    int size;       // the size of IPT memory buffer to collect
++    unsigned int mode;       // IPT operation mode (single-buffer, circular buffer, trace on branch overflow, trace always, sample, contiguous, etc.)
++} ipt_cfg_t;
++
++// tame-based sampling configuration
++typedef struct
++{
++    int reqtype;
++    int interval;   // in system time units
++
++} tbs_cfg_t;
++
++// execution context tracing configuration
++typedef struct
++{
++    int reqtype;
++    int base;       // base register
++    int index;      // index register
++    int scale;      // multiplier
++    int imm;        // offset
++    int size;       // data size
++    long long ips;  // starting instruction pointer of a code region to read memory contents for
++    long long ipe;  // ending instruction pointer of a code region to to read memory contents for
++
++    /// IMPORTANT NOTICE:
++    ///   Set MSB in base and index register fields indictes that the remaining bits of the fields
++    ///     encode an index to another exectx_cfg structure whose simulated results should be used 
++    ///     instead of a register to read memory contents
++    ///   All set bits in base and index fields indicate that a corresponding field is not involved
++    //      in memory address calculation
++
++} exectx_cfg_t;
++
++// collection triggering configuration
++typedef struct
++{
++    int reqtype;
++    int reason;
++    int duration;   /// profiling duration, seconds
++
++} coltrigger_cfg_t;
++
++// application state configuration
++typedef struct
++{
++    int reqtype;
++    int sim_thread_count;
++    int range_count;
++    struct
++    {
++        long long start;
++        long long end;
++
++    } range[1];
++
++} appstate_cfg_t;
++
++// API-based application state configuration
++typedef struct
++{
++    int reqtype;
++    int sim_thread_count;
++    int range_count;
++    struct
++    {
++        int function_id;
++        int entry_count;
++
++    } range[1];
++
++} apistate_cfg_t;
++
++// Callstack-based application state configuration
++typedef struct
++{
++    int reqtype;
++    int sim_thread_count;
++    int stack_count;
++    struct
++    {
++        int size;
++        long long sample;
++        struct
++        {
++            long long caller;
++
++        } stack[1];
++
++    } chain[1];
++
++} stkstate_cfg_t;
++
++// tracing configuration
++typedef struct
++{
++    int reqtype;
++    int trace_flags;
++    int namelen;
++    char name[1];
++
++} trace_cfg_t;
++
++// injection configuration
++typedef struct
++{
++    int reqtype;
++    void* libaddr;
++    int namelen;
++    char name[1];
++
++} inject_cfg_t;
++
++// supervisor configuration
++typedef struct
++{
++    int reqtype;
++    long long root_id;
++
++} root_cfg_t;
++
++// stack incomming structure
++typedef enum 
++{
++    vtss_stk_user = 0, //vtss_stack_kernel, vtss_stack_common
++    vtss_stk_last
++} stk_type_e;
++
++typedef struct
++{
++    int reqtype;
++    stk_type_e stktype;
++    unsigned long long stk_sz;// size of stack in bytes
++    unsigned long long stk_pg_sz; // stack page size
++
++} stk_cfg_t;
++
++#pragma pack(pop)
++
++/**
++// Implementation and usage hints
++//
++//
++/// event configuration - substitutes current chains
++/// [req:cpuevent][idx][interval]<[mux_grp][mux_alg][mux_arg]>; <> - must be 0 by default
++/// [req:chipevent][idx]<[interval][mux_grp][mux_alg][mux_arg]>
++/// [req:osevent][idx]<[interval][mux_grp][mux_alg][mux_arg]>
++
++/// collection triggering configuration - the collection is triggered on and off 
++///                                       depending on the presence of the specified condition
++/// [req:trigger][reason: <appstate>|<trigger point>|<unconditional>]
++
++/// application state configuration
++/// [req:appstate][sim_thread_no][ranges_no]{[range: [start][end]]...}
++
++/// API-based application state configuration
++/// [req:apistate][sim_thread_no][ranges_no]{[range: [func_id][entry_count]]...}
++
++/// tracing configuration
++/// [req:trace]{[trace parameters: 1 bit per tracing group]}[namelen][name]
++
++/// injection configuration
++/// [req:inject][namelen][name]
++
++/// [[req:xxx][cancel]] - turns the corresponding request/functonal block to its default mode
++/// [req:root][root id] - some requests may require root id
++//
++*/
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif
+diff --git a/drivers/misc/intel/sepdk/vtsspp/vtsstrace.h b/drivers/misc/intel/sepdk/vtsspp/vtsstrace.h
+new file mode 100644
+index 000000000000..12cf90e76bc6
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/vtsstrace.h
+@@ -0,0 +1,286 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSSTRACE_H_
++#define _VTSSTRACE_H_
++
++/**
++//
++// VTune Trace File Format for Stack Sampling
++//
++*/
++
++/// flags to initialize the mandatory flagword member of each trace record
++#define UEC_EMPTYREC    0x00000000
++#define UEC_OVERFLOW    0x80000000
++#define UEC_EXTENDED    0x40000000
++#define UEC_VECTORED    0x20000000
++#define UEC_SEQMARK     0x10000000
++#define UEC_MAGIC       0x08000000
++
++#define UEC_LEAF0       0x00000000
++#define UEC_LEAF1       0x02000000
++#define UEC_LEAF2       0x04000000
++#define UEC_LEAF3       0x06000000
++
++/// Leaf 0 flags (default)
++#define UEC_RECSIZE     0x00000001
++#define UEC_ACTIVITY    0x00000002
++#define UEC_VRESIDX     0x00000004
++#define UEC_CPUIDX      0x00000008
++#define UEC_USRLVLID    0x00000010
++#define UEC_EXTRA       0x00000020  /// may be used as MUX_GROUP for events
++#define UEC_CPUTSC      0x00000040
++#define UEC_CPUEVENT    0x00000080
++#define UEC_REALTSC     0x00000100
++#define UEC_CHPSETEV    0x00000200
++#define UEC_THREADID    0x00000400
++#define UEC_PROCESSID   0x00000800
++#define UEC_EXECADDR    0x00001000
++#define UEC_REFADDR     0x00002000
++#define UEC_EXEPHYSADDR 0x00004000
++#define UEC_REFPHYSADDR 0x00008000
++#define UEC_PWREVENT    0x00010000
++#define UEC_SYSTRACE    0x00020000
++#define UEC_LARGETRACE  0x00040000
++#define UEC_USERTRACE   0x00080000
++#define UEC_CPURECTSC   0x00100000
++#define UEC_REALRECTSC  0x00200000
++#define UEC_TPADDR      0x00400000
++#define UEC_TPIDX       0x00800000
++#define UEC_PADDING     0x01000000
++
++/// same specification defining L0 names
++#define UECL0_RECSIZE       0x00000001
++#define UECL0_ACTIVITY      0x00000002
++#define UECL0_VRESIDX       0x00000004
++#define UECL0_CPUIDX        0x00000008
++#define UECL0_USRLVLID      0x00000010
++#define UECL0_EXTRA         0x00000020
++#define UECL0_CPUTSC        0x00000040
++#define UECL0_CPUEVENT      0x00000080
++#define UECL0_REALTSC       0x00000100
++#define UECL0_CHPSETEV      0x00000200
++#define UECL0_THREADID      0x00000400
++#define UECL0_PROCESSID     0x00000800
++#define UECL0_EXECADDR      0x00001000
++#define UECL0_REFADDR       0x00002000
++#define UECL0_EXEPHYSADDR   0x00004000
++#define UECL0_REFPHYSADDR   0x00008000
++#define UECL0_PWREVENT      0x00010000
++#define UECL0_SYSTRACE      0x00020000
++#define UECL0_LARGETRACE    0x00040000
++#define UECL0_USERTRACE     0x00080000
++#define UECL0_CPURECTSC     0x00100000
++#define UECL0_REALRECTSC    0x00200000
++#define UECL0_TPADDR        0x00400000
++#define UECL0_TPIDX         0x00800000
++#define UECL0_PADDING       0x01000000
++
++/// Leaf 1 flags
++#define UECL1_ACTIVITY      0x00000001
++#define UECL1_VRESIDX       0x00000002
++#define UECL1_CPUIDX        0x00000004
++#define UECL1_USRLVLID      0x00000008
++#define UECL1_CPUTSC        0x00000010
++#define UECL1_REALTSC       0x00000020
++#define UECL1_MUXGROUP      0x00000040
++#define UECL1_CPUEVENT      0x00000080
++#define UECL1_CHPSETEV      0x00000100
++#define UECL1_OSEVENT       0x00000200
++#define UECL1_EXECADDR      0x00000400
++#define UECL1_REFADDR       0x00000800
++#define UECL1_EXEPHYSADDR   0x00001000
++#define UECL1_REFPHYSADDR   0x00002000
++#define UECL1_TPIDX         0x00004000
++#define UECL1_TPADDR        0x00008000
++#define UECL1_PWREVENT      0x00010000
++#define UECL1_CPURECTSC     0x00020000
++#define UECL1_REALRECTSC    0x00040000
++#define UECL1_PADDING       0x00080000
++#define UECL1_REFID         0x00100000
++#define UECL1_UNKNOWN1      0x00200000
++#define UECL1_SYSTRACE      0x00400000
++#define UECL1_LARGETRACE    0x00800000
++#define UECL1_CODETRACE     0x00800000  /// compatibility synonym
++#define UECL1_USERTRACE     0x01000000
++
++#define UECL1_EXT_CPUFREQ   0x00000001
++
++/// Leaf 2 flags
++#define UECL2_GLOBALTSC     0x00000001  /// recomputed global timestamp for trace indexing purposes
++#define UECL2_FILEOFFSET    0x00000002  /// trace file offset for indexing purposes
++#define UECL2_LARGETRACE    0x01000000  /// large trace record to contain trace indices
++
++/// UEC Magic Values
++#define UEC_MAGICVALUE  0xaddedefa
++#define UEC_MAGICUSR    0xdefadefa
++
++/// semantic IDs for activity
++#define SEMID_ACTIVITY "bit-activity"
++#define SEMID_ACTMARK  "byte-actmark"
++
++/// activity flags
++#define UECACT_USERDEFINED    0x80000000
++#define UECACT_SWITCHFROM     0x00000000
++#define UECACT_SWITCHTO       0x00000001
++#define UECACT_SWITCHREALTO   0x00000002
++#define UECACT_SAMPLED        0x00000004
++#define UECACT_APC            0x00000008
++#define UECACT_EXCEPTION      0x00000010
++#define UECACT_INTERRUPT      0x00000020
++#define UECACT_PROBED         0x00000040
++#define UECACT_CODETRACE      0x00000080
++#define UECACT_FREQUENCY      0x00000100
++#define UECACT_MODULELOAD     0x00000200
++#define UECACT_MODULEUNLOAD   0x00000400
++#define UECACT_TRIGGERED      0x00000800
++#define UECACT_NEWTASK        0x00001000
++#define UECACT_OLDTASK        0x00002000
++#define UECACT_SYNCHRO        0x00004000
++#define UECACT_BTSOVFLW       0x00008000
++#define UECACT_NESTED         0x00010000    /// ORed with context switch activities
++#define UECACT_CALLBACK       0x00020000
++
++/// new activity mark semantics (LSB is the grouping bit)
++#define UECACTMARK_GROUP          0x01  /// XORed with the activities
++#define UECACTMARK_SWITCHFROM     0x02
++#define UECACTMARK_SWITCHTO       0x04
++#define UECACTMARK_SWITCHREALTO   0x06
++#define UECACTMARK_SAMPLED        0x08
++#define UECACTMARK_APC            0x0a
++#define UECACTMARK_EXCEPTION      0x0c
++#define UECACTMARK_INTERRUPT      0x0e
++#define UECACTMARK_PROBED         0x10
++#define UECACTMARK_CODETRACE      0x12
++#define UECACTMARK_FREQUENCY      0x14
++#define UECACTMARK_MODULELOAD     0x16
++#define UECACTMARK_MODULEUNLOAD   0x18
++#define UECACTMARK_TRIGGERED      0x1a
++#define UECACTMARK_NEWTASK        0x1c
++#define UECACTMARK_OLDTASK        0x1e
++#define UECACTMARK_SYNCHRO        0x20
++#define UECACTMARK_BTSOVFLW       0x22
++#define UECACTMARK_CALLBACK       0x23
++#define UECACTMARK_NESTED         0x40  /// ORed with context switch activities
++
++/// systrace types
++#define UECSYSTRACE_PARTIAL_RECORD   0x8000
++
++#define UECSYSTRACE_PROCESS_NAME   0
++#define UECSYSTRACE_STACK_SAMPLE32 1
++#define UECSYSTRACE_STACK_SAMPLE64 2
++#define UECSYSTRACE_MODULE_MAP32   3
++#define UECSYSTRACE_MODULE_MAP64   4
++#define UECSYSTRACE_INST_SAMPLE32  5
++#define UECSYSTRACE_INST_SAMPLE64  6
++#define UECSYSTRACE_STACK_INC32    7
++#define UECSYSTRACE_STACK_INC64    8
++#define UECSYSTRACE_STACK_EXT32    9
++#define UECSYSTRACE_STACK_EXT64    10
++#define UECSYSTRACE_STACK_INCEXT32 11
++#define UECSYSTRACE_STACK_INCEXT64 12
++
++#define UECSYSTRACE_STACK_CTX32_V0    13    /// full stack preceded with real esp:ebp
++#define UECSYSTRACE_STACK_CTX64_V0    14    /// full stack preceded with real rsp:rbp
++#define UECSYSTRACE_STACK_CTXINC32_V0 15    /// incremental stack preceded with real esp:ebp
++#define UECSYSTRACE_STACK_CTXINC64_V0 16    /// incremental stack preceded with real rsp:rbp
++
++#define UECSYSTRACE_SWCFG  17   /// software configuration record
++#define UECSYSTRACE_HWCFG  18   /// hardware configuration record
++#define UECSYSTRACE_FMTCFG 19   /// forward compatibility format record
++
++#define UECSYSTRACE_BRANCH_V0 20    /// branch trace record
++
++#define UECSYSTRACE_REGCTX32      21    /// register context for IA32 (PEBS)
++#define UECSYSTRACE_REGCTX32E     22    /// register context for EM64T (PEBS)
++#define UECSYSTRACE_REGCTX32_VEC  23    /// a vector of register contexts for IA32 (PEBS)
++#define UECSYSTRACE_REGCTX32E_VEC 24    /// a vector of register contexts for EM64T (PEBS)
++
++#define UECSYSTRACE_INDEX_LOCATOR 25    /// a record to locate trace indices
++#define UECSYSTRACE_INDEX_STREAM  26    /// a stream of trace index records
++
++#define UECSYSTRACE_CLEAR_STACK32 27    /// 32-bit call stack sequence
++#define UECSYSTRACE_CLEAR_STACK64 28    /// 64-bit call stack sequence
++
++#define UECSYSTRACE_EXECTX_V0     29    /// execution context for IA32/EM64T (register and memory contents)
++
++#define UECSYSTRACE_LOAD_JIT32   30
++#define UECSYSTRACE_UNLOAD_JIT32 31
++#define UECSYSTRACE_LOAD_JIT64   32
++#define UECSYSTRACE_UNLOAD_JIT64 33
++
++#define UECSYSTRACE_STACK_CTX32_V1    40    /// full stack preceded with esp:bottom (instead of fp)
++#define UECSYSTRACE_STACK_CTX64_V1    41    /// full stack preceded with  rsp:bottom (instead of fp)
++#define UECSYSTRACE_STACK_CTXINC32_V1 42    /// incremental stack preceded with  esp:bottom (instead of fp)
++#define UECSYSTRACE_STACK_CTXINC64_V1 43    /// incremental stack preceded with  rsp:bottom (instead of fp)
++
++#define UECSYSTRACE_COLCFG  44  /// collector configuration record
++#define UECSYSTRACE_SYSINFO 45  /// system information record
++
++#define UECSYSTRACE_STACK_CTX32_V2    46    /// full stack without sp and fp values (both equal exectx.sp)
++#define UECSYSTRACE_STACK_CTX64_V2    47    /// full stack without sp and fp values (both equal exectx.sp)
++#define UECSYSTRACE_STACK_CTXINC32_V2 48    /// incremental stack without sp and fp values (both equal exectx.sp)
++#define UECSYSTRACE_STACK_CTXINC64_V2 49    /// incremental stack without sp and fp values (both equal exectx.sp)
++
++#define UECSYSTRACE_STREAM_ZLIB 50          /// a record containing a stream compressed with ZLIB
++#define UECSYSTRACE_DEBUG       60          /// a record with debugging info in a human-readable format
++#define UECSYSTRACE_IPT         35          /// a record with a raw IPT data stream
++#define UECSYSTRACE_IPTCFG      36          /// a record with IPT configuration
++#define UECSYSTRACE_IPTIPS      37          /// a record with decoded IPT IPs from TIP/FUP packets
++
++/// module types for for systrace(module map)
++#define MODTYPE_ELF      0x00   /// default Linux module type
++#define MODTYPE_COFF     0x01   /// default Windows module type
++#define MODTYPE_BIN      0x02   /// any non-structured executable region
++#define MODTYPE_JIT_FLAG 0x80   /// should be ORed with the actial JITted module type
++
++// Pre-defined User Record Types
++#define URT_PARTIAL_RECORD   0x8000      /// indicates the next subsequent record
++                                         /// should be appended to the current one
++
++#define URT_CALLSTACK_DATA   0x0000      /// a sequence of function IDs / addresses
++#define URT_FUNCMODID_MAP    0x0001      /// a map of IDs to functions and modules
++#define URT_ALTSTREAM        0x0002      /// wraps an alternative stream of user-level data
++                                         /// all records of this type should be concatenated
++                                         /// and parsed as a separate stream
++#define URT_IMPORTS32        0x0003      /// recorded info on instrumented import functions
++#define URT_IMPORTS64        0x0004      /// recorded info on instrumented import functions
++#define URT_APIWRAP32_V0     0x0005      /// recorded info on instrumented API functions
++#define URT_APIWRAP64_V0     0x0006      /// recorded info on instrumented API functions
++#define URT_APIWRAP32_V1     0x0007      /// recorded info on instrumented API functions
++#define URT_APIWRAP64_V1     0x0008      /// recorded info on instrumented API functions
++#define URT_APIWRAP32_V2     0x0009      /// recorded info on instrumented API functions
++#define URT_APIWRAP64_V2     0x000a      /// recorded info on instrumented API functions
++
++#define URT_DEBUG            60          /// a record with debugging info in a human-readable format
++
++// Pre-defined system function IDs
++#define FID_THREAD_NAME      0x11e       /// thread name
++#define FID_GENERIC_SYSCALL  0x100000    /// system calls tracked by the driver
++
++#endif /* _VTSSTRACE_H_ */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/vtsstypes.h b/drivers/misc/intel/sepdk/vtsspp/vtsstypes.h
+new file mode 100644
+index 000000000000..450e6c15b55c
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/vtsstypes.h
+@@ -0,0 +1,516 @@
++/*
++  Copyright (C) 2010-2015 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#ifndef _VTSSTYPES_H_
++#define _VTSSTYPES_H_
++
++#include <linux/types.h>        /* for size_t */
++
++/**
++// Data Types and Macros
++*/
++/* Should be in sync with collectunits1/traceformat/include/traceformat.h */
++#define VTSS_WINDOWS_IA32   0
++#define VTSS_WINDOWS_IA64   1
++#define VTSS_WINDOWS_EM64T  2
++
++#define VTSS_LINUX_IA32     3
++#define VTSS_LINUX_IA64     4
++#define VTSS_LINUX_EM64T    5
++#define VTSS_LINUX_KNC      6
++
++#define VTSS_UNKNOWN_ARCH   0xff
++
++#pragma pack(push, 1)
++
++#define VTSS_FMTCFG_RESERVED 0xF0   /// specified for bits unused in the trace being generated
++                                    /// for format indicator bits specify the size of 0
++
++/// defbit[i] specifies the size code for a corresponding syntax element as follows:
++/// [76543210]
++///  ||
++///  |+------- reserved
++///  +-------- 0: fixed-length element, bits 0-5 provide the size of a syntax element in bytes
++///   
++///   +------- 1: variable-length element, bits 0-2 specify the number of bytes at the 
++///               beginning of the element which, in their turn, provide the element's size
++
++typedef struct
++{
++    unsigned char rank;
++    unsigned int  and_mask;
++    unsigned int  cmp_mask;
++
++    unsigned char defcount;
++    unsigned char defbit[0x20]; /// sizeof(flagword)
++
++} fmtcfg_t;
++
++/// format configuration trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned short size;
++    unsigned short type;
++
++} fcf_trace_record_t;
++
++/// hardware configuration trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned short size;
++    unsigned short type;
++
++} hcf_trace_record_t;
++
++/// PT configuration trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned short size;
++    unsigned short type;
++
++} ptc_trace_record_t;
++
++/// collector configuration trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned short size;
++    unsigned short type;
++
++    int version;
++
++    short major;
++    short minor;
++    int   revision;
++    long long features;
++
++    unsigned char len;
++    char name[0];
++
++} col_trace_record_t;
++
++/// system configuration trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned short size;
++    unsigned short type;
++
++} sys_trace_record_t;
++
++/// software configuration trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int vresidx;
++    unsigned short size;
++    unsigned short type;
++
++} scf_trace_record_t;
++
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int vectored;
++    unsigned char vec_no;
++    long long tsc;
++    long long utc;
++
++} time_marker_record_t;
++
++/// new task trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int activity;
++    unsigned int cpuidx;
++    unsigned int pid;
++    unsigned int tid;
++    long long cputsc;
++    long long realtsc;
++    unsigned short size;
++    unsigned short type;
++
++} ntk_trace_record_t;
++
++/// dynamically captured module trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int pid;
++    unsigned int tid;
++    long long cputsc;
++    long long realtsc;
++    unsigned short size;
++    unsigned short type;
++
++    size_t start;
++    size_t end;
++    size_t offset;
++    unsigned char bin;
++    unsigned short len;
++
++} dlm_trace_record_t;
++
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int pid;
++    unsigned int tid;
++    long long cputsc;
++    long long realtsc;
++    unsigned short size;
++    unsigned short type;
++
++    unsigned int start;
++    unsigned int end;
++    unsigned int offset;
++    unsigned char bin;
++    unsigned short len;
++
++} dlm_trace_record_32_t;
++
++// new active thread trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int activity;
++    unsigned int residx;
++    unsigned int cpuidx;
++    unsigned int pid;
++    unsigned int tid;
++    long long cputsc;
++    long long realtsc;
++
++} nth_trace_record_t;
++
++// context swap in trace record
++typedef union
++{
++    struct
++    {
++        unsigned int flagword;
++        unsigned int activity;
++        unsigned int residx;
++        unsigned int cpuidx;
++        long long cputsc;
++        long long realtsc;
++        long long execaddr;
++
++    } procina;
++
++    struct
++    {
++        unsigned int flagword;
++        unsigned int activity;
++        unsigned int residx;
++        unsigned int cpuidx;
++        long long cputsc;
++        long long realtsc;
++
++    } procin;
++
++    struct
++    {
++        unsigned int flagword;
++        unsigned int activity;
++        unsigned int cpuidx;
++        unsigned int pid;
++        unsigned int tid;
++        long long cputsc;
++        long long realtsc;
++        long long execaddr;
++
++    } sysina;
++
++    struct
++    {
++        unsigned int flagword;
++        unsigned int activity;
++        unsigned int cpuidx;
++        unsigned int pid;
++        unsigned int tid;
++        long long cputsc;
++        long long realtsc;
++
++    } sysin;
++
++} cti_trace_record_t;
++
++// context swap out trace record
++typedef union
++{
++    struct
++    {
++        unsigned int flagword;
++        unsigned int activity;
++        unsigned int cpuidx;
++        long long cputsc;
++        long long realtsc;
++        long long execaddr;
++
++    } procout;
++
++    struct
++    {
++        unsigned int flagword;
++        unsigned int activity;
++        unsigned int cpuidx;
++        long long cputsc;
++        long long realtsc;
++
++    } sysout;
++
++} cto_trace_record_t;
++
++// process creation/destruction trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int activity;
++    unsigned int cpuidx;
++    unsigned int pid;
++    unsigned int tid;
++    long long cputsc;
++    long long realtsc;
++    unsigned short size;
++    unsigned short type;
++
++} prc_trace_record_t;
++
++// thread creation/destruction trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int activity;
++    unsigned int cpuidx;
++    unsigned int pid;
++    unsigned int tid;
++    long long cputsc;
++    long long realtsc;
++
++} thr_trace_record_t;
++
++// module load trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int pid;
++    unsigned int tid;
++    long long cputsc;
++    long long realtsc;
++    unsigned short size;
++    unsigned short type;
++
++    unsigned int start;
++    unsigned int end;
++    unsigned int offset;
++    unsigned char bin;
++    unsigned short len;
++
++} mod_trace_record_t;
++
++/// stack trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int residx;
++    unsigned short size;
++    unsigned short type;
++    
++    unsigned int idx;
++
++
++} stk_trace_kernel_record_t;
++
++/// stack trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int residx;
++    unsigned int cpuidx;
++    long long cputsc;
++    long long execaddr;
++    unsigned short size;
++    unsigned short type;
++
++    union
++    {
++        struct
++        {
++            size_t sp;
++            size_t fp;
++        };
++        struct
++        {
++            unsigned int sp32;
++            unsigned int fp32;
++        };
++    };
++
++} stk_trace_record_t;
++
++/// large stack trace record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int residx;
++    unsigned int cpuidx;
++    long long cputsc;
++    long long execaddr;
++    unsigned int size;
++    unsigned short type;
++
++    union
++    {
++        struct
++        {
++            size_t sp;
++            size_t fp;
++        };
++        struct
++        {
++            unsigned int sp32;
++            unsigned int fp32;
++        };
++    };
++
++} lstk_trace_record_t;
++
++/**
++// Trace Records generated for events
++*/
++
++/// Trigger Point Event record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int vectored;
++    unsigned int cpuidx;
++    unsigned char muxgroup;
++    unsigned char event_no;
++
++} tpe_trace_record_t;
++
++/// Sample Point Event record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int vectored;
++    unsigned int activity;
++    unsigned int residx;
++    unsigned int cpuidx;
++    unsigned long long cputsc;
++    unsigned char muxgroup;
++    unsigned char event_no;
++
++} spe_trace_record_t;
++
++/// General Purpose Event record
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int vectored;
++    unsigned int residx;
++    unsigned int cpuidx;
++    unsigned long long cputsc;
++    unsigned char muxgroup;
++    unsigned char event_no;
++} gpe_trace_record_t;
++
++typedef union
++{
++    /// trigger point event record
++    tpe_trace_record_t tperec;
++    /// sample point event record
++    spe_trace_record_t sperec;
++    /// general-purpose event record
++    gpe_trace_record_t gperec;
++} event_trace_record_t;
++
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int residx;
++    unsigned int cpuidx;
++    unsigned long long cputsc;
++    unsigned short size;
++    unsigned short type;
++} bts_trace_record_t;
++
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int activity;
++    unsigned int residx;
++    unsigned int cpuidx;
++    long long cputsc;
++    unsigned short size;
++    unsigned short type;
++    long long entry_tsc;
++    unsigned int entry_cpu;
++    unsigned int fid;
++
++} prb_trace_record_t;
++
++// thread name trace record
++typedef struct
++{
++    prb_trace_record_t probe;
++    unsigned char version;
++    unsigned short length;
++
++} thname_trace_record_t;
++
++typedef struct
++{
++    unsigned int flagword;
++    unsigned short size;
++    unsigned short type;
++
++} debug_info_record_t;
++
++typedef struct
++{
++    unsigned int flagword;
++    unsigned int residx;
++    unsigned int cpuidx;
++    long long cputsc;
++    unsigned long long execaddr;
++    unsigned short size;
++    unsigned short type;
++    unsigned int merge_node;
++
++} clrstk_trace_record_t;
++
++
++#pragma pack(pop)
++
++#endif /* _VTSSTYPES_H_ */
+-- 
+2.18.0
+

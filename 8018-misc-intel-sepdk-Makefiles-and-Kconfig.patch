@@ -1,0 +1,200 @@
+From acc10773a644e9c23a5403f1e07b7d4bdd18c684 Mon Sep 17 00:00:00 2001
+From: Miguel Bernal Marin <miguel.bernal.marin@linux.intel.com>
+Date: Wed, 29 Aug 2018 17:23:50 -0500
+Subject: [PATCH 8018/8021] misc: intel: sepdk: Makefiles and Kconfig
+
+---
+ drivers/misc/intel/sepdk/Kconfig          | 63 ++++++++++++++++++++++
+ drivers/misc/intel/sepdk/Makefile         |  5 ++
+ drivers/misc/intel/sepdk/pax/Makefile     |  4 ++
+ drivers/misc/intel/sepdk/sep/Makefile     | 65 +++++++++++++++++++++++
+ drivers/misc/intel/sepdk/socperf/Makefile | 12 +++++
+ 5 files changed, 149 insertions(+)
+ create mode 100644 drivers/misc/intel/sepdk/Kconfig
+ create mode 100644 drivers/misc/intel/sepdk/Makefile
+ create mode 100644 drivers/misc/intel/sepdk/pax/Makefile
+ create mode 100644 drivers/misc/intel/sepdk/sep/Makefile
+ create mode 100644 drivers/misc/intel/sepdk/socperf/Makefile
+
+diff --git a/drivers/misc/intel/sepdk/Kconfig b/drivers/misc/intel/sepdk/Kconfig
+new file mode 100644
+index 000000000000..2ef57f30e0de
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/Kconfig
+@@ -0,0 +1,63 @@
++#
++# THE SEP KERNEL DRIVER UNDER LINUX*
++#
++config INTEL_SEP
++	bool "Sampling Enabling Product (SEP)"
++	help
++	  SEP is a command line tool for doing hardware-based sampling using
++	  event-based sampling (EBS).
++
++config SEP
++	tristate "SEP kernel driver"
++	depends on INTEL_SEP
++	default m
++
++config SEP_SOCPERF
++	tristate "SocPerf kernel driver from SEP"
++	depends on INTEL_SEP
++	depends on SEP
++	default m
++
++config SEP_PAX
++	tristate "PAX kernel driver from SEP"
++	depends on INTEL_SEP
++	depends on SEP
++	default m
++
++config SEP_PER_USER_MODE
++	bool "Use Per User Mode on SEP"
++	depends on INTEL_SEP
++	default n
++
++choice
++	prompt "Choose log mode"
++	default SEP_STANDARD_MODE
++	depends on INTEL_SEP
++	help
++	  This option allows to select logging mode.
++
++config SEP_STANDARD_MODE
++	bool "Use standard logging mode"
++
++config SEP_MINLOG_MODE
++	bool "Use min logging mode"
++	help
++	  WARNING: Using minimal logging mode.
++	  This may make troubleshooting more difficult.
++
++config SEP_MAXLOG_MODE
++	bool "Use max logging mode"
++	help
++	  WARNING: Using maximal logging mode.
++	  This may increase overhead
++
++endchoice
++
++config SEP_PRIVATE_BUILD
++	bool "Is this build an Internal and Private build"
++	depends on INTEL_SEP
++	default n
++	help
++	  Select Yes if this is an Intel Internal Build
++
++
+diff --git a/drivers/misc/intel/sepdk/Makefile b/drivers/misc/intel/sepdk/Makefile
+new file mode 100644
+index 000000000000..e48af52368e5
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/Makefile
+@@ -0,0 +1,5 @@
++
++obj-$(CONFIG_SEP)		+= sep/
++obj-$(CONFIG_SEP_PAX)		+= pax/
++obj-$(CONFIG_SEP_SOCPERF)	+= socperf/
++
+diff --git a/drivers/misc/intel/sepdk/pax/Makefile b/drivers/misc/intel/sepdk/pax/Makefile
+new file mode 100644
+index 000000000000..267d70eeaab5
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/pax/Makefile
+@@ -0,0 +1,4 @@
++ccflags-y := -I$(src)/../include -I$(src)/../inc
++
++obj-$(CONFIG_SEP_PAX) += pax.o
++
+diff --git a/drivers/misc/intel/sepdk/sep/Makefile b/drivers/misc/intel/sepdk/sep/Makefile
+new file mode 100644
+index 000000000000..4fc01c7e3446
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/sep/Makefile
+@@ -0,0 +1,65 @@
++ccflags-y := -I$(src)/../include -I$(src)/../inc -I$(src)/..
++ccflags-y += -DSEP_CONFIG_MODULE_LAYOUT
++# TODO: verify kaiser.h
++#ccflags-y += -DKAISER_HEADER_PRESENT
++ccflags-y += -DDRV_CPU_HOTPLUG -DDRV_USE_TASKLET_WORKAROUND
++
++asflags-y := -I$(src)/..
++
++ifdef CONFIG_SEP_PER_USER_MODE
++	ccflags-y += -DSECURE_SEP
++endif
++
++ifdef CONFIG_SEP_MINLOG_MODE
++	ccflags-y += -DDRV_MINIMAL_LOGGING
++endif
++
++ifdef CONFIG_SEP_MAXLOG_MODE
++	ccflags-y += -DDRV_MAXIMAL_LOGGING
++endif
++
++ifdef CONFIG_SEP_PRIVATE_BUILD
++	ccflags-y += -DENABLE_CPUS -DBUILD_CHIPSET -DBUILD_GFX
++endif
++
++obj-$(CONFIG_SEP)		+= sep5.o
++
++sep5-y	:=	lwpmudrv.o        \
++		control.o         \
++		cpumon.o          \
++		eventmux.o        \
++		linuxos.o         \
++		output.o          \
++		pmi.o             \
++		sys_info.o        \
++		utility.o         \
++		valleyview_sochap.o    \
++		unc_power.o	  \
++		core2.o           \
++		perfver4.o        \
++		silvermont.o      \
++		pci.o             \
++		apic.o            \
++		pebs.o            \
++		unc_gt.o          \
++		unc_mmio.o        \
++		unc_msr.o         \
++		unc_common.o      \
++		unc_pci.o         \
++		sepdrv_p_state.o
++
++
++ifdef CONFIG_X86_64
++	sep5-y	+=	sys64.o
++endif
++
++ifdef CONFIG_X86_32
++	sep5-y	+=	sys32.o
++endif
++
++sep5-$(CONFIG_SEP_PRIVATE_BUILD)	+=	chap.o    \
++						gmch.o    \
++						gfx.o     \
++						unc_sa.o
++
++
+diff --git a/drivers/misc/intel/sepdk/socperf/Makefile b/drivers/misc/intel/sepdk/socperf/Makefile
+new file mode 100644
+index 000000000000..dd22934ed6e0
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/socperf/Makefile
+@@ -0,0 +1,12 @@
++ccflags-y := -I$(src)/include -I$(src)/inc
++
++obj-$(CONFIG_SEP_SOCPERF) += socperf3.o
++
++socperf3-y := 	socperfdrv.o	\
++		control.o	\
++		utility.o	\
++		pci.o		\
++		soc_uncore.o	\
++		haswellunc_sa.o	\
++		npk_uncore.o
++
+-- 
+2.18.0
+

@@ -1,0 +1,46 @@
+From 48b8d8c3bb65331b87c93a81e36e4296a178dd4b Mon Sep 17 00:00:00 2001
+From: Miguel Bernal Marin <miguel.bernal.marin@linux.intel.com>
+Date: Thu, 30 Aug 2018 04:10:37 -0500
+Subject: [PATCH 8019/8021] misc: intel: soc_perf: Makefiles and Kconfig
+
+---
+ drivers/misc/intel/soc_perf/Kconfig  |  4 ++++
+ drivers/misc/intel/soc_perf/Makefile | 15 +++++++++++++++
+ 2 files changed, 19 insertions(+)
+ create mode 100644 drivers/misc/intel/soc_perf/Kconfig
+ create mode 100644 drivers/misc/intel/soc_perf/Makefile
+
+diff --git a/drivers/misc/intel/soc_perf/Kconfig b/drivers/misc/intel/soc_perf/Kconfig
+new file mode 100644
+index 000000000000..e268a7bd8bfa
+--- /dev/null
++++ b/drivers/misc/intel/soc_perf/Kconfig
+@@ -0,0 +1,4 @@
++
++config INTEL_SOCPERF
++	tristate "SocPerf kernel driver from SocWatch"
++	default m
+diff --git a/drivers/misc/intel/soc_perf/Makefile b/drivers/misc/intel/soc_perf/Makefile
+new file mode 100644
+index 000000000000..0f3f48204d1a
+--- /dev/null
++++ b/drivers/misc/intel/soc_perf/Makefile
+@@ -0,0 +1,15 @@
++ccflags-y := -I$(src)/include -I$(src)/inc
++
++# TODO: verify chrome OS
++#ccflags-y += -DDRV_CHROMEOS -Wno-error
++
++obj-$(CONFIG_INTEL_SOCPERF) += socperf2_0.o
++
++socperf2_0-y :=	socperfdrv.o	\
++		control.o	\
++		utility.o	\
++		pci.o		\
++		soc_uncore.o	\
++		haswellunc_sa.o	\
++		npk_uncore.o
++
+-- 
+2.18.0
+

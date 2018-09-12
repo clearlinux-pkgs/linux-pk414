@@ -1,0 +1,1439 @@
+From b6fe84ba850ff5eff95f1f0f872b455b1deca089 Mon Sep 17 00:00:00 2001
+From: Miguel Bernal Marin <miguel.bernal.marin@linux.intel.com>
+Date: Wed, 29 Aug 2018 06:14:57 -0500
+Subject: [PATCH 8011/8021] misc: intel: sepdk: add autoconf  source files from
+ vtsspp
+
+---
+ .../vtsspp/autoconf/cpumask_parselist_user.c  | 33 ++++++++++++++
+ .../intel/sepdk/vtsspp/autoconf/dpath_path.c  | 34 ++++++++++++++
+ .../vtsspp/autoconf/dump_trace_have_bp.c      | 38 ++++++++++++++++
+ .../autoconf/get_user_pages_tsk_mm_args.c     | 38 ++++++++++++++++
+ .../autoconf/get_user_pages_two_flags.c       | 34 ++++++++++++++
+ .../vtsspp/autoconf/init_work_two_args.c      | 40 +++++++++++++++++
+ .../misc/intel/sepdk/vtsspp/autoconf/kaiser.c | 33 ++++++++++++++
+ .../vtsspp/autoconf/kmap_atomic_one_arg.c     | 33 ++++++++++++++
+ .../sepdk/vtsspp/autoconf/kprobe_flags.c      | 30 +++++++++++++
+ .../vtsspp/autoconf/kprobe_symbol_name.c      | 30 +++++++++++++
+ .../vtsspp/autoconf/module_core_layout.c      | 34 ++++++++++++++
+ .../sepdk/vtsspp/autoconf/module_mutex.c      | 34 ++++++++++++++
+ .../sepdk/vtsspp/autoconf/nameidata_cleanup.c | 30 +++++++++++++
+ .../sepdk/vtsspp/autoconf/procfs_owner.c      | 36 +++++++++++++++
+ .../autoconf/ring_buffer_alloc_read_page.c    | 35 +++++++++++++++
+ .../sepdk/vtsspp/autoconf/ring_buffer_flags.c | 33 ++++++++++++++
+ .../autoconf/ring_buffer_free_read_page.c     | 35 +++++++++++++++
+ .../vtsspp/autoconf/ring_buffer_lost_events.c | 39 ++++++++++++++++
+ .../vtsspp/autoconf/ring_buffer_resize.c      | 35 +++++++++++++++
+ .../vtsspp/autoconf/ring_buffer_size_cpu.c    | 35 +++++++++++++++
+ .../vtsspp/autoconf/smp_call_function_retry.c | 37 ++++++++++++++++
+ .../sepdk/vtsspp/autoconf/stacktrace_ops.c    | 31 +++++++++++++
+ .../autoconf/stacktrace_ops_walk_stack.c      | 31 +++++++++++++
+ .../vtsspp/autoconf/stacktrace_ops_warning.c  | 31 +++++++++++++
+ .../sepdk/vtsspp/autoconf/system_unbound_wq.c | 35 +++++++++++++++
+ .../sepdk/vtsspp/autoconf/task_real_parent.c  | 40 +++++++++++++++++
+ .../intel/sepdk/vtsspp/autoconf/task_uid.c    | 35 +++++++++++++++
+ .../sepdk/vtsspp/autoconf/trace_sched_no_rq.c | 44 +++++++++++++++++++
+ .../vtsspp/autoconf/trace_sched_preempt.c     | 44 +++++++++++++++++++
+ .../sepdk/vtsspp/autoconf/trace_sched_rq.c    | 44 +++++++++++++++++++
+ .../vtsspp/autoconf/user_copy_without_check.c | 34 ++++++++++++++
+ .../vtsspp/autoconf/walk_stack_task_arg.c     | 35 +++++++++++++++
+ .../intel/sepdk/vtsspp/autoconf/x86_uniregs.c | 33 ++++++++++++++
+ 33 files changed, 1163 insertions(+)
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/cpumask_parselist_user.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/dpath_path.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/dump_trace_have_bp.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/get_user_pages_tsk_mm_args.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/get_user_pages_two_flags.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/init_work_two_args.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/kaiser.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/kmap_atomic_one_arg.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/kprobe_flags.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/kprobe_symbol_name.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/module_core_layout.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/module_mutex.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/nameidata_cleanup.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/procfs_owner.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_alloc_read_page.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_flags.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_free_read_page.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_lost_events.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_resize.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_size_cpu.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/smp_call_function_retry.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/stacktrace_ops.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/stacktrace_ops_walk_stack.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/stacktrace_ops_warning.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/system_unbound_wq.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/task_real_parent.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/task_uid.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/trace_sched_no_rq.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/trace_sched_preempt.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/trace_sched_rq.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/user_copy_without_check.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/walk_stack_task_arg.c
+ create mode 100644 drivers/misc/intel/sepdk/vtsspp/autoconf/x86_uniregs.c
+
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/cpumask_parselist_user.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/cpumask_parselist_user.c
+new file mode 100644
+index 000000000000..4036c0cca3da
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/cpumask_parselist_user.c
+@@ -0,0 +1,33 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/cpumask.h>
++
++int autoconf_test(void)
++{
++    return cpumask_parselist_user(NULL, 0, NULL);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/dpath_path.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/dpath_path.c
+new file mode 100644
+index 000000000000..74fbedd1e85e
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/dpath_path.c
+@@ -0,0 +1,34 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/path.h>
++#include <linux/dcache.h>
++
++void autoconf_test(struct path *p)
++{
++    (void)d_path(p, NULL, 0);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/dump_trace_have_bp.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/dump_trace_have_bp.c
+new file mode 100644
+index 000000000000..adba9c13d9cb
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/dump_trace_have_bp.c
+@@ -0,0 +1,38 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/sched.h>
++#include <asm/stacktrace.h>
++
++void autoconf_test(void)
++{
++    unsigned long bp = 0;
++    unsigned long *stack = NULL;
++    struct stacktrace_ops stack_ops;
++
++    dump_trace(current, task_pt_regs(current), stack, bp, &stack_ops, NULL);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/get_user_pages_tsk_mm_args.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/get_user_pages_tsk_mm_args.c
+new file mode 100644
+index 000000000000..0500ae28af28
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/get_user_pages_tsk_mm_args.c
+@@ -0,0 +1,38 @@
++/*
++  Copyright (C) 2010-2018 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/sched.h>
++#include <linux/mm_types.h>
++#include <linux/mm.h>
++
++long autoconf_test(void)
++{
++    struct task_struct *tsk = NULL;
++    struct mm_struct *mm = NULL;
++    /* kernel < 4.6.0 */
++    return get_user_pages(tsk, mm, 0, 0, 0 , 0, NULL, NULL);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/get_user_pages_two_flags.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/get_user_pages_two_flags.c
+new file mode 100644
+index 000000000000..5242f99340f5
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/get_user_pages_two_flags.c
+@@ -0,0 +1,34 @@
++/*
++  Copyright (C) 2010-2018 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/mm.h>
++
++long autoconf_test(void)
++{
++    /* kernel < 4.9.0 */
++    return get_user_pages(0, 0, 0, 0, NULL, NULL);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/init_work_two_args.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/init_work_two_args.c
+new file mode 100644
+index 000000000000..2e50811c48ce
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/init_work_two_args.c
+@@ -0,0 +1,40 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/workqueue.h>
++
++static void work_function(struct work_struct *work)
++{
++}
++
++struct work_struct *autoconf_test(void)
++{
++    struct work_struct *work = NULL;
++
++    INIT_WORK(work, work_function);
++    return work;
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/kaiser.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/kaiser.c
+new file mode 100644
+index 000000000000..e4b93ac3448a
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/kaiser.c
+@@ -0,0 +1,33 @@
++/*
++  Copyright (C) 2018 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/kaiser.h>
++
++int autoconf_test(void)
++{
++    return kaiser_enabled;
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/kmap_atomic_one_arg.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/kmap_atomic_one_arg.c
+new file mode 100644
+index 000000000000..0f722d2d2965
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/kmap_atomic_one_arg.c
+@@ -0,0 +1,33 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/highmem.h>
++
++void* autoconf_test(void)
++{
++    return kmap_atomic(NULL);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/kprobe_flags.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/kprobe_flags.c
+new file mode 100644
+index 000000000000..b9fa0bbfca83
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/kprobe_flags.c
+@@ -0,0 +1,30 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/kprobes.h>
++
++struct kprobe _kp __attribute__ ((unused)) = { .flags = 0 };
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/kprobe_symbol_name.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/kprobe_symbol_name.c
+new file mode 100644
+index 000000000000..63c949a05e9b
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/kprobe_symbol_name.c
+@@ -0,0 +1,30 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/kprobes.h>
++
++struct kprobe _kp __attribute__ ((unused)) = { .symbol_name = "symbol_name" };
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/module_core_layout.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/module_core_layout.c
+new file mode 100644
+index 000000000000..0d68f4d3be2d
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/module_core_layout.c
+@@ -0,0 +1,34 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/module.h>
++
++void autoconf_test(void)
++{
++    struct module* mod;
++    mod->core_layout.base;
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/module_mutex.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/module_mutex.c
+new file mode 100644
+index 000000000000..6c149e43f208
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/module_mutex.c
+@@ -0,0 +1,34 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/module.h>
++
++void autoconf_test(void)
++{
++    mutex_lock(&module_mutex);
++    mutex_unlock(&module_mutex);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/nameidata_cleanup.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/nameidata_cleanup.c
+new file mode 100644
+index 000000000000..94c5da3f3f51
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/nameidata_cleanup.c
+@@ -0,0 +1,30 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/namei.h>
++
++struct nameidata _nd __attribute__ ((unused)) = { .path = {(void *)0} };
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/procfs_owner.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/procfs_owner.c
+new file mode 100644
+index 000000000000..5f0688b52b2b
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/procfs_owner.c
+@@ -0,0 +1,36 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/proc_fs.h>
++
++/* kernel commit 4d38a69c6 */
++void autoconf_test(void)
++{
++    struct proc_dir_entry foo;
++
++    foo.owner = (void *)NULL;
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_alloc_read_page.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_alloc_read_page.c
+new file mode 100644
+index 000000000000..4b3a9dd15109
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_alloc_read_page.c
+@@ -0,0 +1,35 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/types.h>
++#include <linux/ring_buffer.h>
++
++void* autoconf_test(void)
++{
++    /* last field is not always there */
++    return ring_buffer_alloc_read_page(NULL, 0);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_flags.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_flags.c
+new file mode 100644
+index 000000000000..2c366b6c4286
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_flags.c
+@@ -0,0 +1,33 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/ring_buffer.h>
++
++void autoconf_test(void)
++{
++    (void)ring_buffer_lock_reserve(NULL, 0, 0);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_free_read_page.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_free_read_page.c
+new file mode 100644
+index 000000000000..530c50b62132
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_free_read_page.c
+@@ -0,0 +1,35 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/types.h>
++#include <linux/ring_buffer.h>
++
++void autoconf_test(void)
++{
++    /* middle field is not always there */
++    ring_buffer_free_read_page(NULL, 0, NULL);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_lost_events.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_lost_events.c
+new file mode 100644
+index 000000000000..366f2a497069
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_lost_events.c
+@@ -0,0 +1,39 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++/*
++  Some kernels have place holder recording of dropped events in the
++  ring_buffer peek and consume calls.
++*/
++#include <linux/types.h>
++#include <linux/ring_buffer.h>
++
++struct ring_buffer_event *autoconf_test(void)
++{
++    /* last field is not always there */
++    return ring_buffer_peek(NULL, 1, NULL, NULL);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_resize.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_resize.c
+new file mode 100644
+index 000000000000..76f7b83f542c
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_resize.c
+@@ -0,0 +1,35 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/types.h>
++#include <linux/ring_buffer.h>
++
++int autoconf_test(void)
++{
++    /* last field is not always there */
++    return ring_buffer_resize(NULL, 0, RING_BUFFER_ALL_CPUS);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_size_cpu.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_size_cpu.c
+new file mode 100644
+index 000000000000..b29f22c2eb68
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/ring_buffer_size_cpu.c
+@@ -0,0 +1,35 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/types.h>
++#include <linux/ring_buffer.h>
++
++unsigned long autoconf_test(void)
++{
++    /* last field is not always there */
++    return ring_buffer_size(NULL, 0);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/smp_call_function_retry.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/smp_call_function_retry.c
+new file mode 100644
+index 000000000000..1ac56628cad1
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/smp_call_function_retry.c
+@@ -0,0 +1,37 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/smp.h>
++
++void func(void* info)
++{
++}
++
++int autoconf_test(void)
++{
++    return smp_call_function(func, NULL, 0, 1);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/stacktrace_ops.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/stacktrace_ops.c
+new file mode 100644
+index 000000000000..9dd9850745d8
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/stacktrace_ops.c
+@@ -0,0 +1,31 @@
++/*
++  Copyright (C) 2018 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/sched.h>
++#include <asm/stacktrace.h>
++
++struct stacktrace_ops ops __attribute__ ((unused));
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/stacktrace_ops_walk_stack.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/stacktrace_ops_walk_stack.c
+new file mode 100644
+index 000000000000..8c5dc12d5017
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/stacktrace_ops_walk_stack.c
+@@ -0,0 +1,31 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/sched.h>
++#include <asm/stacktrace.h>
++
++struct stacktrace_ops ops __attribute__ ((unused)) = { .walk_stack = NULL };
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/stacktrace_ops_warning.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/stacktrace_ops_warning.c
+new file mode 100644
+index 000000000000..e8406a5c725f
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/stacktrace_ops_warning.c
+@@ -0,0 +1,31 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/sched.h>
++#include <asm/stacktrace.h>
++
++struct stacktrace_ops ops __attribute__ ((unused)) = { .warning = NULL };
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/system_unbound_wq.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/system_unbound_wq.c
+new file mode 100644
+index 000000000000..9fd740c9160f
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/system_unbound_wq.c
+@@ -0,0 +1,35 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/workqueue.h>
++
++struct work_struct *autoconf_test(void)
++{
++    struct work_struct *work = NULL;
++    queue_work(system_unbound_wq, work);
++    return work;
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/task_real_parent.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/task_real_parent.c
+new file mode 100644
+index 000000000000..78c4b70f5813
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/task_real_parent.c
+@@ -0,0 +1,40 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++/*
++ * PR6732 - In RHEL5 and F[678] kernels, the utrace patch removed the
++ * ptrace-related parent field and renamed real_parent to parent.  In
++ * future Fedora kernels, there may or may not be a ptrace-related
++ * parent field, but the real useful field will go back to being called
++ * real_parent.
++ */
++#include <linux/sched.h>
++
++struct task_struct *autoconf_test(struct task_struct *task)
++{
++    return task->real_parent;
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/task_uid.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/task_uid.c
+new file mode 100644
+index 000000000000..24090d8472f9
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/task_uid.c
+@@ -0,0 +1,35 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/sched.h>
++
++int autoconf_test(struct task_struct *task)
++{
++    return (task->uid = 0);
++}
++
++/* as opposed to linux/cred.h wrappers current_uid() etc. */
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/trace_sched_no_rq.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/trace_sched_no_rq.c
+new file mode 100644
+index 000000000000..7e37d6a8e59e
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/trace_sched_no_rq.c
+@@ -0,0 +1,44 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <trace/events/sched.h>
++#ifdef DECLARE_TRACE_NOARGS
++#define VTSS_TP_DATA   , NULL
++#define VTSS_TP_PROTO  void *cb_data __attribute__ ((unused)),
++#else
++#define VTSS_TP_DATA
++#define VTSS_TP_PROTO
++#endif
++
++static void tp_sched_switch(VTSS_TP_PROTO struct task_struct *prev, struct task_struct *next)
++{
++}
++
++int autoconf_test(void)
++{
++    return register_trace_sched_switch(tp_sched_switch VTSS_TP_DATA);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/trace_sched_preempt.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/trace_sched_preempt.c
+new file mode 100644
+index 000000000000..314e8d126f33
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/trace_sched_preempt.c
+@@ -0,0 +1,44 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <trace/events/sched.h>
++#ifdef DECLARE_TRACE_NOARGS
++#define VTSS_TP_DATA   , NULL
++#define VTSS_TP_PROTO  void *cb_data __attribute__ ((unused)),
++#else
++#define VTSS_TP_DATA
++#define VTSS_TP_PROTO
++#endif
++
++static void tp_sched_switch(VTSS_TP_PROTO bool preempt, struct task_struct *prev, struct task_struct *next)
++{
++}
++
++int autoconf_test(void)
++{
++    return register_trace_sched_switch(tp_sched_switch VTSS_TP_DATA);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/trace_sched_rq.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/trace_sched_rq.c
+new file mode 100644
+index 000000000000..fabaa5abaefa
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/trace_sched_rq.c
+@@ -0,0 +1,44 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <trace/events/sched.h>
++#ifdef DECLARE_TRACE_NOARGS
++#define VTSS_TP_DATA   , NULL
++#define VTSS_TP_PROTO  void *cb_data __attribute__ ((unused)),
++#else
++#define VTSS_TP_DATA
++#define VTSS_TP_PROTO
++#endif
++
++static void tp_sched_switch(VTSS_TP_PROTO struct rq *rq, struct task_struct *prev, struct task_struct *next)
++{
++}
++
++int autoconf_test(void)
++{
++    return register_trace_sched_switch(tp_sched_switch VTSS_TP_DATA);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/user_copy_without_check.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/user_copy_without_check.c
+new file mode 100644
+index 000000000000..146c76df88bf
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/user_copy_without_check.c
+@@ -0,0 +1,34 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <asm/uaccess.h>
++
++unsigned long autoconf_test(const void __user *from)
++{
++    char to[8];
++    return _copy_from_user(to, from, 16);
++}
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/walk_stack_task_arg.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/walk_stack_task_arg.c
+new file mode 100644
+index 000000000000..43c14923db65
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/walk_stack_task_arg.c
+@@ -0,0 +1,35 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/sched.h>
++#include <asm/stacktrace.h>
++
++unsigned long autoconf_test(struct task_struct *task)
++{
++      return print_context_stack(task, NULL, 0, NULL, NULL, NULL, NULL);
++}
++
+diff --git a/drivers/misc/intel/sepdk/vtsspp/autoconf/x86_uniregs.c b/drivers/misc/intel/sepdk/vtsspp/autoconf/x86_uniregs.c
+new file mode 100644
+index 000000000000..4a371f83585c
+--- /dev/null
++++ b/drivers/misc/intel/sepdk/vtsspp/autoconf/x86_uniregs.c
+@@ -0,0 +1,33 @@
++/*
++  Copyright (C) 2010-2014 Intel Corporation.  All Rights Reserved.
++
++  This file is part of SEP Development Kit
++
++  SEP Development Kit is free software; you can redistribute it
++  and/or modify it under the terms of the GNU General Public License
++  version 2 as published by the Free Software Foundation.
++
++  SEP Development Kit is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License
++  along with SEP Development Kit; if not, write to the Free Software
++  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
++
++  As a special exception, you may use this file as part of a free software
++  library without restriction.  Specifically, if other files instantiate
++  templates or use macros or inline functions from this file, or you compile
++  this file and link it with other files to produce an executable, this
++  file does not by itself cause the resulting executable to be covered by
++  the GNU General Public License.  This exception does not however
++  invalidate any other reasons why the executable file might be covered by
++  the GNU General Public License.
++*/
++#include <linux/compiler.h>
++#include <asm/ptrace.h>
++
++#if defined(__i386__) || defined(__x86_64__)
++struct pt_regs regs = { .ax = 0x0 };
++#endif
+-- 
+2.18.0
+

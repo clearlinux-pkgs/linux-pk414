@@ -1,0 +1,86 @@
+From 592ecda5801196375fce54868ad30ae310036a22 Mon Sep 17 00:00:00 2001
+From: Miguel Bernal Marin <miguel.bernal.marin@linux.intel.com>
+Date: Thu, 30 Aug 2018 06:35:31 -0500
+Subject: [PATCH 8020/8021] misc: intel: socwatch: Makefiles and Kconfig
+
+---
+ drivers/misc/intel/socwatch/Kconfig  | 27 +++++++++++++++++++++++
+ drivers/misc/intel/socwatch/Makefile | 32 ++++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+)
+ create mode 100644 drivers/misc/intel/socwatch/Kconfig
+ create mode 100644 drivers/misc/intel/socwatch/Makefile
+
+diff --git a/drivers/misc/intel/socwatch/Kconfig b/drivers/misc/intel/socwatch/Kconfig
+new file mode 100644
+index 000000000000..2c5ac7436ba4
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/Kconfig
+@@ -0,0 +1,27 @@
++config INTEL_SOCWATCH
++	tristate "SoC Watch kernel module"
++	default m
++
++config SOCWATCH_DO_ANDROID
++	int "Soc Watch Do Android"
++	depends on INTEL_SOCWATCH
++	default 0
++
++config SOCWATCH_DO_SOCPERF
++	int "Soc Watch Do SoC Perf"
++	depends on INTEL_SOCWATCH
++	depends on INTEL_SOCPERF
++	default 1 if INTEL_SOCPERF
++	default 0
++	help
++	  If INTEL_SOCPERF is enabled you can set to 1.
++
++config SOCWATCH_DO_PROFILING
++	int "Soc Watch Do Profiling"
++	depends on INTEL_SOCWATCH
++	default 0
++
++config SOCWATCH_DO_DEBUG
++	bool "Soc Watch Do Debug"
++	depends on INTEL_SOCWATCH
++	default n
+diff --git a/drivers/misc/intel/socwatch/Makefile b/drivers/misc/intel/socwatch/Makefile
+new file mode 100644
+index 000000000000..c8cfe6105699
+--- /dev/null
++++ b/drivers/misc/intel/socwatch/Makefile
+@@ -0,0 +1,32 @@
++ccflags-y := -I$(src)/include -I$(src)/inc
++ccflags-y += -Werror=strict-prototypes
++ccflags-y += -Werror=pointer-to-int-cast
++ccflags-y += -Werror=int-to-pointer-cast
++ccflags-y += -Werror=format
++ccflags-y += -Werror=attributes
++
++
++ccflags-y += -DDO_ANDROID=$(CONFIG_SOCWATCH_DO_ANDROID)
++ccflags-y += -DDO_SOCPERF=$(CONFIG_SOCWATCH_DO_SOCPERF)
++ccflags-y += -DDO_DRIVER_PROFILING=$(CONFIG_SOCWATCH_DO_PROFILING)
++
++
++ifdef CONFIG_SOCWATCH_DO_DEBUG
++	ccflags-y += -Werror
++endif
++
++obj-$(CONFIG_INTEL_SOCWATCH)	+= socwatch2_6.o
++
++socwatch2_6-y	:=	sw_driver.o        \
++			sw_hardware_io.o \
++			sw_output_buffer.o \
++			sw_tracepoint_handlers.o \
++			sw_collector.o \
++			sw_mem.o \
++			sw_internal.o \
++			sw_file_ops.o \
++			sw_ops_provider.o \
++			sw_trace_notifier_provider.o \
++			sw_reader.o \
++			sw_telem.o
++
+-- 
+2.18.0
+
