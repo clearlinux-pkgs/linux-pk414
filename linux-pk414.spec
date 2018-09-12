@@ -1680,6 +1680,29 @@ Patch1625: 1625-hyper_dmabuf-fix-map-failure-issue-when-assign-4G-me.patch
 Patch1626: 1626-CBC-driver-kernel-crash-fix-during-warm-reboot.patch
 #END XXXX: PK Series
 
+# SEP and SoCWatch Series
+Patch8001: 8001-misc-intel-sepdk-add-C-source-files-from-sep.patch
+Patch8002: 8002-misc-intel-sepdk-add-include-files-from-sep.patch
+Patch8003: 8003-misc-intel-sepdk-add-inc-files-from-sep.patch
+Patch8004: 8004-misc-intel-sepdk-add-source-files-from-pax.patch
+Patch8005: 8005-misc-intel-sepdk-add-C-source-files-from-socperf.patch
+Patch8006: 8006-misc-intel-sepdk-add-inc-files-from-socperf.patch
+Patch8007: 8007-misc-intel-sepdk-add-include-files-from-socperf.patch
+Patch8008: 8008-misc-intel-sepdk-add-C-source-files-from-vtsspp.patch
+Patch8009: 8009-misc-intel-sepdk-add-headers-source-files-from-vtssp.patch
+Patch8010: 8010-misc-intel-sepdk-add-S-source-files-from-vtsspp.patch
+Patch8011: 8011-misc-intel-sepdk-add-autoconf-source-files-from-vtss.patch
+Patch8012: 8012-misc-intel-soc_perf-add-include-files.patch
+Patch8013: 8013-misc-intel-soc_perf-add-inc-files.patch
+Patch8014: 8014-misc-intel-soc_perf-add-C-source-files.patch
+Patch8015: 8015-misc-intel-socwatch-add-C-source-files.patch
+Patch8016: 8016-misc-intel-socwatch-add-inc-files.patch
+Patch8017: 8017-misc-intel-socwatch-add-include-files.patch
+Patch8018: 8018-misc-intel-sepdk-Makefiles-and-Kconfig.patch
+Patch8019: 8019-misc-intel-soc_perf-Makefiles-and-Kconfig.patch
+Patch8020: 8020-misc-intel-socwatch-Makefiles-and-Kconfig.patch
+Patch8021: 8021-misc-intel-Makefile-and-Kconfig.patch
+
 # Clear Linux patch
 # needs to add to PK series
 Patch9001: 9001-init-wait-for-partition-and-retry-scan.patch
@@ -3343,6 +3366,30 @@ Linux kernel extra files
 %patch1626 -p1
 # End XXXX PK Series
 
+# SEP and SoCWatch Series
+%patch8001 -p1
+%patch8002 -p1
+%patch8003 -p1
+%patch8004 -p1
+%patch8005 -p1
+%patch8006 -p1
+%patch8007 -p1
+%patch8008 -p1
+%patch8009 -p1
+%patch8010 -p1
+%patch8011 -p1
+%patch8012 -p1
+%patch8013 -p1
+%patch8014 -p1
+%patch8015 -p1
+%patch8016 -p1
+%patch8017 -p1
+%patch8018 -p1
+%patch8019 -p1
+%patch8020 -p1
+%patch8021 -p1
+
+# Clear Linux patch
 %patch9001 -p1
 
 cp %{SOURCE1} .
