@@ -21,7 +21,7 @@ Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
-# kernel-lts-quilt: lts-4.14-base-180908T051954Z
+# kernel-lts-quilt: lts-4.14-base-180910T232005Z
 # kernel-config: lts-4.14-base-180905T220003Z
 
 %define ktarget0 pk414-sos
@@ -1678,6 +1678,13 @@ Patch1623: 1623-hyper_dmabuf-virtio-Add-support-for-VBS_RESET_DEV-io.patch
 Patch1624: 1624-hyper_dmabuf-virtio-Handle-S3-resume-correctly-v2.patch
 Patch1625: 1625-hyper_dmabuf-fix-map-failure-issue-when-assign-4G-me.patch
 Patch1626: 1626-CBC-driver-kernel-crash-fix-during-warm-reboot.patch
+Patch1627: 1627-drm-i915-fix-a-kernel-panic-issue-of-plane-restricti.patch
+Patch1628: 1628-drm-i915-gvt-only-kick-out-invalid-request-instead-o.patch
+Patch1629: 1629-drm-i915-gvt-ensure-each-pipe-has-a-plane-in-Host-OS.patch
+Patch1630: 1630-drm-i915-gvt-allocate-ddb-according-to-active-pipes.patch
+Patch1631: 1631-drm-i915-gvt-Fixed-an-issue-in-PS-MMIO-handlers.patch
+Patch1632: 1632-drm-i915-to-limit-the-supported-modifiers-for-plane-.patch
+Patch1633: 1633-cbc-fix-line-warnings-and-move-spin_unlock-to-correc.patch
 #END XXXX: PK Series
 
 # SEP and SoCWatch Series
@@ -3364,6 +3371,13 @@ Linux kernel extra files
 %patch1624 -p1
 %patch1625 -p1
 %patch1626 -p1
+%patch1627 -p1
+%patch1628 -p1
+%patch1629 -p1
+%patch1630 -p1
+%patch1631 -p1
+%patch1632 -p1
+%patch1633 -p1
 # End XXXX PK Series
 
 # SEP and SoCWatch Series
