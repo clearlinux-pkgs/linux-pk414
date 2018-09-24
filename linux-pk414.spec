@@ -21,7 +21,7 @@ Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
-# kernel-lts-quilt: lts-4.14-base-180910T232005Z
+# kernel-lts-quilt: lts-4.14-base-180920T182457Z
 # kernel-config: lts-4.14-base-180905T220003Z
 
 %define ktarget0 pk414-sos
@@ -1685,6 +1685,40 @@ Patch1630: 1630-drm-i915-gvt-allocate-ddb-according-to-active-pipes.patch
 Patch1631: 1631-drm-i915-gvt-Fixed-an-issue-in-PS-MMIO-handlers.patch
 Patch1632: 1632-drm-i915-to-limit-the-supported-modifiers-for-plane-.patch
 Patch1633: 1633-cbc-fix-line-warnings-and-move-spin_unlock-to-correc.patch
+Patch1634: 1634-media-ipu4-remove-internal-URL.patch
+Patch1635: 1635-ASoC-Intel-common-Add-fw_filename-name-to-bxt_machin.patch
+Patch1636: 1636-powercap-add-suspend-and-resume-mechanism-for-SOC-po.patch
+Patch1637: 1637-Revert-usb-roles-intel_xhci-Don-t-rely-on-the-PMIC-w.patch
+Patch1638: 1638-usb-roles-Fix-return-value-check-in-intel_xhci_usb_p.patch
+Patch1639: 1639-usb-roles-Fix-potential-NULL-dereference-in-intel_xh.patch
+Patch1640: 1640-usb-roles-intel_xhci-Always-allow-user-control.patch
+Patch1641: 1641-usb-roles-intel_xhci-Enable-runtime-PM.patch
+Patch1642: 1642-usb-dwc3-Prevent-indefinite-sleep-in-_dwc3_set_mode-.patch
+Patch1643: 1643-staging-Add-AVnu-based-Intel-IGB-driver.patch
+Patch1644: 1644-clean-up-API-delta-s-from-the-backport-from-4.20-API.patch
+Patch1645: 1645-the-igb_avb-direver-cannot-coexist-with-e1000-or-e10.patch
+Patch1646: 1646-fix-some-likely-copy-paste-errors-with-some-if-block.patch
+Patch1647: 1647-media-intel-ipu4-ICI-Use-standard-values-for-memory-.patch
+Patch1648: 1648-media-intel-ipu4-VIRT-Fxied-failed-to-stream-close-p.patch
+Patch1649: 1649-media-i2c-crlmodule-lite-Remove-op_sys_clock.patch
+Patch1650: 1650-media-i2c-crlmodule-lite-Add-mask-field.patch
+Patch1651: 1651-media-i2c-crlmodule-lite-Add-register-settings-to-su.patch
+Patch1652: 1652-media-v4l2-core-fix-kernel-panic.patch
+Patch1653: 1653-media-intel-ipu4-adv7481_hdmi-Add-HDMI-YUYV-format.patch
+Patch1654: 1654-media-intel-ipu4-OV10635-Enable-RDACM23-camera-modul.patch
+Patch1655: 1655-media-intel-ipu4-adv7481_hdmi-Enable-HDMI-active-vid.patch
+Patch1656: 1656-media-intel-ipu4-adv7481_hdmi-Fix-Shifted-Active-Vid.patch
+Patch1657: 1657-media-ici-Remove-set_pipeline_format-when-setting-st.patch
+Patch1658: 1658-media-intel-ipu4-VIRT-Poll-function-to-return-if-put.patch
+Patch1659: 1659-drm-i915-gvt-add-ggtt-pv-fallback-handling.patch
+Patch1660: 1660-drm-i915-gvt-also-assign-pipe-C-scaler-ownership-to-.patch
+Patch1661: 1661-upstream-drm-i915-gvt-Off-by-one-in-intel_vgpu_write.patch
+Patch1662: 1662-upstream-drm-i915-gvt-Fix-stack-out-of-bounds-bug-in.patch
+Patch1663: 1663-drm-i915-gvt-clear-ggtt-entries-when-destroy-vgpu.patch
+Patch1664: 1664-Adding-kernel-parameter-for-forcing-xapic-in-physica.patch
+Patch1665: 1665-vhm-deinit-trusty-after-hcall_destroy_vm.patch
+Patch1666: 1666-VHM-add-ioctl-hypercall-for-UOS-intr-data-monitor.patch
+Patch1667: 1667-VHM-fix-compile-warnings.patch
 #END XXXX: PK Series
 
 # SEP and SoCWatch Series
@@ -3378,6 +3412,40 @@ Linux kernel extra files
 %patch1631 -p1
 %patch1632 -p1
 %patch1633 -p1
+%patch1634 -p1
+%patch1635 -p1
+%patch1636 -p1
+%patch1637 -p1
+%patch1638 -p1
+%patch1639 -p1
+%patch1640 -p1
+%patch1641 -p1
+%patch1642 -p1
+%patch1643 -p1
+%patch1644 -p1
+%patch1645 -p1
+%patch1646 -p1
+%patch1647 -p1
+%patch1648 -p1
+%patch1649 -p1
+%patch1650 -p1
+%patch1651 -p1
+%patch1652 -p1
+%patch1653 -p1
+%patch1654 -p1
+%patch1655 -p1
+%patch1656 -p1
+%patch1657 -p1
+%patch1658 -p1
+%patch1659 -p1
+%patch1660 -p1
+%patch1661 -p1
+%patch1662 -p1
+%patch1663 -p1
+%patch1664 -p1
+%patch1665 -p1
+%patch1666 -p1
+%patch1667 -p1
 # End XXXX PK Series
 
 # SEP and SoCWatch Series
