@@ -1685,7 +1685,6 @@ Patch1630: 1630-drm-i915-gvt-allocate-ddb-according-to-active-pipes.patch
 Patch1631: 1631-drm-i915-gvt-Fixed-an-issue-in-PS-MMIO-handlers.patch
 Patch1632: 1632-drm-i915-to-limit-the-supported-modifiers-for-plane-.patch
 Patch1633: 1633-cbc-fix-line-warnings-and-move-spin_unlock-to-correc.patch
-Patch1634: 1634-media-ipu4-remove-internal-URL.patch
 Patch1635: 1635-ASoC-Intel-common-Add-fw_filename-name-to-bxt_machin.patch
 Patch1636: 1636-powercap-add-suspend-and-resume-mechanism-for-SOC-po.patch
 Patch1637: 1637-Revert-usb-roles-intel_xhci-Don-t-rely-on-the-PMIC-w.patch
@@ -3412,7 +3411,6 @@ Linux kernel extra files
 %patch1631 -p1
 %patch1632 -p1
 %patch1633 -p1
-%patch1634 -p1
 %patch1635 -p1
 %patch1636 -p1
 %patch1637 -p1
