@@ -21,7 +21,7 @@ Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
-# kernel-lts-quilt: lts-4.14-base-180921T193328Z
+# kernel-lts-quilt: lts-4.14-base-180926T015116Z
 # kernel-config: lts-4.14-base-180905T220003Z
 
 %define ktarget0 pk414-sos
@@ -1718,6 +1718,10 @@ Patch1663: 1663-Adding-kernel-parameter-for-forcing-xapic-in-physica.patch
 Patch1664: 1664-vhm-deinit-trusty-after-hcall_destroy_vm.patch
 Patch1665: 1665-VHM-add-ioctl-hypercall-for-UOS-intr-data-monitor.patch
 Patch1666: 1666-VHM-fix-compile-warnings.patch
+Patch1667: 1667-Revert-powercap-add-suspend-and-resume-mechanism-for.patch
+Patch1668: 1668-powercap-add-suspend-and-resume-mechanism-for-SOC-po.patch
+Patch1669: 1669-dm-verity-don-t-crash-on-vmallocated-buffer.patch
+Patch1670: 1670-usb-roles-Fix-USB-3.0-OTG-issue-on-Intel-platform.patch
 #END XXXX: PK Series
 
 # SEP and SoCWatch Series
@@ -3444,6 +3448,10 @@ Linux kernel extra files
 %patch1664 -p1
 %patch1665 -p1
 %patch1666 -p1
+%patch1667 -p1
+%patch1668 -p1
+%patch1669 -p1
+%patch1670 -p1
 # End XXXX PK Series
 
 # SEP and SoCWatch Series
