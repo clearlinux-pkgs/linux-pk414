@@ -10,7 +10,7 @@
 
 Name:           linux-pk414
 Version:        4.14.71
-Release:        109
+Release:        110
 License:        GPL-2.0
 Summary:        The Linux kernel
 Url:            http://www.kernel.org/
@@ -1750,6 +1750,7 @@ Patch8021: 8021-misc-intel-Makefile-and-Kconfig.patch
 # Clear Linux patch
 # needs to add to PK series
 Patch9001: 9001-init-wait-for-partition-and-retry-scan.patch
+Patch9002: 9002-add-SEP-and-SoCWatch-dependencies-for-ACRN.patch
 
 %description
 The Linux kernel.
@@ -3479,6 +3480,7 @@ Linux kernel extra files
 
 # Clear Linux patch
 %patch9001 -p1
+%patch9002 -p1
 
 cp %{SOURCE1} .
 cp %{SOURCE2} .
