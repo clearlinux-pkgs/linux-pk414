@@ -1,7 +1,7 @@
-From 0286cb5e943d8a63b4c26ff341ad9b5340d67e4c Mon Sep 17 00:00:00 2001
+From 0b651cd4807fc698cedd3175043887b0671e18c3 Mon Sep 17 00:00:00 2001
 From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 Date: Mon, 16 Oct 2017 18:01:26 -0700
-Subject: [PATCH 0676/1670] net/sched: Introduce Credit Based Shaper (CBS)
+Subject: [PATCH 0676/1669] net/sched: Introduce Credit Based Shaper (CBS)
  qdisc
 
 This queueing discipline implements the shaper algorithm defined by
@@ -89,7 +89,7 @@ index 9e43a47..5b63544 100644
  obj-$(CONFIG_NET_CLS_ROUTE4)	+= cls_route.o
 diff --git a/net/sched/sch_cbs.c b/net/sched/sch_cbs.c
 new file mode 100644
-index 0000000..0e85133c
+index 0000000..0e85133
 --- /dev/null
 +++ b/net/sched/sch_cbs.c
 @@ -0,0 +1,293 @@
