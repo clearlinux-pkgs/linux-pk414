@@ -22,7 +22,7 @@ Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
 # kernel-lts-quilt: lts-4.14-base-181001T064647Z
-# kernel-config: lts-4.14-base-180928T014930Z
+# kernel-config: lts-4.14-base-181001T064647Z
 
 %define ktarget0 pk414-sos
 %define kversion0 %{version}-%{release}.%{ktarget0}
