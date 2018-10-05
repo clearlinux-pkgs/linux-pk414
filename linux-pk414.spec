@@ -21,7 +21,7 @@ Source2:        config-pk414-standard
 Source3:        cmdline-pk414-sos
 Source4:        cmdline-pk414-standard
 
-# kernel-lts-quilt: lts-4.14-base-181001T064647Z
+# kernel-lts-quilt: lts-v4.14.73-base-181002T012100Z
 # kernel-config: lts-4.14-base-181001T064647Z
 
 %define ktarget0 pk414-sos
@@ -1721,6 +1721,13 @@ Patch1667: 1667-Revert-powercap-add-suspend-and-resume-mechanism-for.patch
 Patch1668: 1668-powercap-add-suspend-and-resume-mechanism-for-SOC-po.patch
 Patch1669: 1669-dm-verity-don-t-crash-on-vmallocated-buffer.patch
 Patch1670: 1670-usb-roles-Fix-USB-3.0-OTG-issue-on-Intel-platform.patch
+Patch1671: 1671-hyper-dmabuf-fix-potential-error-as-Werror-enabled.patch
+Patch1672: 1672-vhm-enable-Werror-while-compiling-vhm-vbs-hyper-dmab.patch
+Patch1673: 1673-vhm-change-trace_printk-of-vhm_dev_ioctl-to-pr_debug.patch
+Patch1674: 1674-vhm-add-ioeventfd-support-for-ACRN-hypervisor-servic.patch
+Patch1675: 1675-vhm-add-irqfd-support-for-ACRN-hypervisor-service-mo.patch
+Patch1676: 1676-drm-i915-gvt-use-plane-size-for-fb-decoder.patch
+Patch1677: 1677-drm-i915-ensure-oa-config-uuid-is-null-terminated.patch
 #END XXXX: PK Series
 
 # SEP and SoCWatch Series
@@ -3451,6 +3458,13 @@ Linux kernel extra files
 %patch1668 -p1
 %patch1669 -p1
 %patch1670 -p1
+%patch1671 -p1
+%patch1672 -p1
+%patch1673 -p1
+%patch1674 -p1
+%patch1675 -p1
+%patch1676 -p1
+%patch1677 -p1
 # End XXXX PK Series
 
 # SEP and SoCWatch Series
